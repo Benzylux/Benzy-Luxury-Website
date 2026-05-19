@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benzy Luxury | Shop</title>
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="OFF BACK/BENZY LOGO.png" />
+    <link rel="apple-touch-icon" href="OFF BACK/BENZY LOGO.png" />
+</head>
+<body class="shop-page-nav">
+  <div class="navbar">
+    <div class="logo">
+      <img src="OFF BACK/BENZY LOGO.png" alt="Benzy Luxury Logo" class="logo-main">
+      <img src="OFF BACK/BLX.png" alt="BLX Logo" class="logo-blx">
+    </div>
+
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li class="has-dropdown">
+          <a href="Shop.html" class="active shop-toggle">Shop <span class="chevron">▾</span></a>
+          <ul class="dropdown">
+            <li><a href="Shop.html?cat=all">All Products</a></li>
+            <li><a href="Shop.html?cat=men">Men</a></li>
+            <li><a href="Shop.html?cat=women">Women</a></li>
+            <li><a href="Shop.html?cat=accessories">Accessories</a></li>
+          </ul>
+        </li>
+        <li><a href="About.html">About</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+        <li><a href="Account.html">Account</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-right">
+      <a href="Search.html" class="search-link" aria-label="Search">
+        <img src="OFF BACK/icons8-search-64.png" alt="Search Icon">
+      </a>
+      <a href="Cart.html" class="cart-link" aria-label="Cart">
+        <img src="OFF BACK/icons8-cart-100.png" alt="Cart Icon">
+      </a>
+    </div>
+  </div>
+
+  <main class="shop-page">
+    <section id="shop-home-landing" class="shop-home-landing">
+      <section class="shop-home-hero">
+        <img class="shop-home-video" src="Model shoot/IMG_0038.JPG" alt="Benzy Luxury Model Shoot">
+        <div class="shop-home-overlay"></div>
+        <div class="shop-home-content">
+          <p class="shop-home-eyebrow" data-site-homepage-eyebrow>Benzy Luxury</p>
+          <h1 data-site-hero-heading>Explore Our New Collection</h1>
+          <p data-site-hero-body>Discover the latest Benzy Luxury pieces, current campaign stories, and elevated wardrobe staples.</p>
+          <div class="shop-home-cta-row">
+            <a href="Shop.html?cat=all" class="shop-home-btn shop-home-btn-ghost" data-hero-btn="ghost"><span data-site-homepage-cta-label>Shop Now</span></a>
+            <a href="Shop.html?cat=all" class="shop-home-btn shop-home-btn-solid" data-hero-btn="solid"><span data-site-homepage-cta-label>Shop Now</span></a>
+          </div>
+        </div>
+        <div id="shop-home-hero-dots" class="shop-home-hero-dots" aria-label="Hero slides"></div>
+      </section>
+
+      <section class="shop-home-section">
+        <div class="shop-home-section-head shop-home-section-head-newin">
+          <div>
+            <p class="shop-home-mini">New In</p>
+            <h2>Explore Our New Collection</h2>
+          </div>
+          <a href="Shop.html?cat=all" class="shop-home-link">Shop New In</a>
+        </div>
+        <div id="shop-home-newin-grid" class="shop-home-grid shop-home-grid-four"></div>
+      </section>
+
+      <section class="shop-home-split">
+        <a
+          href="Shop.html?cat=women"
+          class="shop-home-split-card"
+          data-base-image="Model shoot/IMG_0002.JPG"
+          data-hover-image="Model shoot/IMG_0045.JPG"
+          style="background-image:url('Model shoot/IMG_0002.JPG')"
+        >
+          <span>New Releases</span>
+          <strong>Explore Now</strong>
+        </a>
+        <a
+          href="Shop.html?cat=men"
+          class="shop-home-split-card"
+          data-base-image="Model shoot/IMG_0054.JPG"
+          data-hover-image="Model shoot/IMG_0085.JPG"
+          style="background-image:url('Model shoot/IMG_0054.JPG')"
+        >
+          <span>From Our New Collection</span>
+          <strong>Explore Now</strong>
+        </a>
+      </section>
+
+      <section class="shop-home-section">
+        <div class="shop-home-section-head shop-home-section-head-standard">
+          <div>
+            <p class="shop-home-mini">Explore More Products</p>
+            <a href="Shop.html?cat=all" class="shop-home-title-link">Shop All Products</a>
+          </div>
+        </div>
+        <div id="shop-home-products-grid" class="shop-home-grid shop-home-grid-four"></div>
+      </section>
+
+      <section class="shop-home-split shop-home-split-secondary">
+        <a
+          href="Shop.html?cat=accessories"
+          class="shop-home-split-card"
+          data-base-image="Model shoot/IMG_0093.JPG"
+          data-hover-image="Model shoot/IMG_9912.JPG"
+          style="background-image:url('Model shoot/IMG_0093.JPG')"
+        >
+          <span>Accessories</span>
+          <strong>Explore Now</strong>
+        </a>
+        <a
+          href="Shop.html?cat=all"
+          class="shop-home-split-card"
+          data-base-image="Model shoot/IMG_9963.JPG"
+          data-hover-image="Model shoot/IMG_0032.JPG"
+          style="background-image:url('Model shoot/IMG_9963.JPG')"
+        >
+          <span>From Our New Collection</span>
+          <strong>Explore Now</strong>
+        </a>
+      </section>
+
+    </section>
+
+    <section id="shop-category-shell" class="shop-category-shell" hidden>
+      <div class="shop-category-hero">
+        <div class="shop-category-copy">
+          <p id="shop-category-kicker" class="shop-category-kicker">Collection</p>
+          <span id="shop-category-breadcrumb" class="shop-category-breadcrumb">Shop / All Products</span>
+          <h1 id="shop-category-title" class="shop-category-title">All Products</h1>
+          <p id="shop-category-description" class="shop-category-description">
+            A complete selection of Benzy Luxury pieces, from statement jerseys to off-duty essentials.
+          </p>
+          <div id="shop-category-featured" class="shop-category-featured" aria-label="Featured pieces"></div>
+          <div class="shop-category-metrics" aria-label="Collection overview">
+            <article class="shop-category-metric">
+              <span>Items in collection</span>
+              <strong id="shop-category-metric-count">0</strong>
+            </article>
+            <article class="shop-category-metric">
+              <span>Price range</span>
+              <strong id="shop-category-metric-price">-</strong>
+            </article>
+            <article class="shop-category-metric">
+              <span>Ready now</span>
+              <strong id="shop-category-metric-stock">-</strong>
+            </article>
+          </div>
+        </div>
+
+        <div class="shop-category-media">
+          <img id="shop-category-image" class="shop-category-image" src="Model shoot/IMG_0038.JPG" alt="Benzy Luxury collection">
+          <div class="shop-category-media-card">
+            <p class="shop-category-media-label">Curated for</p>
+            <strong id="shop-category-accent-title">Elevated essentials</strong>
+            <p id="shop-category-accent-copy">
+              Designed to move from campaign moments to everyday rotation without losing the statement.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="shop-category-curation" aria-label="Collection details">
+        <article class="shop-category-curation-card">
+          <p class="shop-category-curation-label">Collection note</p>
+          <strong id="shop-category-note-title">Luxury in motion</strong>
+          <p id="shop-category-note-body">
+            Sharp silhouettes, easy layering, and bold branded details define the mood of this collection.
+          </p>
+        </article>
+
+        <article class="shop-category-curation-card">
+          <p class="shop-category-curation-label">Signature palette</p>
+          <div id="shop-category-palette" class="shop-category-palette" aria-label="Collection palette"></div>
+          <p id="shop-category-palette-copy">
+            A focused run of colorways drawn from the products in this collection.
+          </p>
+        </article>
+
+        <article class="shop-category-curation-card">
+          <p class="shop-category-curation-label">Availability</p>
+          <strong id="shop-category-stock-title">Ready to shop</strong>
+          <p id="shop-category-stock-body">
+            Most pieces in this collection are available now for immediate purchase.
+          </p>
+        </article>
+      </div>
+
+    </section>
+
+    <section class="shop-toolbar" aria-label="Shop controls" hidden>
+      <div class="shop-toolbar-copy">
+        <button id="shop-filter-toggle" class="shop-filter-toggle" type="button" aria-expanded="false">Filter and sort</button>
+        <p id="shop-filter-summary" class="shop-filter-summary">Showing the full collection.</p>
+      </div>
+      <p id="shop-products-count" class="shop-products-count">0 products</p>
+    </section>
+
+    <section class="shop-sort-row" aria-label="Sort controls" hidden>
+      <div class="shop-sort-copy">
+        <p class="shop-sort-kicker">Refine the collection</p>
+        <p class="shop-sort-caption">Sort by newest, price, or alphabetical order to narrow the collection faster.</p>
+      </div>
+      <label class="shop-sort-wrap" for="shop-sort-select">
+        <select id="shop-sort-select">
+          <option value="featured">Featured</option>
+          <option value="best-selling">Best selling</option>
+          <option value="az">Alphabetically, A-Z</option>
+          <option value="za">Alphabetically, Z-A</option>
+          <option value="price-asc">Price, low to high</option>
+          <option value="price-desc">Price, high to low</option>
+          <option value="date-old-new">Date, old to new</option>
+          <option value="date-new-old">Date, new to old</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="shop-layout" hidden>
+      <aside class="shop-filters" aria-label="Product filters">
+        <div class="shop-filters-head">
+          <div class="shop-filters-title-wrap">
+            <p class="shop-filters-kicker">Collection controls</p>
+            <strong>Filters</strong>
+          </div>
+          <button id="shop-filter-close" class="shop-filter-close" type="button" aria-label="Close filters">&times;</button>
+        </div>
+        <p class="shop-filters-caption">Use stock and price to refine the current collection instantly.</p>
+
+        <div class="shop-filter-group">
+          <button class="filter-toggle" type="button" data-filter-target="availability" aria-expanded="true">
+            <span>Availability</span>
+            <span class="filter-chevron">&#8722;</span>
+          </button>
+          <div class="filter-body" data-filter-body="availability">
+            <label class="filter-check">
+              <input id="filter-instock" type="checkbox" />
+              <span>In stock only</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="shop-filter-group">
+          <button class="filter-toggle" type="button" data-filter-target="price" aria-expanded="true">
+            <span>Price</span>
+            <span class="filter-chevron">&#8722;</span>
+          </button>
+          <div class="filter-body" data-filter-body="price">
+            <p id="filter-price-note" class="filter-price-note">Collection range: N0.00 - N0.00</p>
+            <div class="filter-range-wrap">
+              <div class="filter-range-shell">
+                <input id="filter-range-min" class="filter-range" type="range" min="0" max="0" step="500" value="0" />
+                <input id="filter-range-max" class="filter-range" type="range" min="0" max="0" step="500" value="0" />
+              </div>
+            </div>
+            <div class="filter-price-labels" aria-hidden="true">
+              <span>Min</span>
+              <span>Max</span>
+            </div>
+            <div class="filter-price">
+              <label class="price-input-wrap">
+                <span class="currency-prefix">&#8358;</span>
+                <input id="filter-price-min" type="number" min="0" step="500" placeholder="Min" />
+              </label>
+              <label class="price-input-wrap">
+                <span class="currency-prefix">&#8358;</span>
+                <input id="filter-price-max" type="number" min="0" step="500" placeholder="Max" />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="shop-filters-footer">
+          <p class="shop-filters-hint">Adjustments apply live as you refine the drawer.</p>
+          <button id="filter-reset" type="button" class="filter-reset">Reset filters</button>
+        </div>
+      </aside>
+
+      <section class="shop-grid" id="shop-grid"></section>
+    </section>
+
+    <p id="shop-empty" class="shop-empty" hidden>No products found in this category.</p>
+  </main>
+
+  <label class="currency-inline" for="shop-currency-select" aria-label="Currency selector" hidden>
+    <select id="shop-currency-select">
+      <option value="USD">USD</option>
+      <option value="NGN">NGN</option>
+    </select>
+  </label>
+
+  <script src="cart-api.js"></script>
+  <script src="currency-service.js"></script>
+  <script src="cart-store.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benzy Luxury | Checkout</title>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css?v=checkout-currency-black-select-20260516" />
+  <link rel="icon" type="image/png" href="OFF BACK/BENZY LOGO.png" />
+  <link rel="apple-touch-icon" href="OFF BACK/BENZY LOGO.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="checkout-body">
+  <main class="checkout-page">
+    <a href="Cart.html" class="checkout-back-btn" aria-label="Back to cart">
+      <span class="checkout-back-arrow">&#8592;</span>
+      Back to cart
+    </a>
+    <div class="checkout-page-tools">
+      <label class="checkout-currency-control" for="currency-select">
+        <select id="currency-select" aria-label="Currency">
+          <option value="USD">USD</option>
+          <option value="NGN" selected>NGN</option>
+        </select>
+      </label>
+    </div>
+    <section class="checkout-hero" aria-labelledby="checkout-title">
+      <div class="checkout-hero-copy">
+        <p class="checkout-eyebrow">Secure Checkout</p>
+        <h1 id="checkout-title">Finish your Benzy Luxury order</h1>
+        <p class="checkout-hero-text">Choose your saved profile address, review your order, and complete payment in a simpler flow.</p>
+      </div>
+      <div class="checkout-hero-panel">
+        <div class="checkout-progress" aria-label="Checkout progress">
+          <span class="checkout-progress-step is-active">Delivery</span>
+          <span class="checkout-progress-step is-active">Review</span>
+          <span class="checkout-progress-step">Payment</span>
+        </div>
+        <div class="checkout-hero-grid">
+          <div class="hero-metric">
+            <span class="hero-metric-label">Items in bag</span>
+            <strong id="checkout-hero-items">0 PIECES</strong>
+          </div>
+          <div class="hero-metric">
+            <span class="hero-metric-label">Estimated shipping</span>
+            <strong id="checkout-hero-shipping">0</strong>
+          </div>
+          <div class="hero-metric">
+            <span class="hero-metric-label">Paying in</span>
+            <strong id="checkout-hero-currency">NGN</strong>
+          </div>
+        </div>
+        <p id="checkout-shipping-note" class="checkout-hero-note">Shipping updates when you choose a saved delivery address.</p>
+      </div>
+    </section>
+    <div class="checkout-layout">
+      <div class="checkout-main">
+        <section class="checkout-section checkout-section--delivery">
+          <div class="checkout-section-head">
+            <div>
+              <h2 class="checkout-section-title">
+                <span class="section-number">1</span>
+                Delivery Address
+              </h2>
+              <p class="checkout-section-copy">Choose one of the addresses already saved in your profile to continue checkout.</p>
+            </div>
+            <span class="checkout-section-tag">Profile ready</span>
+          </div>
+
+          <div class="checkout-address-shell">
+            <div class="checkout-saved-address">
+              <label for="saved-address-select">Saved Address</label>
+              <div class="checkout-saved-row">
+                <select id="saved-address-select">
+                  <option value="">Select a saved address</option>
+                </select>
+                <a class="checkout-address-manage" href="Profile.html">Manage</a>
+              </div>
+              <p id="saved-address-note" class="checkout-address-note">Select a saved address from your profile.</p>
+            </div>
+
+            <div id="checkout-address-preview" class="checkout-address-preview" hidden>
+              <div class="checkout-address-preview-head">
+                <h3>Selected Address</h3>
+                <span id="selected-address-badge" class="address-preview-badge">Saved</span>
+              </div>
+              <div class="checkout-address-preview-grid">
+                <div class="address-preview-item">
+                  <span class="address-preview-label">Recipient</span>
+                  <strong id="selected-address-recipient" class="address-preview-value">-</strong>
+                </div>
+                <div class="address-preview-item">
+                  <span class="address-preview-label">Contact</span>
+                  <strong id="selected-address-contact" class="address-preview-value">-</strong>
+                </div>
+                <div class="address-preview-item address-preview-item--wide">
+                  <span class="address-preview-label">Street Address</span>
+                  <strong id="selected-address-line" class="address-preview-value">-</strong>
+                </div>
+                <div class="address-preview-item address-preview-item--wide">
+                  <span class="address-preview-label">City / State</span>
+                  <strong id="selected-address-region" class="address-preview-value">-</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="checkout-section checkout-section--summary">
+          <div class="checkout-header-row">
+            <div>
+              <h2 class="checkout-section-title">
+                <span class="section-number">2</span>
+                Order Summary
+              </h2>
+              <p class="checkout-section-copy">Your totals update live as you review your order and switch currency.</p>
+            </div>
+          </div>
+
+          <div class="checkout-summary-note">
+            <span class="checkout-note-pill">Taxes calculated at 7.5%</span>
+            <span class="checkout-note-pill">Shipping syncs with your current store settings</span>
+          </div>
+          <p id="checkout-currency-status" class="checkout-coupon-status" aria-live="polite"></p>
+          
+          <div class="checkout-items" id="checkout-items">
+          </div>
+          
+          <div class="checkout-totals">
+            <div class="total-row">
+              <span id="checkout-subtotal-label">Subtotal</span>
+              <span id="checkout-subtotal">0</span>
+            </div>
+            <div class="total-row total-row-discount" id="checkout-discount-row" hidden>
+              <span>Discount</span>
+              <span id="checkout-discount">0</span>
+            </div>
+            <div class="total-row total-row-net" id="checkout-balance-row" hidden>
+              <span>After Discount</span>
+              <span id="checkout-balance">0</span>
+            </div>
+            <div class="total-row">
+              <span>Tax</span>
+              <span id="checkout-tax">0</span>
+            </div>
+            <div class="total-row">
+              <span>Shipping</span>
+              <span id="checkout-shipping">0</span>
+            </div>
+            <div class="total-row grand-total">
+              <span>Total</span>
+              <span id="checkout-total">0</span>
+            </div>
+          </div>
+          <p id="checkout-coupon-status" class="checkout-coupon-status" aria-live="polite"></p>
+        </section>
+
+        <section class="checkout-section checkout-section--payment">
+          <div class="checkout-section-head">
+            <div>
+              <h2 class="checkout-section-title">
+                <span class="section-number">3</span>
+                Payment Method
+              </h2>
+              <p class="checkout-section-copy">Choose the payment path that feels best for you. Every option keeps checkout clear and secure.</p>
+            </div>
+            <span class="checkout-section-tag">Encrypted</span>
+          </div>
+          
+          <div class="payment-methods">
+            <label class="payment-option">
+              <input type="radio" name="payment" value="wallet" />
+              <div class="payment-card">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+                <div class="payment-copy">
+                  <span>Wallet</span>
+                  <small>Use your saved Benzy balance</small>
+                </div>
+              </div>
+            </label>
+            
+            <label class="payment-option">
+              <input type="radio" name="payment" value="paystack" checked />
+              <div class="payment-card">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="12" r="10"/>
+                </svg>
+                <div class="payment-copy">
+                  <span>Paystack</span>
+                  <small>Apple Pay, cards, and more via Paystack</small>
+                </div>
+              </div>
+            </label>
+          </div>
+        </section>
+
+        <div class="checkout-action-panel">
+          <div id="apple-pay-panel" class="checkout-apple-pay" hidden>
+            <div class="checkout-apple-pay-copy">
+              <p class="checkout-apple-pay-kicker">Apple Pay</p>
+              <p id="apple-pay-support-copy" class="checkout-apple-pay-note">Apple Pay appears automatically on supported Safari and iOS devices over HTTPS.</p>
+            </div>
+            <div id="paystack-apple-pay" class="checkout-apple-pay-button" hidden></div>
+            <button id="paystack-other-channels" class="checkout-alt-pay-btn" type="button" hidden>More payment options</button>
+          </div>
+          <p id="checkout-payment-status" class="checkout-coupon-status checkout-payment-status" aria-live="polite"></p>
+          <button id="pay-now-btn" class="pay-now-btn" type="button">
+            <span class="btn-copy"><span class="btn-text">Pay Now</span><span class="btn-subtext">Securely place your order</span></span>
+            <span class="btn-amount" id="pay-btn-amount">NGN 0</span>
+          </button>
+          
+          <div class="checkout-assurance">
+            <p class="checkout-secure">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              Secure checkout. Your payment information is encrypted.
+            </p>
+            <p class="checkout-assurance-copy">You will receive confirmation immediately after payment or receipt verification.</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="checkout-sidebar">
+        <div class="checkout-sidebar-card checkout-sidebar-card--intro">
+          <p class="checkout-eyebrow">Order At A Glance</p>
+          <h3>Luxury, without the friction</h3>
+          <p class="checkout-sidebar-copy">Keep your bag, totals, and next actions visible while you complete checkout.</p>
+          <div class="checkout-sidebar-badges">
+            <span>Fast dispatch</span>
+            <span>Secure gateways</span>
+            <span>Profile-ready checkout</span>
+          </div>
+        </div>
+
+        <div class="checkout-sidebar-card checkout-sidebar-card--summary">
+          <div class="checkout-sidebar-head">
+            <h3>Bag Summary</h3>
+            <span class="sidebar-live-pill">Live total</span>
+          </div>
+          <div class="sidebar-items" id="sidebar-items">
+          </div>
+          <div class="sidebar-totals">
+            <div class="total-row">
+              <span id="sidebar-subtotal-label">Subtotal</span>
+              <span id="sidebar-subtotal">0</span>
+            </div>
+            <div class="total-row total-row-discount" id="sidebar-discount-row" hidden>
+              <span>Discount</span>
+              <span id="sidebar-discount">0</span>
+            </div>
+            <div class="total-row total-row-net" id="sidebar-balance-row" hidden>
+              <span>After Discount</span>
+              <span id="sidebar-balance">0</span>
+            </div>
+            <div class="total-row">
+              <span>Tax</span>
+              <span id="sidebar-tax">0</span>
+            </div>
+            <div class="total-row">
+              <span>Shipping</span>
+              <span id="sidebar-shipping">0</span>
+            </div>
+            <div class="total-row grand-total">
+              <span>Total</span>
+              <span id="sidebar-total">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="checkout-sidebar-card checkout-sidebar-card--support">
+          <p class="support-kicker">Need a quick change?</p>
+          <p class="support-copy">Update your saved details in your profile or head back to the cart before paying.</p>
+          <div class="checkout-sidebar-links">
+            <a href="Profile.html">Manage profile</a>
+            <a href="Cart.html">Edit cart</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    window.__BENZY_SKIP_SITE_FOOTER = true;
+  </script>
+  <script src="cart-api.js"></script>
+  <script src="currency-service.js"></script>
+  <script src="cart-store.js"></script>
+  <script src="https://js.paystack.co/v2/inline.js"></script>
+  <script src="main.js"></script>
+  <script>
+    (function() {
+      var CART_KEY = 'benzy_cart_items';
+      var GUEST_CART_KEY = 'benzy_guest_cart_items';
+      var CART_META_KEY = 'benzy_cart_meta';
+      var TOKEN_KEY = 'benzy_auth_token';
+      var CURRENCY_KEY = 'benzy_currency';
+      var CURRENCY_SOURCE_KEY = 'benzy_currency_source';
+      var SHIPPING_KEY = 'benzy_shipping_fee_ngn';
+      var SHIPPING_SETTINGS_KEY = 'benzy_shipping_settings_v2';
+      var DEFAULT_SHIPPING_NGN = 3000;
+      var TAX_RATE = 0.075;
+      var DEFAULT_SHIPPING_SETTINGS = {
+        shippingFeeNgn: DEFAULT_SHIPPING_NGN,
+        shipping: {
+          defaultDomesticFeeNgn: DEFAULT_SHIPPING_NGN,
+          lagosFeeNgn: DEFAULT_SHIPPING_NGN,
+          otherStatesFeeNgn: 4500,
+          internationalFeeNgn: 15000,
+          freeShippingThresholdNgn: 150000,
+          deliveryTimes: {
+            lagos: '1-2 business days',
+            otherStates: '3-5 business days',
+            international: '5-10 business days'
+          }
+        }
+      };
+
+      var currencyConfig = {
+        USD: { rate: 1 / 1376.86, locale: 'en-US', currency: 'USD' },
+        NGN: { rate: 1, locale: 'en-NG', currency: 'NGN' }
+      };
+
+      var activeCurrency = window.BenzyCurrency && typeof window.BenzyCurrency.getSelectedCurrency === 'function'
+        ? window.BenzyCurrency.getSelectedCurrency()
+        : (localStorage.getItem(CURRENCY_KEY) || 'NGN');
+      if (!currencyConfig[activeCurrency]) activeCurrency = 'NGN';
+      
+      var checkoutItemsEl = document.getElementById('checkout-items');
+      var sidebarItemsEl = document.getElementById('sidebar-items');
+      var subtotalLabelEl = document.getElementById('checkout-subtotal-label');
+      var subtotalEl = document.getElementById('checkout-subtotal');
+      var discountRowEl = document.getElementById('checkout-discount-row');
+      var discountEl = document.getElementById('checkout-discount');
+      var balanceRowEl = document.getElementById('checkout-balance-row');
+      var balanceEl = document.getElementById('checkout-balance');
+      var taxEl = document.getElementById('checkout-tax');
+      var shippingEl = document.getElementById('checkout-shipping');
+      var totalEl = document.getElementById('checkout-total');
+      var sidebarSubtotalLabelEl = document.getElementById('sidebar-subtotal-label');
+      var sidebarSubtotalEl = document.getElementById('sidebar-subtotal');
+      var sidebarDiscountRowEl = document.getElementById('sidebar-discount-row');
+      var sidebarDiscountEl = document.getElementById('sidebar-discount');
+      var sidebarBalanceRowEl = document.getElementById('sidebar-balance-row');
+      var sidebarBalanceEl = document.getElementById('sidebar-balance');
+      var sidebarTaxEl = document.getElementById('sidebar-tax');
+      var sidebarShippingEl = document.getElementById('sidebar-shipping');
+      var sidebarTotalEl = document.getElementById('sidebar-total');
+      var payBtnAmountEl = document.getElementById('pay-btn-amount');
+      var payNowBtn = document.getElementById('pay-now-btn');
+      var applePayPanelEl = document.getElementById('apple-pay-panel');
+      var applePayContainerEl = document.getElementById('paystack-apple-pay');
+      var applePaySupportCopyEl = document.getElementById('apple-pay-support-copy');
+      var paystackOtherChannelsBtn = document.getElementById('paystack-other-channels');
+      var checkoutPaymentStatusEl = document.getElementById('checkout-payment-status');
+      var checkoutHeroItemsEl = document.getElementById('checkout-hero-items');
+      var checkoutHeroShippingEl = document.getElementById('checkout-hero-shipping');
+      var checkoutHeroCurrencyEl = document.getElementById('checkout-hero-currency');
+      var checkoutShippingNoteEl = document.getElementById('checkout-shipping-note');
+      var bankDetailsEl = document.getElementById('bank-details');
+      var paymentOptions = document.querySelectorAll('input[name="payment"]');
+      var currencySelect = document.getElementById('currency-select');
+      var API_BASE = localStorage.getItem('benzy_api_base') || 'http://localhost:3001';
+      var API_BASES = (function() {
+        var bases = [];
+        var origin = window.location.origin;
+        if (origin && origin !== 'null') bases.push(origin);
+        if (API_BASE) bases.push(API_BASE);
+        bases.push('http://localhost:3001');
+        return Array.from(new Set(bases));
+      })();
+      var COUPON_KEY = 'benzy_discount_coupon';
+      var savedAddressSelect = document.getElementById('saved-address-select');
+      var savedAddressNote = document.getElementById('saved-address-note');
+      var checkoutAddressPreviewEl = document.getElementById('checkout-address-preview');
+      var selectedAddressBadgeEl = document.getElementById('selected-address-badge');
+      var selectedAddressRecipientEl = document.getElementById('selected-address-recipient');
+      var selectedAddressContactEl = document.getElementById('selected-address-contact');
+      var selectedAddressLineEl = document.getElementById('selected-address-line');
+      var selectedAddressRegionEl = document.getElementById('selected-address-region');
+      var checkoutCouponStatusEl = document.getElementById('checkout-coupon-status');
+      var checkoutCurrencyStatusEl = document.getElementById('checkout-currency-status');
+      var savedAddresses = [];
+      var customerProfile = { name: '', email: '' };
+      var selectedDelivery = null;
+      var walletSummary = { balance: 0, currency: 'NGN' };
+      var currencySelectionSource = localStorage.getItem(CURRENCY_SOURCE_KEY) === 'manual' ? 'manual' : 'auto';
+      var checkoutContext = {
+        countryCode: '',
+        httpsDetected: window.location.protocol === 'https:' && Boolean(window.isSecureContext),
+        paystackConfigured: false,
+        paystackPublicKeyConfigured: false
+      };
+      var paystackCheckoutClient = null;
+      var paystackSession = null;
+      var paystackSessionRequestKey = '';
+      var paystackApplePayRequestKey = '';
+      var paystackApplePayReady = false;
+      var paystackApplePayMountPromise = null;
+      var paystackSessionRefreshTimer = 0;
+
+      function getCurrencyService() {
+        return window.BenzyCurrency && typeof window.BenzyCurrency === 'object'
+          ? window.BenzyCurrency
+          : null;
+      }
+
+      function getCurrencyConfig(code) {
+        var normalized = String(code || activeCurrency || 'NGN').trim().toUpperCase();
+        var service = getCurrencyService();
+        if (service && typeof service.getCurrencyConfig === 'function') {
+          return service.getCurrencyConfig(normalized);
+        }
+        return currencyConfig[normalized] || currencyConfig.NGN;
+      }
+
+      function convertPriceFromNgn(amountNgn, targetCurrency) {
+        var service = getCurrencyService();
+        if (service && typeof service.convertPrice === 'function') {
+          return roundAmount(service.convertPrice(amountNgn, targetCurrency));
+        }
+
+        var cfg = getCurrencyConfig(targetCurrency);
+        return roundAmount(Number(amountNgn || 0) * Number(cfg.rate || 1));
+      }
+
+      function convertAmountToNgn(amount, sourceCurrency) {
+        var normalized = String(sourceCurrency || 'NGN').trim().toUpperCase();
+        var service = getCurrencyService();
+        if (service && typeof service.convertAmount === 'function') {
+          return roundAmount(service.convertAmount(amount, normalized, 'NGN'));
+        }
+
+        if (normalized === 'NGN') return roundAmount(amount);
+        var cfg = currencyConfig[normalized] || currencyConfig.USD;
+        return Number(cfg.rate || 0) > 0
+          ? roundAmount(Number(amount || 0) / Number(cfg.rate))
+          : roundAmount(Number(amount || 0) * 1600);
+      }
+
+      function getItemPriceNgn(item) {
+        var explicitPriceNgn = Number(item && item.priceNgn);
+        if (Number.isFinite(explicitPriceNgn) && explicitPriceNgn >= 0) {
+          return roundAmount(explicitPriceNgn);
+        }
+
+        var directPrice = Number(item && item.price);
+        if (Number.isFinite(directPrice) && directPrice >= 0) {
+          return roundAmount(directPrice);
+        }
+
+        var priceUsd = Number(item && item.priceUsd || 0);
+        return convertAmountToNgn(priceUsd, 'USD');
+      }
+
+      function formatMoneyFromNgn(amountNgn, currencyCode) {
+        var code = currencyCode || activeCurrency;
+        var service = getCurrencyService();
+        if (service && typeof service.formatPriceFromNgn === 'function') {
+          return service.formatPriceFromNgn(amountNgn, code);
+        }
+
+        var cfg = getCurrencyConfig(code);
+        return new Intl.NumberFormat(cfg.locale, {
+          style: 'currency',
+          currency: cfg.currency,
+          maximumFractionDigits: 2
+        }).format(convertPriceFromNgn(amountNgn, code));
+      }
+
+      function getPaystackSupportedCurrencies() {
+        var service = getCurrencyService();
+        if (service && typeof service.getPaystackSupportedCurrencies === 'function') {
+          return service.getPaystackSupportedCurrencies();
+        }
+        return ['NGN'];
+      }
+
+      function getSupportedCheckoutCurrencies() {
+        var service = getCurrencyService();
+        if (service && typeof service.getSupportedCheckoutCurrencies === 'function') {
+          return service.getSupportedCheckoutCurrencies();
+        }
+        return ['NGN'];
+      }
+
+      function getDefaultCheckoutCurrency() {
+        var service = getCurrencyService();
+        if (service && typeof service.getDefaultCheckoutCurrency === 'function') {
+          return service.getDefaultCheckoutCurrency();
+        }
+        return 'NGN';
+      }
+
+      function getCheckoutCurrencySelection(paymentMethodOverride) {
+        var paymentMethod = paymentMethodOverride || getSelectedPaymentMethod();
+        var service = getCurrencyService();
+        if (service && typeof service.getCheckoutCurrencySelection === 'function') {
+          return service.getCheckoutCurrencySelection(activeCurrency, {
+            paymentMethodCode: paymentMethod
+          });
+        }
+
+        return {
+          displayCurrency: activeCurrency,
+          requestedCheckoutCurrency: activeCurrency,
+          chargeCurrency: paymentMethod === 'wallet' ? 'NGN' : activeCurrency,
+          chargeCurrencyForced: paymentMethod === 'wallet' && activeCurrency !== 'NGN',
+          chargeCurrencyMessage: paymentMethod === 'wallet' && activeCurrency !== 'NGN'
+            ? 'Wallet payments settle in NGN while prices stay in your selected display currency.'
+            : '',
+          fallbackCurrency: getDefaultCheckoutCurrency()
+        };
+      }
+
+      if (payBtnAmountEl) payBtnAmountEl.textContent = 'NGN 0';
+      if (checkoutHeroCurrencyEl) checkoutHeroCurrencyEl.textContent = getCheckoutCurrencySelection().chargeCurrency || activeCurrency;
+
+      function normalizeEmail(value) {
+        return String(value || '').trim().toLowerCase();
+      }
+
+      function getCustomerEmail() {
+        return normalizeEmail(customerProfile.email);
+      }
+
+      function getCustomerDisplayName(metaEntry) {
+        return String(
+          (metaEntry && metaEntry.recipient) ||
+          customerProfile.name ||
+          'Benzy Luxury Customer'
+        ).trim();
+      }
+
+      function normalizeCouponCode(value) {
+        return String(value || '').trim().toUpperCase();
+      }
+
+      function roundAmount(value) {
+        var amount = Number(value || 0);
+        if (!Number.isFinite(amount)) return 0;
+        return Number(amount.toFixed(2));
+      }
+
+      function readCouponState() {
+        try {
+          var parsed = JSON.parse(localStorage.getItem(COUPON_KEY) || 'null');
+          return parsed && typeof parsed === 'object' ? parsed : null;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function writeCouponState(state) {
+        if (!state || typeof state !== 'object') {
+          localStorage.removeItem(COUPON_KEY);
+          return;
+        }
+        localStorage.setItem(COUPON_KEY, JSON.stringify(state));
+      }
+
+      function clearCouponState() {
+        localStorage.removeItem(COUPON_KEY);
+      }
+
+      function setCheckoutCouponStatus(text, state) {
+        if (!checkoutCouponStatusEl) return;
+        checkoutCouponStatusEl.textContent = text || '';
+        if (state) {
+          checkoutCouponStatusEl.dataset.state = state;
+        } else {
+          delete checkoutCouponStatusEl.dataset.state;
+        }
+      }
+
+      function setCheckoutPaymentStatus(text, state) {
+        if (!checkoutPaymentStatusEl) return;
+        checkoutPaymentStatusEl.textContent = text || '';
+        if (state) {
+          checkoutPaymentStatusEl.dataset.state = state;
+        } else {
+          delete checkoutPaymentStatusEl.dataset.state;
+        }
+      }
+
+      function setCheckoutCurrencyStatus(text, state) {
+        if (!checkoutCurrencyStatusEl) return;
+        checkoutCurrencyStatusEl.textContent = text || '';
+        if (state) {
+          checkoutCurrencyStatusEl.dataset.state = state;
+        } else {
+          delete checkoutCurrencyStatusEl.dataset.state;
+        }
+      }
+
+      function normalizeCountryValue(value) {
+        var normalized = String(value || '').trim().toUpperCase();
+        if (!normalized) return '';
+        if (normalized === 'NIGERIA' || normalized === 'NGA') return 'NG';
+        return normalized;
+      }
+
+      function detectLocalCountryCode() {
+        var languages = [];
+        if (navigator.language) languages.push(navigator.language);
+        if (Array.isArray(navigator.languages)) languages = languages.concat(navigator.languages);
+
+        for (var i = 0; i < languages.length; i += 1) {
+          var match = String(languages[i] || '').match(/-([A-Za-z]{2})\b/);
+          if (match) return String(match[1]).trim().toUpperCase();
+        }
+
+        var timeZone = '';
+        try {
+          timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+        } catch (error) {
+          timeZone = '';
+        }
+
+        if (String(timeZone || '').toLowerCase() === 'africa/lagos') {
+          return 'NG';
+        }
+
+        return '';
+      }
+
+      function getDetectedCountryCode() {
+        var addressCountry = normalizeCountryValue(selectedDelivery && selectedDelivery.country);
+        if (addressCountry) return addressCountry;
+
+        var requestCountry = normalizeCountryValue(checkoutContext.countryCode);
+        if (requestCountry) return requestCountry;
+
+        return detectLocalCountryCode();
+      }
+
+      function getAutoCheckoutCurrency() {
+        var service = getCurrencyService();
+        if (service && typeof service.getDetectedCheckoutCurrency === 'function') {
+          var detectedCurrency = String(service.getDetectedCheckoutCurrency() || '').trim().toUpperCase();
+          if (currencyConfig[detectedCurrency]) return detectedCurrency;
+        }
+        return getDetectedCountryCode() === 'NG' ? 'NGN' : 'USD';
+      }
+
+      function setSelectedCurrencyValue(nextCurrency, source) {
+        var normalized = String(nextCurrency || '').trim().toUpperCase();
+        if (!currencyConfig[normalized]) return;
+
+        activeCurrency = normalized;
+        currencySelectionSource = source === 'manual' ? 'manual' : 'auto';
+        localStorage.setItem(CURRENCY_SOURCE_KEY, currencySelectionSource);
+
+        var service = getCurrencyService();
+        if (service && typeof service.setSelectedCurrency === 'function') {
+          service.setSelectedCurrency(normalized);
+        } else {
+          localStorage.setItem(CURRENCY_KEY, normalized);
+        }
+
+        if (currencySelect) currencySelect.value = normalized;
+        syncPaystackCurrencyAvailability();
+        syncCheckoutCurrencyNotice();
+      }
+
+      function syncAutoCheckoutCurrency(force) {
+        if (!force && currencySelectionSource === 'manual') return;
+        var previousCurrency = activeCurrency;
+        setSelectedCurrencyValue(getAutoCheckoutCurrency(), 'auto');
+        if (previousCurrency !== activeCurrency) {
+          renderCheckoutItems();
+          return;
+        }
+        syncCheckoutCurrencyNotice();
+      }
+
+      function syncCheckoutCurrencyNotice(paymentMethodOverride, explicitMessage) {
+        var paymentMethod = paymentMethodOverride || getSelectedPaymentMethod();
+        var selection = getCheckoutCurrencySelection(paymentMethod);
+        var chargeCurrency = paymentMethod === 'wallet'
+          ? 'NGN'
+          : (selection.chargeCurrency || selection.fallbackCurrency || activeCurrency);
+
+        if (checkoutHeroCurrencyEl) checkoutHeroCurrencyEl.textContent = chargeCurrency || activeCurrency;
+
+        if (explicitMessage) {
+          setCheckoutCurrencyStatus(explicitMessage, 'info');
+          return selection;
+        }
+
+        if (paymentMethod === 'wallet') {
+          setCheckoutCurrencyStatus(
+            activeCurrency === 'NGN'
+              ? 'Wallet payments settle in NGN.'
+              : 'Wallet payments settle in NGN while prices remain in your selected display currency.',
+            'info'
+          );
+          return selection;
+        }
+
+        if (selection.chargeCurrencyMessage) {
+          setCheckoutCurrencyStatus(selection.chargeCurrencyMessage, 'info');
+          return selection;
+        }
+
+        setCheckoutCurrencyStatus('', '');
+        return selection;
+      }
+
+      function getValidatedCouponForEmail(email) {
+        var state = readCouponState();
+        var normalizedEmail = normalizeEmail(email);
+        if (!state || state.status !== 'validated' || !state.code) return null;
+        if (normalizeEmail(state.email) !== normalizedEmail) return null;
+        return state;
+      }
+
+      function shouldReturnApiResponse(response, data) {
+        if (!response) return false;
+        if (response.ok) return true;
+        if ([400, 401, 403, 409, 422].includes(response.status)) return true;
+        if (data && typeof data.message === 'string' && data.message.trim()) return true;
+        return false;
+      }
+
+      async function postToApi(path, body) {
+        for (var i = 0; i < API_BASES.length; i += 1) {
+          try {
+            var headers = { 'Content-Type': 'application/json' };
+            var token = getToken();
+            if (token) headers.Authorization = 'Bearer ' + token;
+            var response = await fetch(API_BASES[i] + path, {
+              method: 'POST',
+              headers: headers,
+              body: JSON.stringify(body || {})
+            });
+            var data = await response.json().catch(function() { return {}; });
+            if (shouldReturnApiResponse(response, data)) {
+              return { response: response, data: data };
+            }
+          } catch (e) {
+            // Try the next API base.
+          }
+        }
+
+        throw new Error('Unable to reach the server.');
+      }
+
+      async function getFromApi(path) {
+        for (var i = 0; i < API_BASES.length; i += 1) {
+          try {
+            var headers = {};
+            var token = getToken();
+            if (token) headers.Authorization = 'Bearer ' + token;
+            var response = await fetch(API_BASES[i] + path, {
+              method: 'GET',
+              headers: headers
+            });
+            var data = await response.json().catch(function() { return {}; });
+            if (shouldReturnApiResponse(response, data)) {
+              return { response: response, data: data };
+            }
+          } catch (e) {
+            // Try the next API base.
+          }
+        }
+
+        throw new Error('Unable to reach the server.');
+      }
+
+      function getPaystackClient() {
+        var Factory = window.PaystackPop || window.Paystack;
+        if (!Factory) {
+          throw new Error('Paystack InlineJS v2 failed to load.');
+        }
+
+        if (!paystackCheckoutClient) {
+          paystackCheckoutClient = new Factory();
+        }
+
+        return paystackCheckoutClient;
+      }
+
+      function isApplePayBrowserSupported() {
+        if (typeof window.ApplePaySession === 'undefined') return false;
+        var userAgent = String(navigator.userAgent || '');
+        var isSafari = /Safari/i.test(userAgent) && !/Chrome|CriOS|Edg|OPR|Firefox|FxiOS/i.test(userAgent);
+        var isIOS = /iPhone|iPad|iPod/i.test(userAgent);
+        var canMakePayments = true;
+        if (typeof window.ApplePaySession.canMakePayments === 'function') {
+          canMakePayments = window.ApplePaySession.canMakePayments();
+        }
+
+        return Boolean(canMakePayments && (isSafari || isIOS));
+      }
+
+      function canAttemptApplePay() {
+        return Boolean(
+          checkoutContext.httpsDetected
+          && checkoutContext.paystackPublicKeyConfigured
+          && isApplePayBrowserSupported()
+        );
+      }
+
+      function resetApplePayState(message, status) {
+        paystackApplePayReady = false;
+        paystackApplePayRequestKey = '';
+        paystackApplePayMountPromise = null;
+        if (applePayContainerEl) {
+          applePayContainerEl.hidden = true;
+          applePayContainerEl.innerHTML = '';
+        }
+        if (paystackOtherChannelsBtn) paystackOtherChannelsBtn.hidden = true;
+        if (applePayPanelEl) applePayPanelEl.hidden = true;
+        if (message) {
+          setCheckoutPaymentStatus(message, status || 'pending');
+        }
+      }
+
+      function getCheckoutDraft(paymentMethodOverride) {
+        var delivery = selectedDelivery;
+        var items = loadCart();
+        var paymentMethod = paymentMethodOverride || getSelectedPaymentMethod();
+
+        if (!items.length || !getToken() || !delivery || !delivery.address || !delivery.city || !delivery.state) {
+          return null;
+        }
+
+        var name = String(delivery.name || customerProfile.name || 'Benzy Luxury Customer').trim();
+        var phone = String(delivery.phone || '').trim();
+        var email = normalizeEmail(delivery.email || customerProfile.email);
+        if (!email) return null;
+
+        var totals = calculateCheckoutTotals(items, email);
+        return {
+          delivery: delivery,
+          items: items,
+          name: name,
+          phone: phone,
+          email: email,
+          paymentMethod: paymentMethod,
+          totals: totals,
+          payload: buildCheckoutRequest(paymentMethod, items, delivery, email, name, phone, totals)
+        };
+      }
+
+      function buildPaystackSessionKey(payload) {
+        var safePayload = payload && typeof payload === 'object' ? payload : {};
+        return JSON.stringify({
+          orderId: String(safePayload.orderId || '').trim(),
+          paymentMethod: String(safePayload.paymentMethod || '').trim(),
+          email: String(safePayload.customer && safePayload.customer.email || '').trim().toLowerCase(),
+          currency: String(safePayload.currency || '').trim().toUpperCase(),
+          checkoutCurrency: String(safePayload.checkoutCurrency || safePayload.settlementCurrency || '').trim().toUpperCase(),
+          totalNgn: Number(safePayload.totalNgn || safePayload.totalNaira || 0),
+          discountCode: String(safePayload.discountCode || '').trim().toUpperCase(),
+          shippingAddress: String(safePayload.shippingAddress || '').trim(),
+          items: Array.isArray(safePayload.items)
+            ? safePayload.items.map(function(item) {
+              return {
+                id: String(item && (item.id || item.productId) || '').trim(),
+                quantity: Number(item && (item.quantity || item.qty) || 0),
+                priceNgn: Number(item && (item.priceNgn || item.price) || 0),
+                size: String(item && item.size || '').trim(),
+                color: String(item && item.color || '').trim()
+              };
+            })
+            : []
+        });
+      }
+
+      async function requestPaystackSession(payload, force) {
+        var requestKey = buildPaystackSessionKey(payload);
+        if (!force && paystackSession && paystackSessionRequestKey === requestKey) {
+          return paystackSession;
+        }
+
+        var nextPayload = JSON.parse(JSON.stringify(payload || {}));
+        if (paystackSession && paystackSession.orderId) {
+          nextPayload.orderId = paystackSession.orderId;
+        }
+
+        var result = await postToApi('/api/checkout/paystack/initialize', nextPayload);
+        if (!result.response.ok || !result.data || !result.data.reference || !(result.data.publicKey || result.data.key)) {
+          throw new Error(String(result.data && result.data.message || 'Unable to prepare Paystack checkout.'));
+        }
+
+        paystackSession = {
+          orderId: String(result.data.orderId || '').trim(),
+          reference: String(result.data.reference || '').trim(),
+          publicKey: String(result.data.publicKey || result.data.key || '').trim(),
+          email: String(result.data.email || nextPayload.customer && nextPayload.customer.email || '').trim(),
+          amountSubunit: Number(result.data.amount || 0),
+          displayAmount: Number(result.data.displayAmount || 0),
+          displayCurrency: String(result.data.displayCurrency || nextPayload.selectedDisplayCurrency || activeCurrency || 'NGN').trim().toUpperCase(),
+          checkoutCurrency: String(result.data.checkoutCurrency || nextPayload.checkoutCurrency || nextPayload.currency || 'NGN').trim().toUpperCase(),
+          currency: String(result.data.currency || nextPayload.currency || 'NGN').trim().toUpperCase(),
+          chargeCurrency: String(result.data.chargeCurrency || result.data.currency || nextPayload.checkoutCurrency || nextPayload.currency || 'NGN').trim().toUpperCase(),
+          chargeCurrencyForced: Boolean(result.data.chargeCurrencyForced),
+          chargeCurrencyMessage: String(result.data.chargeCurrencyMessage || '').trim(),
+          callbackUrl: String(result.data.callbackUrl || '').trim()
+        };
+        paystackSessionRequestKey = requestKey;
+        if (paystackSession.chargeCurrencyMessage) {
+          syncCheckoutCurrencyNotice(nextPayload.paymentMethod, paystackSession.chargeCurrencyMessage);
+        } else {
+          syncCheckoutCurrencyNotice(nextPayload.paymentMethod);
+        }
+        return paystackSession;
+      }
+
+      async function verifyPaystackOrder(session, response) {
+        var reference = String(response && response.reference || session && session.reference || '').trim();
+        if (!reference) {
+          throw new Error('Missing Paystack transaction reference.');
+        }
+
+        setCheckoutPaymentStatus('Verifying your payment with Paystack...', 'pending');
+        var verification = await postToApi('/api/payments/paystack/verify', {
+          reference: reference,
+          orderId: session && session.orderId || ''
+        });
+
+        if (!verification.response.ok || !verification.data || !verification.data.verified || !verification.data.order) {
+          throw new Error(String(verification.data && verification.data.message || 'Payment verification failed.'));
+        }
+
+        clearSuccessfulCheckoutState();
+        setCheckoutPaymentStatus('Payment verified successfully.', 'success');
+
+        var order = verification.data.order;
+        var next = 'PaymentSuccess.html?mode=paystack';
+        if (order && order.orderId) next += '&orderId=' + encodeURIComponent(order.orderId);
+        next += '&reference=' + encodeURIComponent(reference);
+        window.location.href = next;
+      }
+
+      function getMountedApplePayElement(elements) {
+        if (!elements || typeof elements !== 'object') return null;
+        return elements.applePay || elements.apple_pay || null;
+      }
+
+      async function mountApplePayButton(force) {
+        if (!canAttemptApplePay()) {
+          resetApplePayState();
+          return null;
+        }
+
+        var paymentMethod = getSelectedPaymentMethod();
+        if (paymentMethod !== 'card' && paymentMethod !== 'paystack') {
+          resetApplePayState();
+          return null;
+        }
+
+        var draft = getCheckoutDraft(paymentMethod);
+        if (!draft) {
+          resetApplePayState();
+          return null;
+        }
+
+        var requestKey = buildPaystackSessionKey(draft.payload);
+        if (!force && paystackApplePayReady && paystackApplePayRequestKey === requestKey) {
+          return paystackSession;
+        }
+
+        var session = await requestPaystackSession(draft.payload, force);
+        if (!session || !session.publicKey || !session.reference) {
+          resetApplePayState();
+          return null;
+        }
+
+        if (applePayContainerEl) {
+          applePayContainerEl.hidden = false;
+          applePayContainerEl.innerHTML = '';
+        }
+        if (applePayPanelEl) applePayPanelEl.hidden = false;
+        if (applePaySupportCopyEl) {
+          applePaySupportCopyEl.textContent = 'Apple Pay is available on supported Safari and iOS devices for ' + session.currency + ' checkout.';
+        }
+
+        setCheckoutPaymentStatus('Preparing Apple Pay...', 'pending');
+        var paystackPop = getPaystackClient();
+        paystackApplePayMountPromise = paystackPop.paymentRequest({
+          key: session.publicKey,
+          email: session.email,
+          amount: session.amountSubunit,
+          currency: session.currency,
+          ref: session.reference,
+          container: 'paystack-apple-pay',
+          loadPaystackCheckoutButton: 'paystack-other-channels',
+          style: {
+            theme: 'dark',
+            applePay: {
+              margin: '10px',
+              padding: '10px',
+              width: '100%',
+              borderRadius: '8px',
+              type: 'pay',
+              locale: 'en'
+            }
+          },
+          onSuccess: function(response) {
+            void verifyPaystackOrder(session, response).catch(function(error) {
+              console.error('Apple Pay verification error:', error);
+              setCheckoutPaymentStatus(error && error.message ? error.message : 'Unable to verify Apple Pay payment.', 'error');
+            });
+          },
+          onError: function(error) {
+            console.error('Apple Pay error:', error);
+            setCheckoutPaymentStatus(
+              error && error.message ? error.message : 'Apple Pay could not be started on this device.',
+              'error'
+            );
+          },
+          onCancel: function() {
+            setCheckoutPaymentStatus('Apple Pay was cancelled.', 'pending');
+          },
+          onElementsMount: function(elements) {
+            var mountedElement = getMountedApplePayElement(elements);
+            var mounted = Boolean(mountedElement);
+            paystackApplePayReady = mounted;
+            paystackApplePayRequestKey = mounted ? requestKey : '';
+            if (applePayPanelEl) applePayPanelEl.hidden = !mounted;
+            if (applePayContainerEl) applePayContainerEl.hidden = !mounted;
+            if (paystackOtherChannelsBtn) paystackOtherChannelsBtn.hidden = !mounted;
+            if (mounted) {
+              setCheckoutPaymentStatus('Apple Pay is ready on this device.', 'success');
+            } else {
+              resetApplePayState();
+            }
+          }
+        });
+
+        return paystackApplePayMountPromise;
+      }
+
+      function scheduleApplePayRefresh(force) {
+        if (paystackSessionRefreshTimer) {
+          window.clearTimeout(paystackSessionRefreshTimer);
+          paystackSessionRefreshTimer = 0;
+        }
+
+        paystackSessionRefreshTimer = window.setTimeout(function() {
+          void mountApplePayButton(Boolean(force)).catch(function(error) {
+            console.error('Apple Pay setup error:', error);
+            resetApplePayState();
+            if (error && error.message) {
+              setCheckoutPaymentStatus(error.message, 'error');
+            }
+          });
+        }, force ? 0 : 250);
+      }
+
+      async function loadCheckoutContext() {
+        try {
+          var service = getCurrencyService();
+          if (service && typeof service.getCheckoutContext === 'function') {
+            var nextContext = await service.getCheckoutContext();
+            checkoutContext = {
+              countryCode: String(nextContext.countryCode || '').trim().toUpperCase(),
+              httpsDetected: Boolean(nextContext.httpsDetected),
+              paystackConfigured: Boolean(nextContext.paystackConfigured),
+              paystackPublicKeyConfigured: Boolean(nextContext.paystackPublicKeyConfigured)
+            };
+            syncAutoCheckoutCurrency();
+            syncPaystackCurrencyAvailability();
+            syncCheckoutCurrencyNotice();
+            scheduleApplePayRefresh(true);
+            return;
+          }
+        } catch (error) {
+          // Ignore context lookup errors and keep local fallbacks.
+        }
+
+        syncAutoCheckoutCurrency();
+        syncPaystackCurrencyAvailability();
+        syncCheckoutCurrencyNotice();
+      }
+      
+      if (currencySelect) {
+        currencySelect.value = activeCurrency;
+        currencySelect.addEventListener('change', function() {
+          setSelectedCurrencyValue(this.value, 'manual');
+          renderCheckoutItems();
+          scheduleApplePayRefresh(true);
+        });
+      }
+      
+      function loadCart() {
+        if (window.BenzyCartStore && typeof window.BenzyCartStore.getCachedCart === 'function') {
+          return window.BenzyCartStore.getCachedCart();
+        }
+        try {
+          return JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+        } catch {
+          return [];
+        }
+      }
+
+      function cloneShippingSettings(value) {
+        return JSON.parse(JSON.stringify(value || DEFAULT_SHIPPING_SETTINGS));
+      }
+
+      function normalizeStoredShippingSettings(payload) {
+        var base = cloneShippingSettings(DEFAULT_SHIPPING_SETTINGS);
+        var source = payload && typeof payload === 'object' ? payload : {};
+        var shipping = source.shipping && typeof source.shipping === 'object' ? source.shipping : {};
+        var deliveryTimes = shipping.deliveryTimes && typeof shipping.deliveryTimes === 'object' ? shipping.deliveryTimes : {};
+        var shippingFeeNgn = Number(source.shippingFeeNgn);
+        var defaultDomesticFeeNgn = Number(shipping.defaultDomesticFeeNgn);
+        var lagosFeeNgn = Number(shipping.lagosFeeNgn);
+        var otherStatesFeeNgn = Number(shipping.otherStatesFeeNgn);
+        var internationalFeeNgn = Number(shipping.internationalFeeNgn);
+        var freeShippingThresholdNgn = Number(shipping.freeShippingThresholdNgn);
+
+        if (Number.isFinite(shippingFeeNgn) && shippingFeeNgn >= 0) {
+          base.shippingFeeNgn = shippingFeeNgn;
+          base.shipping.defaultDomesticFeeNgn = shippingFeeNgn;
+        }
+
+        if (Number.isFinite(defaultDomesticFeeNgn) && defaultDomesticFeeNgn >= 0) {
+          base.shipping.defaultDomesticFeeNgn = defaultDomesticFeeNgn;
+          base.shippingFeeNgn = defaultDomesticFeeNgn;
+        }
+
+        if (Number.isFinite(lagosFeeNgn) && lagosFeeNgn >= 0) base.shipping.lagosFeeNgn = lagosFeeNgn;
+        if (Number.isFinite(otherStatesFeeNgn) && otherStatesFeeNgn >= 0) base.shipping.otherStatesFeeNgn = otherStatesFeeNgn;
+        if (Number.isFinite(internationalFeeNgn) && internationalFeeNgn >= 0) base.shipping.internationalFeeNgn = internationalFeeNgn;
+        if (Number.isFinite(freeShippingThresholdNgn) && freeShippingThresholdNgn >= 0) {
+          base.shipping.freeShippingThresholdNgn = freeShippingThresholdNgn;
+        }
+
+        if (deliveryTimes.lagos) base.shipping.deliveryTimes.lagos = String(deliveryTimes.lagos).trim();
+        if (deliveryTimes.otherStates) base.shipping.deliveryTimes.otherStates = String(deliveryTimes.otherStates).trim();
+        if (deliveryTimes.international) base.shipping.deliveryTimes.international = String(deliveryTimes.international).trim();
+        if (source.resolved && typeof source.resolved === 'object') base.resolved = source.resolved;
+        return base;
+      }
+
+      function getStoredShippingSettings() {
+        try {
+          var parsed = JSON.parse(localStorage.getItem(SHIPPING_SETTINGS_KEY) || 'null');
+          if (parsed && typeof parsed === 'object') {
+            return normalizeStoredShippingSettings(parsed);
+          }
+        } catch (error) {
+          // Fall back to legacy storage below.
+        }
+
+        var legacyFee = parseFloat(localStorage.getItem(SHIPPING_KEY) || String(DEFAULT_SHIPPING_NGN));
+        return normalizeStoredShippingSettings({
+          shippingFeeNgn: Number.isFinite(legacyFee) && legacyFee >= 0 ? legacyFee : DEFAULT_SHIPPING_NGN
+        });
+      }
+
+      function setStoredShippingSettings(payload) {
+        var normalized = normalizeStoredShippingSettings(payload);
+        localStorage.setItem(SHIPPING_SETTINGS_KEY, JSON.stringify(normalized));
+        localStorage.setItem(SHIPPING_KEY, String(normalized.shippingFeeNgn));
+        return normalized;
+      }
+
+      function getShippingFeeNgn() {
+        return getStoredShippingSettings().shippingFeeNgn;
+      }
+
+      function resolveShippingQuote(subtotalNgn) {
+        var settings = getStoredShippingSettings();
+        var shipping = settings.shipping || DEFAULT_SHIPPING_SETTINGS.shipping;
+        var safeSubtotalNgn = Number.isFinite(subtotalNgn) && subtotalNgn > 0 ? subtotalNgn : 0;
+        var state = String(selectedDelivery && selectedDelivery.state || '').trim().toLowerCase();
+        var countryCode = normalizeCountryValue(selectedDelivery && selectedDelivery.country);
+        var thresholdNgn = Number(shipping.freeShippingThresholdNgn || 0);
+        var zone = 'domestic';
+        var feeNgn = Number(shipping.defaultDomesticFeeNgn || settings.shippingFeeNgn || DEFAULT_SHIPPING_NGN);
+        var deliveryTime = String(shipping.deliveryTimes && shipping.deliveryTimes.otherStates || '').trim()
+          || DEFAULT_SHIPPING_SETTINGS.shipping.deliveryTimes.otherStates;
+
+        if (countryCode && countryCode !== 'NG') {
+          zone = 'international';
+          feeNgn = Number(shipping.internationalFeeNgn || DEFAULT_SHIPPING_SETTINGS.shipping.internationalFeeNgn);
+          deliveryTime = String(shipping.deliveryTimes && shipping.deliveryTimes.international || '').trim()
+            || DEFAULT_SHIPPING_SETTINGS.shipping.deliveryTimes.international;
+        } else if (state.indexOf('lagos') !== -1) {
+          zone = 'lagos';
+          feeNgn = Number(shipping.lagosFeeNgn || DEFAULT_SHIPPING_SETTINGS.shipping.lagosFeeNgn);
+          deliveryTime = String(shipping.deliveryTimes && shipping.deliveryTimes.lagos || '').trim()
+            || DEFAULT_SHIPPING_SETTINGS.shipping.deliveryTimes.lagos;
+        } else if (state) {
+          zone = 'other_states';
+          feeNgn = Number(shipping.otherStatesFeeNgn || shipping.defaultDomesticFeeNgn || DEFAULT_SHIPPING_SETTINGS.shipping.otherStatesFeeNgn);
+          deliveryTime = String(shipping.deliveryTimes && shipping.deliveryTimes.otherStates || '').trim()
+            || DEFAULT_SHIPPING_SETTINGS.shipping.deliveryTimes.otherStates;
+        }
+
+        var isFree = thresholdNgn > 0 && safeSubtotalNgn >= thresholdNgn;
+
+        return {
+          zone: zone,
+          feeNgn: isFree ? 0 : roundAmount(Number.isFinite(feeNgn) && feeNgn >= 0 ? feeNgn : DEFAULT_SHIPPING_NGN),
+          baseFeeNgn: roundAmount(Number.isFinite(feeNgn) && feeNgn >= 0 ? feeNgn : DEFAULT_SHIPPING_NGN),
+          deliveryTime: deliveryTime,
+          isFree: isFree,
+          freeShippingThresholdNgn: thresholdNgn,
+          subtotalNgn: safeSubtotalNgn
+        };
+      }
+
+      function renderShippingNote(quote) {
+        if (!checkoutShippingNoteEl) return;
+
+        var shippingQuote = quote && typeof quote === 'object' ? quote : resolveShippingQuote(0);
+        var zoneLabel = 'Nigeria';
+        if (shippingQuote.zone === 'lagos') zoneLabel = 'Lagos';
+        if (shippingQuote.zone === 'other_states') zoneLabel = 'other states';
+        if (shippingQuote.zone === 'international') zoneLabel = 'international orders';
+
+        if (!selectedDelivery) {
+          checkoutShippingNoteEl.textContent = shippingQuote.freeShippingThresholdNgn > 0
+            ? 'Shipping updates when you choose a saved delivery address. Free shipping applies above '
+              + formatCurrency(shippingQuote.freeShippingThresholdNgn) + '.'
+            : 'Shipping updates when you choose a saved delivery address.';
+          return;
+        }
+
+        if (shippingQuote.isFree) {
+          checkoutShippingNoteEl.textContent = 'Free shipping unlocked for ' + zoneLabel
+            + '. Estimated delivery: ' + String(shippingQuote.deliveryTime || 'We will confirm after payment') + '.';
+          return;
+        }
+
+        checkoutShippingNoteEl.textContent = 'Shipping to ' + zoneLabel + ' is '
+          + formatCurrency(shippingQuote.feeNgn) + '. Estimated delivery: '
+          + String(shippingQuote.deliveryTime || 'We will confirm after payment') + '.';
+      }
+
+      function loadShippingFeeFromApi() {
+        return (async function() {
+          for (var i = 0; i < API_BASES.length; i += 1) {
+            try {
+              var response = await fetch(API_BASES[i] + '/api/settings/shipping');
+              if (!response.ok) continue;
+              var data = await response.json().catch(function() { return null; });
+              if (!data || typeof data !== 'object') continue;
+              setStoredShippingSettings(data);
+              renderCheckoutItems();
+              return data;
+            } catch (error) {
+              // Try the next configured API base.
+            }
+          }
+          return null;
+        })();
+      }
+      
+      function formatCurrency(amountNgn) {
+        return formatMoneyFromNgn(amountNgn, activeCurrency);
+      }
+
+      function formatCurrencyCodeAmount(amount, code) {
+        var normalized = String(code || 'NGN').trim().toUpperCase();
+        var service = getCurrencyService();
+        if (service && typeof service.formatCurrency === 'function') {
+          return service.formatCurrency(amount, normalized);
+        }
+
+        var cfg = getCurrencyConfig(normalized);
+        return new Intl.NumberFormat(cfg.locale, {
+          style: 'currency',
+          currency: cfg.currency,
+          maximumFractionDigits: 2
+        }).format(Number(amount || 0));
+      }
+
+      function getDisplayAmountValue(amountUsd, amountNgn, currencyCode) {
+        var code = currencyCode || activeCurrency;
+        return convertPriceFromNgn(amountNgn, code);
+      }
+
+      function formatDisplayAmount(amountUsd, amountNgn, currencyCode) {
+        var code = currencyCode || activeCurrency;
+        return formatMoneyFromNgn(amountNgn, code);
+      }
+
+      function calculateCheckoutTotals(items, email) {
+        var safeItems = Array.isArray(items) ? items : [];
+        var subtotalNgn = 0;
+        var quantityCount = 0;
+        for (var i = 0; i < safeItems.length; i += 1) {
+          var item = safeItems[i];
+          var priceNgn = getItemPriceNgn(item);
+          var qty = parseInt(item && item.qty, 10) || 1;
+          quantityCount += qty;
+          subtotalNgn += priceNgn * qty;
+        }
+
+        subtotalNgn = roundAmount(subtotalNgn);
+        var coupon = getValidatedCouponForEmail(email);
+        var discountNgn = coupon ? roundAmount(subtotalNgn * 0.1) : 0;
+        var discountedSubtotalNgn = roundAmount(Math.max(0, subtotalNgn - discountNgn));
+        var shippingQuote = resolveShippingQuote(discountedSubtotalNgn);
+        var hasItems = safeItems.length > 0 && quantityCount > 0;
+        var shippingNgn = hasItems ? roundAmount(shippingQuote.feeNgn) : 0;
+        var taxNgn = roundAmount(discountedSubtotalNgn * TAX_RATE);
+        var totalNgn = roundAmount(discountedSubtotalNgn + taxNgn + shippingNgn);
+
+        return {
+          itemCount: safeItems.length,
+          quantityCount: quantityCount,
+          subtotalNgn: subtotalNgn,
+          shippingNgn: shippingNgn,
+          discountNgn: discountNgn,
+          discountedSubtotalNgn: discountedSubtotalNgn,
+          taxNgn: taxNgn,
+          totalNgn: totalNgn,
+          coupon: coupon,
+          shippingQuote: hasItems ? shippingQuote : Object.assign({}, shippingQuote, {
+            feeNgn: 0,
+            isFree: true
+          }),
+          deliveryTime: hasItems ? shippingQuote.deliveryTime : ''
+        };
+      }
+
+      function updateTotals(totals) {
+        var summary = totals || calculateCheckoutTotals(loadCart(), getCustomerEmail());
+        var hasDiscount = summary.discountNgn > 0;
+
+        if (subtotalLabelEl) subtotalLabelEl.textContent = hasDiscount ? 'Original subtotal' : 'Subtotal';
+        subtotalEl.textContent = formatDisplayAmount(0, summary.subtotalNgn);
+        if (discountEl) discountEl.textContent = hasDiscount ? '-' + formatDisplayAmount(0, summary.discountNgn) : formatDisplayAmount(0, 0);
+        if (discountRowEl) discountRowEl.hidden = !hasDiscount;
+        if (balanceEl) balanceEl.textContent = hasDiscount ? formatDisplayAmount(0, summary.discountedSubtotalNgn) : formatDisplayAmount(0, 0);
+        if (balanceRowEl) balanceRowEl.hidden = !hasDiscount;
+        if (taxEl) taxEl.textContent = formatDisplayAmount(0, summary.taxNgn);
+        if (shippingEl) shippingEl.textContent = formatDisplayAmount(0, summary.shippingNgn);
+        if (sidebarShippingEl) sidebarShippingEl.textContent = formatDisplayAmount(0, summary.shippingNgn);
+        totalEl.textContent = formatDisplayAmount(0, summary.totalNgn);
+        if (sidebarSubtotalLabelEl) sidebarSubtotalLabelEl.textContent = hasDiscount ? 'Original subtotal' : 'Subtotal';
+        sidebarSubtotalEl.textContent = formatDisplayAmount(0, summary.subtotalNgn);
+        if (sidebarDiscountEl) sidebarDiscountEl.textContent = hasDiscount ? '-' + formatDisplayAmount(0, summary.discountNgn) : formatDisplayAmount(0, 0);
+        if (sidebarDiscountRowEl) sidebarDiscountRowEl.hidden = !hasDiscount;
+        if (sidebarBalanceEl) sidebarBalanceEl.textContent = hasDiscount ? formatDisplayAmount(0, summary.discountedSubtotalNgn) : formatDisplayAmount(0, 0);
+        if (sidebarBalanceRowEl) sidebarBalanceRowEl.hidden = !hasDiscount;
+        if (sidebarTaxEl) sidebarTaxEl.textContent = formatDisplayAmount(0, summary.taxNgn);
+        sidebarTotalEl.textContent = formatDisplayAmount(0, summary.totalNgn);
+        payBtnAmountEl.textContent = formatDisplayAmount(0, summary.totalNgn);
+        if (checkoutHeroShippingEl) checkoutHeroShippingEl.textContent = formatDisplayAmount(0, summary.shippingNgn);
+        if (payNowBtn) payNowBtn.setAttribute('aria-label', 'Pay now ' + formatDisplayAmount(0, summary.totalNgn));
+        renderShippingNote(summary.shippingQuote);
+        syncWalletPaymentAvailability(summary);
+        syncCheckoutCurrencyNotice();
+
+        if (!summary.coupon) {
+          if (readCouponState() && readCouponState().code && !getCustomerEmail()) {
+            setCheckoutCouponStatus('Your saved code will be checked once an email is available.', 'info');
+          } else if (!readCouponState() || !readCouponState().code) {
+            setCheckoutCouponStatus('', '');
+          }
+          return;
+        }
+
+        setCheckoutCouponStatus(
+          'Coupon applied. Your 10% first-order discount is included in the total.',
+          'success'
+        );
+      }
+
+      async function validateStoredCouponForEmail(email) {
+        var normalizedEmail = normalizeEmail(email);
+        var state = readCouponState();
+        var couponCode = normalizeCouponCode(state && state.code);
+
+        if (!couponCode) {
+          setCheckoutCouponStatus('', '');
+          renderCheckoutItems();
+          return null;
+        }
+
+        if (!getToken()) {
+          setCheckoutCouponStatus('Log in to use your subscriber discount.', 'error');
+          renderCheckoutItems();
+          return null;
+        }
+
+        if (!normalizedEmail) {
+          setCheckoutCouponStatus('Add the same email as your logged-in account to use your subscriber discount.', 'info');
+          renderCheckoutItems();
+          return null;
+        }
+
+        var existingCoupon = getValidatedCouponForEmail(normalizedEmail);
+        if (existingCoupon) {
+          setCheckoutCouponStatus('Coupon applied. Your 10% first-order discount is included in the total.', 'success');
+          renderCheckoutItems();
+          return existingCoupon;
+        }
+
+        setCheckoutCouponStatus('Checking coupon...', 'pending');
+
+        try {
+          var result = await postToApi('/api/coupons/validate', {
+            email: normalizedEmail,
+            couponCode: couponCode
+          });
+
+          if (!result.response.ok || !result.data || !result.data.valid) {
+            writeCouponState({
+              code: couponCode,
+              email: '',
+              status: 'saved',
+              source: String(state && state.source || 'footer'),
+              discountPercent: Number(state && state.discountPercent || 10),
+              checkedAt: new Date().toISOString()
+            });
+            setCheckoutCouponStatus(String(result.data && result.data.message || 'Unable to apply coupon.'), 'error');
+            renderCheckoutItems();
+            return null;
+          }
+
+          var nextState = {
+            code: couponCode,
+            email: normalizedEmail,
+            status: 'validated',
+            source: String(result.data.source || 'footer'),
+            discountPercent: Number(result.data.discountPercent || 10),
+            validatedAt: new Date().toISOString()
+          };
+          writeCouponState(nextState);
+          setCheckoutCouponStatus('Coupon applied. Your 10% first-order discount is included in the total.', 'success');
+          renderCheckoutItems();
+          return nextState;
+        } catch (error) {
+          setCheckoutCouponStatus('We could not verify your coupon right now. Please try again before paying.', 'error');
+          renderCheckoutItems();
+          return null;
+        }
+      }
+
+      function getToken() {
+        return localStorage.getItem(TOKEN_KEY) || '';
+      }
+
+      function decodeTokenPayload(token) {
+        if (!token) return {};
+        try {
+          var payloadPart = token.split('.')[1] || '';
+          if (!payloadPart) return {};
+          var base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
+          var padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=');
+          return JSON.parse(atob(padded)) || {};
+        } catch (e) {
+          return {};
+        }
+      }
+
+      function normalizeEmailKey(value) {
+        return String(value || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '_');
+      }
+
+      function addressMetaKey(email) {
+        return 'benzy_address_meta_' + normalizeEmailKey(email);
+      }
+
+      function buildAddressKey(address) {
+        var parts = [
+          address && address.line1,
+          address && address.city,
+          address && address.state,
+          address && address.country,
+          address && address.phone
+        ].map(function(value) { return String(value || '').trim().toLowerCase(); });
+        if (!parts.some(Boolean)) return '';
+        return parts.join('|');
+      }
+
+      function readAddressMeta(email) {
+        if (!email) return {};
+        try {
+          var parsed = JSON.parse(localStorage.getItem(addressMetaKey(email)) || '{}');
+          return parsed && typeof parsed === 'object' ? parsed : {};
+        } catch (e) {
+          return {};
+        }
+      }
+
+      function renderSelectedAddressPreview(delivery) {
+        if (!checkoutAddressPreviewEl) return;
+
+        if (!delivery) {
+          checkoutAddressPreviewEl.hidden = true;
+          return;
+        }
+
+        checkoutAddressPreviewEl.hidden = false;
+        if (selectedAddressBadgeEl) selectedAddressBadgeEl.textContent = delivery.label || 'Saved';
+        if (selectedAddressRecipientEl) selectedAddressRecipientEl.textContent = delivery.name || 'Benzy Luxury Customer';
+        if (selectedAddressContactEl) {
+          selectedAddressContactEl.textContent = [delivery.phone, delivery.email].filter(Boolean).join('  •  ') || 'No contact details';
+        }
+        if (selectedAddressLineEl) selectedAddressLineEl.textContent = delivery.address || 'No street address';
+        if (selectedAddressRegionEl) {
+          selectedAddressRegionEl.textContent = [delivery.city, delivery.state, delivery.zip].filter(Boolean).join(', ') || 'No city or state';
+        }
+      }
+
+      function buildSelectedDelivery(address, metaEntry) {
+        if (!address) return null;
+        return {
+          label: String((metaEntry && metaEntry.label) || (address.isDefault ? 'Default Address' : 'Saved Address')).trim(),
+          name: getCustomerDisplayName(metaEntry),
+          phone: String(address.phone || '').trim(),
+          email: getCustomerEmail(),
+          address: String(address.line1 || '').trim(),
+          city: String(address.city || '').trim(),
+          state: String(address.state || '').trim(),
+          zip: String((metaEntry && metaEntry.postal) || '').trim(),
+          country: String(address.country || 'Nigeria').trim()
+        };
+      }
+
+      function applySavedAddress(address, metaEntry) {
+        selectedDelivery = buildSelectedDelivery(address, metaEntry);
+        renderSelectedAddressPreview(selectedDelivery);
+        renderCheckoutItems();
+        syncAutoCheckoutCurrency();
+        scheduleApplePayRefresh(true);
+      }
+
+      function renderSavedAddressSelect(email) {
+        if (!savedAddressSelect) return;
+        savedAddressSelect.innerHTML = '';
+
+        if (!savedAddresses.length) {
+          savedAddressSelect.disabled = true;
+          selectedDelivery = null;
+          renderSelectedAddressPreview(null);
+          renderCheckoutItems();
+          syncAutoCheckoutCurrency();
+          scheduleApplePayRefresh(true);
+          if (savedAddressNote) savedAddressNote.textContent = 'No saved addresses yet. Add one in your profile to continue.';
+          return;
+        }
+
+        savedAddressSelect.disabled = false;
+        var meta = readAddressMeta(email);
+        savedAddresses.forEach(function(address, index) {
+          var key = buildAddressKey(address);
+          var metaEntry = key ? meta[key] || {} : {};
+          var label = metaEntry.label || (address.isDefault ? 'Default Address' : 'Saved Address');
+          var cityLine = [address.city, address.state].filter(Boolean).join(', ');
+          var option = document.createElement('option');
+          option.value = String(index);
+          option.textContent = cityLine ? label + ' - ' + cityLine : label;
+          savedAddressSelect.appendChild(option);
+        });
+
+        var defaultIndex = savedAddresses.findIndex(function(addr) { return addr && addr.isDefault; });
+        var selectedIndex = defaultIndex >= 0 ? defaultIndex : 0;
+        savedAddressSelect.value = String(selectedIndex);
+        applySavedAddress(savedAddresses[selectedIndex], meta[buildAddressKey(savedAddresses[selectedIndex])] || {});
+        if (savedAddressNote) savedAddressNote.textContent = 'Your order will use the selected saved address from your profile.';
+      }
+
+      function prefillFromToken() {
+        var token = getToken();
+        if (!token) return '';
+        var payload = decodeTokenPayload(token);
+        var email = String(payload.email || '').trim().toLowerCase();
+        customerProfile.email = email;
+        customerProfile.name = String(payload.name || '').trim();
+        return email;
+      }
+
+      function loadSavedAddresses() {
+        if (!savedAddressSelect) return;
+        var token = getToken();
+        if (!token) {
+          savedAddressSelect.disabled = true;
+          selectedDelivery = null;
+          renderSelectedAddressPreview(null);
+          renderCheckoutItems();
+          syncAutoCheckoutCurrency();
+          scheduleApplePayRefresh(true);
+          if (savedAddressNote) savedAddressNote.textContent = 'Login to select a saved address.';
+          return;
+        }
+
+        fetch(API_BASE + '/api/profile/addresses', {
+          method: 'GET',
+          headers: { Authorization: 'Bearer ' + token }
+        })
+          .then(function(res) { return res.json(); })
+          .then(function(data) {
+            savedAddresses = Array.isArray(data && data.addresses) ? data.addresses : [];
+            var email = prefillFromToken();
+            renderSavedAddressSelect(email);
+          })
+          .catch(function() {
+            savedAddresses = [];
+            selectedDelivery = null;
+            renderSelectedAddressPreview(null);
+            renderCheckoutItems();
+            syncAutoCheckoutCurrency();
+            scheduleApplePayRefresh(true);
+            if (savedAddressNote) savedAddressNote.textContent = 'Unable to load saved addresses.';
+          });
+      }
+
+      if (savedAddressSelect) {
+        savedAddressSelect.addEventListener('change', function() {
+          var value = savedAddressSelect.value;
+          if (value === '') {
+            selectedDelivery = null;
+            renderSelectedAddressPreview(null);
+            renderCheckoutItems();
+            syncAutoCheckoutCurrency(true);
+            scheduleApplePayRefresh(true);
+            if (savedAddressNote) savedAddressNote.textContent = 'Select a saved address from your profile.';
+            return;
+          }
+          var index = parseInt(value, 10);
+          if (Number.isNaN(index) || !savedAddresses[index]) return;
+          var email = prefillFromToken();
+          var meta = readAddressMeta(email);
+          applySavedAddress(savedAddresses[index], meta[buildAddressKey(savedAddresses[index])] || {});
+          if (savedAddressNote) savedAddressNote.textContent = 'Your order will use the selected saved address from your profile.';
+        });
+      }
+      
+      function renderCheckoutItems() {
+        var items = loadCart();
+        var email = getCustomerEmail();
+        
+        if (!items.length) {
+          checkoutItemsEl.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
+          sidebarItemsEl.innerHTML = '<p class="empty-cart">No items</p>';
+          if (checkoutHeroItemsEl) checkoutHeroItemsEl.textContent = '0 PIECES';
+          updateTotals(calculateCheckoutTotals([], email));
+          if (payNowBtn) {
+            payNowBtn.disabled = true;
+            payNowBtn.setAttribute('aria-disabled', 'true');
+          }
+          scheduleApplePayRefresh();
+          return;
+        }
+
+        var itemsHTML = '';
+        var totalPieces = 0;
+        for (var i = 0; i < items.length; i++) {
+          var item = items[i];
+          var priceNgn = getItemPriceNgn(item);
+          var qty = parseInt(item.qty) || 1;
+          var itemTotalNgn = priceNgn * qty;
+          var variant = [item.color, item.size || 'M'].filter(Boolean).join(' / ');
+          totalPieces += qty;
+          
+          itemsHTML += '<div class="checkout-item">';
+          itemsHTML += '<div class="checkout-item-media">';
+          itemsHTML += '<img src="' + (item.image || 'OFF BACK/BENZY LOGO.png') + '" alt="' + (item.title || 'Product') + '" class="item-image" />';
+          itemsHTML += '</div>';
+          itemsHTML += '<div class="item-details">';
+          itemsHTML += '<div class="item-topline">';
+          itemsHTML += '<h4>' + (item.title || 'Product') + '</h4>';
+          itemsHTML += '<div class="item-price">' + formatCurrency(itemTotalNgn) + '</div>';
+          itemsHTML += '</div>';
+          itemsHTML += '<p class="item-variant">' + variant + '</p>';
+          itemsHTML += '<div class="item-meta">';
+          itemsHTML += '<span class="item-qty">Qty ' + qty + '</span>';
+          itemsHTML += '<span class="item-unit-price">' + formatCurrency(priceNgn) + ' each</span>';
+          itemsHTML += '</div>';
+          itemsHTML += '</div>';
+          itemsHTML += '</div>';
+        }
+        
+        checkoutItemsEl.innerHTML = itemsHTML;
+        sidebarItemsEl.innerHTML = itemsHTML;
+        if (checkoutHeroItemsEl) checkoutHeroItemsEl.textContent = totalPieces + (totalPieces === 1 ? ' PIECE' : ' PIECES');
+        updateTotals(calculateCheckoutTotals(items, email));
+        if (payNowBtn) {
+          payNowBtn.disabled = false;
+          payNowBtn.removeAttribute('aria-disabled');
+        }
+        scheduleApplePayRefresh();
+      }
+
+      function buildShippingAddress(delivery) {
+        return [
+          delivery && delivery.address,
+          delivery && delivery.city,
+          delivery && delivery.state,
+          delivery && delivery.zip
+        ].filter(Boolean).join(', ');
+      }
+
+      function setPaymentOptionAvailability(value, enabled, noteText) {
+        var input = document.querySelector('input[name="payment"][value="' + value + '"]');
+        if (!input) return;
+        input.disabled = !enabled;
+
+        var card = input.nextElementSibling;
+        if (card) {
+          if (enabled) {
+            delete card.dataset.disabled;
+            card.removeAttribute('title');
+          } else {
+            card.dataset.disabled = 'true';
+            if (noteText) card.setAttribute('title', noteText);
+          }
+        }
+
+        var copy = card ? card.querySelector('small') : null;
+        if (copy && noteText) copy.textContent = noteText;
+
+        if (!enabled && input.checked) {
+          var fallback = document.querySelector('input[name="payment"]:not([disabled])');
+          if (fallback) fallback.checked = true;
+        }
+      }
+
+      function setPaymentOptionVisibility(value, visible) {
+        var input = document.querySelector('input[name="payment"][value="' + value + '"]');
+        if (!input) return;
+        var option = input.closest('.payment-option');
+        if (option) option.hidden = !visible;
+      }
+
+      function syncPaystackCurrencyAvailability() {
+        var selection = getCheckoutCurrencySelection('paystack');
+        var paystackSupportedCurrencies = getPaystackSupportedCurrencies();
+        var supportedLabel = paystackSupportedCurrencies.join(', ');
+        var paystackAvailable = Boolean(selection.chargeCurrency);
+        var note = 'Secure checkout via Paystack';
+
+        if (!paystackAvailable) {
+          note = supportedLabel
+            ? 'Paystack can currently charge only in ' + supportedLabel + '.'
+            : 'Paystack checkout is not configured right now.';
+        } else if (selection.chargeCurrencyMessage) {
+          note = selection.chargeCurrencyMessage;
+        } else if (selection.chargeCurrency && selection.chargeCurrency !== activeCurrency) {
+          note = 'Prices stay in ' + activeCurrency + ', but Paystack will charge in ' + selection.chargeCurrency + '.';
+        }
+
+        setPaymentOptionAvailability('paystack', paystackAvailable, note);
+        if (!paystackAvailable) {
+          resetApplePayState();
+        }
+      }
+
+      function syncWalletPaymentAvailability(totals) {
+        var token = getToken();
+        if (!token) {
+          setPaymentOptionAvailability('wallet', false, 'Login to use your Benzy wallet');
+          return;
+        }
+
+        var summary = totals || calculateCheckoutTotals(loadCart(), getCustomerEmail());
+        var available = Number(walletSummary && walletSummary.balance || 0);
+        if (!Number.isFinite(available) || available <= 0) {
+          setPaymentOptionAvailability('wallet', false, 'Top up your wallet in Profile first');
+          return;
+        }
+
+        var note = 'Available balance: ' + formatCurrencyCodeAmount(available, 'NGN');
+        if (available + 0.0001 < Number(summary && summary.totalNgn || 0)) {
+          note = 'Available: ' + formatCurrencyCodeAmount(available, 'NGN') + ' - top up to cover this order';
+        }
+        setPaymentOptionAvailability('wallet', true, note);
+      }
+
+      async function loadWalletSummary() {
+        if (!getToken()) {
+          walletSummary = { balance: 0, currency: 'NGN' };
+          syncWalletPaymentAvailability();
+          return;
+        }
+
+        try {
+          var result = await getFromApi('/api/profile/wallet');
+          if (result.response.ok && result.data && result.data.wallet) {
+            walletSummary = {
+              balance: Number(result.data.wallet.balance || 0),
+              currency: String(result.data.wallet.currency || 'NGN').toUpperCase()
+            };
+          } else {
+            walletSummary = { balance: 0, currency: 'NGN' };
+          }
+        } catch (error) {
+          walletSummary = { balance: 0, currency: 'NGN' };
+        }
+
+        syncWalletPaymentAvailability();
+      }
+
+      function syncBankDetailsVisibility() {
+        var selected = document.querySelector('input[name="payment"]:checked');
+        if (bankDetailsEl) bankDetailsEl.hidden = !(selected && selected.value === 'bank');
+      }
+
+      function getSelectedPaymentMethod() {
+        var selected = document.querySelector('input[name="payment"]:checked');
+        return selected ? selected.value : 'paystack';
+      }
+
+      function clearSuccessfulCheckoutState() {
+        localStorage.setItem(CART_KEY, '[]');
+        localStorage.removeItem(GUEST_CART_KEY);
+        localStorage.setItem(CART_META_KEY, JSON.stringify({
+          mode: 'guest',
+          updatedAt: new Date().toISOString(),
+          totals: {
+            currency: 'NGN',
+            itemCount: 0,
+            quantityCount: 0,
+            subtotal: 0,
+            tax: 0,
+            total: 0
+          }
+        }));
+        clearCouponState();
+        setCheckoutCouponStatus('', '');
+        window.dispatchEvent(new CustomEvent('benzy:cart-updated'));
+      }
+
+      function buildCheckoutRequest(paymentMethod, items, delivery, email, name, phone, totals) {
+        var safeItems = Array.isArray(items) ? items : [];
+        var currencySelection = getCheckoutCurrencySelection(paymentMethod);
+        return {
+          customer: {
+            name: name,
+            email: email,
+            phone: phone,
+            address: delivery.address,
+            city: delivery.city,
+            state: delivery.state,
+            postalCode: delivery.zip,
+            country: delivery.country || 'Nigeria'
+          },
+          delivery: delivery,
+          items: safeItems.map(function(item) {
+            var quantity = Math.max(1, parseInt(String(item && item.qty || 1), 10));
+            var unitPriceNgn = getItemPriceNgn(item);
+            return {
+              id: item && item.id,
+              productId: item && (item.productId || item.id),
+              variantId: item && item.variantId,
+              name: String(item && (item.title || item.name) || 'Item'),
+              title: String(item && (item.title || item.name) || 'Item'),
+              image: String(item && item.image || ''),
+              quantity: quantity,
+              qty: quantity,
+              price: unitPriceNgn,
+              priceNgn: unitPriceNgn,
+              color: String(item && item.color || ''),
+              size: String(item && item.size || '')
+            };
+          }),
+          subtotal: totals.subtotalNgn,
+          subtotalNgn: totals.subtotalNgn,
+          discount: totals.discountNgn,
+          discountNgn: totals.discountNgn,
+          discountedSubtotal: totals.discountedSubtotalNgn,
+          discountedSubtotalNgn: totals.discountedSubtotalNgn,
+          tax: totals.taxNgn,
+          taxNgn: totals.taxNgn,
+          shipping: totals.shippingNgn,
+          shippingNgn: totals.shippingNgn,
+          total: totals.totalNgn,
+          totalNgn: totals.totalNgn,
+          totalNaira: totals.totalNgn,
+          paymentMethod: paymentMethod,
+          currency: activeCurrency,
+          checkoutCurrency: currencySelection.requestedCheckoutCurrency,
+          settlementCurrency: currencySelection.requestedCheckoutCurrency,
+          selectedDisplayCurrency: activeCurrency,
+          discountCode: totals.coupon ? totals.coupon.code : '',
+          discountPercent: totals.coupon ? Number(totals.coupon.discountPercent || 10) : 0,
+          estimatedDelivery: totals.deliveryTime || '',
+          shippingAddress: buildShippingAddress(delivery),
+          metadata: {
+            selectedCurrency: activeCurrency,
+            selectedDisplayCurrency: activeCurrency,
+            requestedCheckoutCurrency: currencySelection.requestedCheckoutCurrency,
+            predictedChargeCurrency: currencySelection.chargeCurrency || currencySelection.fallbackCurrency || activeCurrency,
+            shippingZone: totals.shippingQuote ? totals.shippingQuote.zone : '',
+            freeShippingApplied: Boolean(totals.shippingQuote && totals.shippingQuote.isFree)
+          }
+        };
+      }
+
+      async function startLivePaystackCheckout(payload) {
+        var session = await requestPaystackSession(payload, true);
+        var paystack = getPaystackClient();
+        setCheckoutPaymentStatus('Opening Paystack checkout...', 'pending');
+
+        await paystack.checkout({
+          key: session.publicKey,
+          email: session.email,
+          amount: session.amountSubunit,
+          currency: session.currency,
+          ref: session.reference,
+          onSuccess: function(transaction) {
+            void verifyPaystackOrder(session, transaction).catch(function(error) {
+              console.error('Paystack verification error:', error);
+              setCheckoutPaymentStatus(error && error.message ? error.message : 'Unable to verify Paystack payment.', 'error');
+            });
+          },
+          onCancel: function() {
+            setCheckoutPaymentStatus('Paystack checkout was cancelled.', 'pending');
+          }
+        });
+      }
+
+      async function submitWalletOrder(payload) {
+        var result = await postToApi('/api/checkout/wallet', payload);
+        if (!result.response.ok || !result.data || !result.data.order) {
+          throw new Error(String(result.data && result.data.message || 'Unable to complete wallet checkout.'));
+        }
+
+        walletSummary = {
+          balance: Number(result.data.wallet && result.data.wallet.balance || 0),
+          currency: String(result.data.wallet && result.data.wallet.currency || 'NGN').toUpperCase()
+        };
+        clearSuccessfulCheckoutState();
+        var orderId = String(result.data.order.orderId || '').trim();
+        var reference = String(result.data.order.paymentReference || result.data.order.transactionId || '').trim();
+        var next = 'PaymentSuccess.html?mode=wallet';
+        if (orderId) next += '&orderId=' + encodeURIComponent(orderId);
+        if (reference) next += '&reference=' + encodeURIComponent(reference);
+        window.location.href = next;
+      }
+
+      setPaymentOptionVisibility('wallet', true);
+      if (bankDetailsEl) bankDetailsEl.hidden = true;
+      setPaymentOptionAvailability('wallet', false, 'Checking wallet balance...');
+      setPaymentOptionAvailability('paystack', true, 'Secure checkout via Paystack');
+      syncPaystackCurrencyAvailability();
+
+      paymentOptions.forEach(function(option) {
+        option.addEventListener('change', function() {
+          syncBankDetailsVisibility();
+          syncCheckoutCurrencyNotice();
+          scheduleApplePayRefresh(true);
+        });
+      });
+
+      syncBankDetailsVisibility();
+      syncCheckoutCurrencyNotice();
+      
+      payNowBtn.addEventListener('click', async function() {
+        var delivery = selectedDelivery;
+        var items = loadCart();
+
+        if (!items.length) {
+          alert('Your cart is empty');
+          return;
+        }
+
+        if (!getToken()) {
+          if (window.BenzyCartStore && typeof window.BenzyCartStore.setPostLoginRedirect === 'function') {
+            window.BenzyCartStore.setPostLoginRedirect('Checkout.html');
+            window.BenzyCartStore.showToast('Log in to continue checkout.', 'info');
+          }
+          window.location.href = 'Profile.html';
+          return;
+        }
+
+        if (!delivery || !delivery.address || !delivery.city || !delivery.state) {
+          alert('Please select a saved delivery address from your profile');
+          return;
+        }
+
+        var name = String(delivery.name || customerProfile.name || 'Benzy Luxury Customer').trim();
+        var phone = String(delivery.phone || '').trim();
+        var email = normalizeEmail(delivery.email || customerProfile.email);
+        var paymentMethod = getSelectedPaymentMethod();
+        var shouldReleaseButton = true;
+
+        if (!email) {
+          if (window.BenzyCartStore && typeof window.BenzyCartStore.setPostLoginRedirect === 'function') {
+            window.BenzyCartStore.setPostLoginRedirect('Checkout.html');
+            window.BenzyCartStore.showToast('Log in to continue checkout.', 'info');
+          }
+          window.location.href = 'Profile.html';
+          return;
+        }
+
+        if (paymentMethod === 'flutterwave' || paymentMethod === 'bank') {
+          alert('This payment method is not live for this checkout.');
+          return;
+        }
+
+        var currencySelection = getCheckoutCurrencySelection(paymentMethod);
+        if ((paymentMethod === 'card' || paymentMethod === 'paystack') && !currencySelection.chargeCurrency) {
+          alert(currencySelection.chargeCurrencyMessage || 'Paystack checkout is not configured for this currency right now.');
+          return;
+        }
+
+        if ((paymentMethod === 'card' || paymentMethod === 'paystack')
+          && window.location.protocol !== 'https:'
+          && !/^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname)) {
+          alert('Paystack Apple Pay and checkout require HTTPS in production.');
+          return;
+        }
+
+        var storedCoupon = readCouponState();
+
+        if (storedCoupon && storedCoupon.code) {
+          var validatedCoupon = await validateStoredCouponForEmail(email);
+          if (!validatedCoupon) {
+            alert((checkoutCouponStatusEl && checkoutCouponStatusEl.textContent) || 'Unable to apply coupon. Please review your code and email.');
+            return;
+          }
+        } else {
+          setCheckoutCouponStatus('', '');
+        }
+
+        var totals = calculateCheckoutTotals(items, email);
+        var payload = buildCheckoutRequest(paymentMethod, items, delivery, email, name, phone, totals);
+        setCheckoutPaymentStatus('', '');
+        syncCheckoutCurrencyNotice(paymentMethod);
+
+        payNowBtn.classList.add('processing');
+        payNowBtn.disabled = true;
+
+        try {
+          if (paymentMethod === 'wallet') {
+            await submitWalletOrder(payload);
+            shouldReleaseButton = false;
+            return;
+          }
+
+          await startLivePaystackCheckout(payload);
+          shouldReleaseButton = false;
+        } catch (error) {
+          console.error('Checkout start error:', error);
+          alert(error && error.message ? error.message : 'Unable to start checkout right now.');
+        } finally {
+          if (shouldReleaseButton) {
+            payNowBtn.classList.remove('processing');
+            payNowBtn.disabled = false;
+          }
+        }
+      });
+
+      window.addEventListener('benzy:cart-updated', function() {
+        renderCheckoutItems();
+      });
+      window.addEventListener('storage', function(event) {
+        if (event.key === CART_KEY || event.key === GUEST_CART_KEY || event.key === CART_META_KEY) {
+          renderCheckoutItems();
+          return;
+        }
+
+        if (event.key === CURRENCY_KEY) {
+          activeCurrency = getCurrencyService() && typeof getCurrencyService().getSelectedCurrency === 'function'
+            ? getCurrencyService().getSelectedCurrency()
+            : (localStorage.getItem(CURRENCY_KEY) || 'NGN');
+          currencySelectionSource = localStorage.getItem(CURRENCY_SOURCE_KEY) === 'manual' ? 'manual' : 'auto';
+          if (currencySelect) currencySelect.value = activeCurrency;
+          syncPaystackCurrencyAvailability();
+          syncCheckoutCurrencyNotice();
+          renderCheckoutItems();
+        }
+      });
+      window.addEventListener('benzy:currency-updated', function() {
+        activeCurrency = getCurrencyService() && typeof getCurrencyService().getSelectedCurrency === 'function'
+          ? getCurrencyService().getSelectedCurrency()
+          : (localStorage.getItem(CURRENCY_KEY) || 'NGN');
+        currencySelectionSource = localStorage.getItem(CURRENCY_SOURCE_KEY) === 'manual' ? 'manual' : 'auto';
+        if (currencySelect) currencySelect.value = activeCurrency;
+        syncPaystackCurrencyAvailability();
+        syncCheckoutCurrencyNotice();
+        renderCheckoutItems();
+      });
+      
+      prefillFromToken();
+      void loadCheckoutContext();
+      loadSavedAddresses();
+      loadWalletSummary();
+      loadShippingFeeFromApi();
+      if (window.BenzyCartStore && typeof window.BenzyCartStore.loadCart === 'function') {
+        void window.BenzyCartStore.loadCart({ forceServer: !!getToken(), silent: true }).then(function() {
+          renderCheckoutItems();
+        }).catch(function() {
+          renderCheckoutItems();
+        });
+      }
+      renderCheckoutItems();
+      void validateStoredCouponForEmail(getCustomerEmail());
+    })();
+  </script>
+</body>
+</html>
+

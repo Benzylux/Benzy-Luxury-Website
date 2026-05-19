@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benzy Luxury | Host Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="/OFF BACK/BENZY LOGO.png" />
+  <link rel="apple-touch-icon" href="/OFF BACK/BENZY LOGO.png" />
+</head>
+<body class="login-body">
+
+  <main class="login-split host-split">
+
+    <!-- Left brand panel -->
+    <aside class="login-brand-panel host-brand-panel" aria-hidden="true">
+      <div class="login-brand-glow"></div>
+      <div class="login-brand-inner">
+        <span class="login-brand-chip">Restricted control room</span>
+        <img src="/OFF BACK/BLX.png" alt="BLX" class="login-brand-logo" />
+        <div class="login-brand-copy">
+          <p class="login-brand-kicker">Benzy Luxury Admin Suite</p>
+          <h1 class="login-brand-title">Run the house with clarity.</h1>
+          <p class="login-brand-tagline">
+            A calmer gateway for hosts managing orders, catalogue updates, customer care, and every premium release behind the scenes.
+          </p>
+        </div>
+        <div class="login-brand-metrics" aria-label="Host controls overview">
+          <article class="login-brand-stat">
+            <strong>Store oversight</strong>
+            <span>Track drops, stock movement, and fulfilment from one private dashboard.</span>
+          </article>
+          <article class="login-brand-stat">
+            <strong>Client care</strong>
+            <span>Review customer activity, payments, and support needs without friction.</span>
+          </article>
+          <article class="login-brand-stat">
+            <strong>Role protected</strong>
+            <span>Every session is verified before the control room opens.</span>
+          </article>
+        </div>
+        <p class="login-brand-note">
+          <span class="login-brand-note-dot" aria-hidden="true"></span>
+          Authorised personnel only. Host permissions are checked at login.
+        </p>
+      </div>
+      <div class="login-brand-pattern"></div>
+    </aside>
+
+    <!-- Right form panel -->
+    <section class="login-form-panel">
+      <div class="login-form-inner">
+
+        <div class="login-form-topbar">
+          <a href="/Account.html" class="login-back-btn" aria-label="Go back to account choices">
+            <span class="login-back-arrow">&#8592;</span> Back to access choice
+          </a>
+          <span id="login-session-status" class="login-form-status" data-tone="neutral">Private session</span>
+        </div>
+
+        <header class="login-form-header">
+          <p class="login-eyebrow host-eyebrow">Host authentication</p>
+          <h1 class="login-title account-signin-title">Enter the control room</h1>
+          <p class="login-subtitle account-signin-copy">
+            Use the approved host email and password assigned to your Benzy Luxury role.
+          </p>
+        </header>
+
+        <div class="login-trust-row" aria-label="Security signals">
+          <span>Encrypted session</span>
+          <span>Role checked</span>
+          <span>Token issued on success</span>
+        </div>
+
+        <div id="account-auth-panel" class="login-fields">
+          <form id="login-form" class="lx-form">
+
+            <div class="lx-field">
+              <div class="lx-field-head">
+                <label class="lx-label" for="login-email">Email address</label>
+                <span class="lx-field-note">Host role email</span>
+              </div>
+              <input class="lx-input" id="login-email" name="admin-email" type="email" placeholder="host@benzyluxury.com" autocomplete="section-admin username" required />
+            </div>
+
+            <div class="lx-field">
+              <div class="lx-field-head">
+                <label class="lx-label" for="login-password">Password</label>
+                <span class="lx-field-note">Minimum 6 characters</span>
+              </div>
+              <div class="lx-password-wrap">
+                <input class="lx-input" id="login-password" name="admin-password" type="password" placeholder="Enter your password" autocomplete="section-admin current-password" minlength="6" required />
+                <button id="toggle-login-password" class="lx-show-btn" type="button" aria-label="Show password" aria-pressed="false">Show</button>
+              </div>
+            </div>
+
+            <button class="lx-submit host-submit" type="submit">Access Dashboard</button>
+
+          </form>
+        </div>
+
+        <div class="login-help-strip">
+          <span>Need a host account reset or access support?</span>
+          <a href="Contact.html" class="login-link">Contact Benzy Luxury</a>
+        </div>
+
+        <p id="account-msg" class="lx-msg" aria-live="polite"></p>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    window.__BENZY_SKIP_LOGIN_BOOT = true;
+
+    // Force host intent before main.js reads it.
+    localStorage.setItem("benzy_login_intent", "host");
+
+    const API_BASE_STORAGE_KEY = "benzy_api_base";
+    const ADMIN_TOKEN_KEY = "benzy_admin_auth_token";
+    const API_REQUEST_TIMEOUT_MS = 6000;
+    const loginForm = document.getElementById("login-form");
+    const emailInput = document.getElementById("login-email");
+    const passwordInput = document.getElementById("login-password");
+    const togglePasswordBtn = document.getElementById("toggle-login-password");
+    const submitBtn = document.querySelector(".host-submit");
+    const msg = document.getElementById("account-msg");
+    const sessionStatus = document.getElementById("login-session-status");
+    const API_BASES = (() => {
+      const bases = [];
+      const storedBase = localStorage.getItem(API_BASE_STORAGE_KEY);
+      if (storedBase) bases.push(storedBase);
+      const origin = window.location.origin;
+      if (origin && origin !== "null") bases.push(origin);
+      bases.push("http://localhost:3001");
+      return Array.from(new Set(bases));
+    })();
+
+    function setMessage(text, isError) {
+      if (!(msg instanceof HTMLElement)) return;
+      msg.textContent = text || "";
+      msg.dataset.state = text ? (isError ? "error" : "success") : "";
+    }
+
+    function setSessionStatus(text, tone) {
+      if (!(sessionStatus instanceof HTMLElement)) return;
+      sessionStatus.textContent = text || "";
+      sessionStatus.dataset.tone = tone || "neutral";
+    }
+
+    async function fetchHostAuth(email, password) {
+      let lastError = null;
+
+      for (const base of API_BASES) {
+        const controller = new AbortController();
+        const timer = window.setTimeout(() => controller.abort(), API_REQUEST_TIMEOUT_MS);
+
+        try {
+          const res = await fetch(`${base}/api/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+            signal: controller.signal
+          });
+          const data = await res.json().catch(() => null);
+
+          if (!res.ok || !data?.token) {
+            throw new Error(data?.error || data?.message || "Invalid email or password.");
+          }
+
+          localStorage.setItem(API_BASE_STORAGE_KEY, base);
+          return data;
+        } catch (error) {
+          lastError = error?.name === "AbortError"
+            ? new Error("The server took too long to respond. Please restart the backend and try again.")
+            : error;
+        } finally {
+          window.clearTimeout(timer);
+        }
+      }
+
+      throw lastError || new Error("Login failed");
+    }
+
+    async function doHostLogin() {
+      if (!(loginForm instanceof HTMLFormElement)) return;
+      if (!(emailInput instanceof HTMLInputElement)) return;
+      if (!(passwordInput instanceof HTMLInputElement)) return;
+      if (!(submitBtn instanceof HTMLButtonElement)) return;
+
+      if (!loginForm.reportValidity()) {
+        setSessionStatus("Complete fields", "error");
+        return;
+      }
+
+      const email = emailInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
+
+      if (!email || password.length < 6) {
+        setSessionStatus("Complete fields", "error");
+        setMessage("Enter a valid email and password (6+ chars).", true);
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.classList.add("is-loading");
+      submitBtn.textContent = "Verifying access...";
+      setSessionStatus("Verifying", "active");
+      setMessage("", false);
+
+      try {
+        const data = await fetchHostAuth(email, password);
+
+        if (data?.user?.role !== "host") {
+          throw new Error("Host access only. You are not an admin.");
+        }
+
+        localStorage.setItem(ADMIN_TOKEN_KEY, data.token);
+        localStorage.removeItem("benzy_login_intent");
+        setSessionStatus("Access granted", "success");
+        window.location.href = "/admin/dashboard";
+      } catch (error) {
+        setSessionStatus("Retry required", "error");
+        setMessage(error?.message || "Unable to log in right now.", true);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("is-loading");
+        submitBtn.textContent = "Access Dashboard";
+      }
+    }
+
+    if (togglePasswordBtn instanceof HTMLButtonElement && passwordInput instanceof HTMLInputElement) {
+      togglePasswordBtn.addEventListener("click", function () {
+        const isHidden = passwordInput.type === "password";
+        passwordInput.type = isHidden ? "text" : "password";
+        togglePasswordBtn.textContent = isHidden ? "Hide" : "Show";
+        togglePasswordBtn.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+        togglePasswordBtn.setAttribute("aria-pressed", isHidden ? "true" : "false");
+      });
+    }
+
+    if (loginForm instanceof HTMLFormElement) {
+      loginForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        doHostLogin();
+      });
+    }
+  </script>
+</body>
+</html>

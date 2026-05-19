@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benzy Luxury Email Preview</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #202020;
+      color: #111;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .preview-shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+    .preview-nav {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 14px 0 22px;
+      background: #202020;
+    }
+    .preview-nav a {
+      color: #f7f7f7;
+      border: 1px solid #555;
+      padding: 9px 13px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .preview-title {
+      color: #fff;
+      margin: 0 0 18px;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+    .email-frame {
+      max-width: 720px;
+      margin: 0 auto 34px;
+      background: #fff;
+      min-height: 420px;
+    }
+    .email {
+      padding: 30px 34px 36px;
+      background: #fff;
+      color: #111;
+    }
+    .email-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 34px;
+    }
+    .stamp-logo {
+      width: 64px;
+      height: 64px;
+      border: 2px solid #111;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-weight: 900;
+      line-height: 0.92;
+      font-size: 14px;
+    }
+    .brand {
+      text-align: right;
+    }
+    .brand strong {
+      display: block;
+      font-family: Georgia, serif;
+      font-size: 29px;
+      font-style: italic;
+      letter-spacing: 0.04em;
+    }
+    .brand a,
+    .footer a {
+      color: #2b7de9;
+      font-size: 15px;
+    }
+    h1 {
+      margin: 0 0 22px;
+      font-size: 34px;
+      line-height: 1.15;
+    }
+    p {
+      margin: 0 0 20px;
+      font-size: 17px;
+      line-height: 1.65;
+    }
+    .order-meta {
+      border-top: 1px solid #e5e5e5;
+      border-bottom: 1px solid #e5e5e5;
+      padding: 20px 0;
+      margin-bottom: 22px;
+    }
+    .order-meta strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+    .order-meta span {
+      display: block;
+      margin-top: 12px;
+      color: #777;
+      font-size: 16px;
+    }
+    .line-item {
+      display: grid;
+      grid-template-columns: 78px 1fr auto;
+      gap: 14px;
+      align-items: start;
+      border-bottom: 1px solid #e5e5e5;
+      padding: 16px 0;
+    }
+    .line-item img {
+      width: 66px;
+      height: 82px;
+      object-fit: cover;
+      border: 1px solid #eee;
+    }
+    .line-item h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+    .line-item small {
+      display: block;
+      color: #444;
+      font-size: 14px;
+    }
+    .price {
+      font-weight: 800;
+      white-space: nowrap;
+      font-size: 17px;
+    }
+    .totals {
+      margin: 18px 0 28px auto;
+      width: min(100%, 330px);
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+    .totals td {
+      padding: 7px 0;
+    }
+    .totals td:last-child {
+      text-align: right;
+      font-weight: 800;
+    }
+    .totals .grand td {
+      border-top: 1px solid #e5e5e5;
+      padding-top: 13px;
+      font-size: 20px;
+      color: #000;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      border-top: 1px solid #e5e5e5;
+      border-bottom: 1px solid #e5e5e5;
+      padding: 22px 0;
+      margin-bottom: 28px;
+    }
+    .info-grid h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
+      text-transform: uppercase;
+    }
+    .info-grid p {
+      font-size: 15px;
+      margin: 0;
+    }
+    .button {
+      display: block;
+      text-align: center;
+      padding: 15px 18px;
+      border: 1px solid #009e49;
+      color: #009e49;
+      text-decoration: none;
+      font-size: 17px;
+      font-weight: 700;
+      margin: 0 0 28px;
+    }
+    .footer {
+      margin-top: 34px;
+      padding: 28px 18px;
+      background: #f7f7f7;
+      text-align: center;
+      color: #999;
+    }
+    .footer strong {
+      display: block;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      font-style: italic;
+      margin: 0 0 12px;
+    }
+    .green-logo {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      background: #009e49;
+      color: #fff;
+      border-radius: 4px;
+      text-align: center;
+      line-height: 22px;
+      font-weight: 800;
+      margin-right: 8px;
+    }
+    .details {
+      border-top: 1px solid #e5e5e5;
+      border-bottom: 1px solid #e5e5e5;
+      padding: 20px 0;
+      margin-bottom: 28px;
+      font-size: 17px;
+      line-height: 1.9;
+      color: #444;
+    }
+    .details strong {
+      color: #333;
+    }
+    .receipt {
+      max-width: 612px;
+      min-height: 792px;
+      margin: 0 auto 34px;
+      padding: 36px;
+      background: #fff;
+      font-size: 13px;
+    }
+    .receipt-top,
+    .receipt-row,
+    .receipt-total {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .receipt-logo {
+      width: 58px;
+      height: 58px;
+      border: 1px solid #111;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      line-height: 1;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .receipt h2 {
+      margin: 0;
+      font-size: 25px;
+    }
+    .receipt hr {
+      border: 0;
+      border-top: 1px solid #ccc;
+      margin: 24px 0;
+    }
+    .receipt-row {
+      padding: 13px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .receipt-total {
+      margin-left: auto;
+      max-width: 230px;
+      padding: 7px 0;
+    }
+    @media (max-width: 640px) {
+      .email {
+        padding: 26px 20px 30px;
+      }
+      .email-header,
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .email-header {
+        align-items: flex-start;
+      }
+      .brand {
+        text-align: left;
+      }
+      .line-item {
+        grid-template-columns: 72px 1fr;
+      }
+      .price {
+        grid-column: 2;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="preview-shell">
+    <nav class="preview-nav">
+      <a href="#order">Order Email</a>
+      <a href="#wallet">Wallet Email</a>
+      <a href="#admin">Admin Order Email</a>
+      <a href="#receipt">Receipt PDF Style</a>
+    </nav>
+    <h1 class="preview-title">Benzy Luxury email and receipt previews</h1>
+
+    <section id="order" class="email-frame">
+      <div class="email">
+        <header class="email-header">
+          <div class="stamp-logo">BENZY<br>LUX</div>
+          <div class="brand">
+            <strong>Benzy Luxury</strong>
+            <a href="https://benzyluxury.com.ng">benzyluxury.com.ng</a>
+          </div>
+        </header>
+        <h1>Thank you for your purchase!</h1>
+        <p>Hello Benedict,</p>
+        <p>Thank you for placing your order with us. Your payment has been received and your order is now being prepared.</p>
+        <div class="order-meta">
+          <strong>Order No: BLX-20260519-48291</strong>
+          <span>Date: 19 May 2026, 9:16 AM</span>
+          <span>Status: Confirmed | Reference: PSK-8F7H2K</span>
+        </div>
+        <div class="line-item">
+          <img src="OFF BACK/BENZY LUXURY BLACK FRONT.png" alt="BENZYLUX BLACK JERSEY" />
+          <div>
+            <h2>BENZYLUX BLACK JERSEY</h2>
+            <small>Size: XL | Color: Black</small>
+            <small>Qty: 2</small>
+          </div>
+          <div class="price">NGN 70,000.00</div>
+        </div>
+        <div class="line-item">
+          <img src="OFF BACK/WhatsApp Image 2025-11-11 at 08.50.33_976d3882.png" alt="BENZYLUX METROPOLITAN SOCKS" />
+          <div>
+            <h2>BENZYLUX METROPOLITAN SOCKS</h2>
+            <small>Qty: 1</small>
+          </div>
+          <div class="price">NGN 4,000.00</div>
+        </div>
+        <table class="totals">
+          <tr><td>Subtotal</td><td>NGN 74,000.00</td></tr>
+          <tr><td>Discount</td><td>NGN 0.00</td></tr>
+          <tr><td>Shipping</td><td>NGN 2,500.00</td></tr>
+          <tr class="grand"><td>Total</td><td>NGN 76,500.00</td></tr>
+        </table>
+        <div class="info-grid">
+          <div>
+            <h2>Billing Info:</h2>
+            <p>+234 806 270 6597<br>Block 2, Flat 13 Ogunmola close,<br>Surulere, Lagos</p>
+          </div>
+          <div>
+            <h2>Shipping Info:</h2>
+            <p>+234 806 270 6597<br>Block 2, Flat 13 Ogunmola close,<br>Surulere, Lagos</p>
+          </div>
+        </div>
+        <a class="button" href="Profile.html">View Order</a>
+        <p>We will update you as your order moves.</p>
+        <div class="footer">
+          <strong>Benzy Luxury</strong>
+          <a href="https://benzyluxury.com.ng">benzyluxury.com.ng</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="wallet" class="email-frame">
+      <div class="email">
+        <p style="font-size:28px;font-weight:800;"><span class="green-logo">✓</span>Benzy Luxury</p>
+        <h1>Wallet Top-up Confirmed</h1>
+        <p>Hello Benedict,</p>
+        <p>NGN 62,950.00 has been added to your Benzy wallet. Below are the transaction details.</p>
+        <div class="details">
+          <div><strong>Reference:</strong> WT-586-DR-1757926696757-LQPG3N</div>
+          <div><strong>Amount:</strong> NGN 62,950.00</div>
+          <div><strong>Wallet Balance:</strong> NGN 93,500.00</div>
+          <div><strong>Payment Method:</strong> Paystack</div>
+          <div><strong>Status:</strong> Successful</div>
+        </div>
+        <p>Your business best friend,<br><strong>Benzy Luxury.</strong></p>
+      </div>
+    </section>
+
+    <section id="admin" class="email-frame">
+      <div class="email">
+        <p style="font-size:28px;font-weight:800;"><span class="green-logo">✓</span>Benzy Luxury</p>
+        <h1>New customer order</h1>
+        <p>Benedict has placed an order. Open the admin dashboard to review fulfilment and payment status.</p>
+        <div class="details">
+          <div><strong>Order ID:</strong> BLX-20260519-48291</div>
+          <div><strong>Customer:</strong> Benedict Ezeude</div>
+          <div><strong>Email:</strong> customer@example.com</div>
+          <div><strong>Total:</strong> NGN 76,500.00</div>
+          <div><strong>Product 1:</strong> BENZYLUX BLACK JERSEY x2</div>
+        </div>
+        <a class="button" href="AdminDashboard.html">Open Admin Dashboard</a>
+      </div>
+    </section>
+
+    <section id="receipt" class="receipt">
+      <div class="receipt-top">
+        <div>
+          <div class="receipt-logo">BENZY<br>LUX</div>
+          <strong>BENZY LUXURY</strong><br>
+          benzyluxury.com.ng<br>
+          benzyluxury@gmail.com
+        </div>
+        <div style="text-align:right;">
+          <h2>Receipt</h2>
+          Order number: BLX-20260519-48291<br>
+          Date Created: 19 May 2026, 9:16 AM<br>
+          Status: Paid
+        </div>
+      </div>
+      <hr>
+      <strong>Shipped To:</strong><br>
+      Benedict Ezeude<br>
+      Block 2, Flat 13 Ogunmola close, Surulere, Lagos
+      <hr>
+      <div class="receipt-row">
+        <span>BENZYLUX BLACK JERSEY size: XL, colour: Black<br>Qty: 2</span>
+        <strong>NGN 70,000.00</strong>
+      </div>
+      <div class="receipt-row">
+        <span>BENZYLUX METROPOLITAN SOCKS<br>Qty: 1</span>
+        <strong>NGN 4,000.00</strong>
+      </div>
+      <div style="margin-top:24px;">
+        <div class="receipt-total"><span>Subtotal</span><strong>NGN 74,000.00</strong></div>
+        <div class="receipt-total"><span>Shipping</span><strong>NGN 2,500.00</strong></div>
+        <div class="receipt-total" style="border-top:1px solid #ccc;"><span>Total</span><strong>NGN 76,500.00</strong></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

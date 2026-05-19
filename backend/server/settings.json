@@ -1,0 +1,20 @@
+{
+  "shippingFeeNgn": 3000,
+  "shipping": {
+    "defaultDomesticFeeNgn": 3000,
+    "lagosFeeNgn": 3000,
+    "otherStatesFeeNgn": 4500,
+    "internationalFeeNgn": 15000,
+    "freeShippingThresholdNgn": 150000,
+    "deliveryTimes": {
+      "lagos": "1-2 business days",
+      "otherStates": "3-5 business days",
+      "international": "5-10 business days"
+    }
+  },
+  "security": {
+    "adminSessionTimeoutMinutes": 30,
+    "activityLogsRetentionDays": 30,
+    "twoFactorEnabled": false
+  }
+}

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benzy Luxury | Product</title>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="OFF BACK/BENZY LOGO.png" />
+  <link rel="apple-touch-icon" href="OFF BACK/BENZY LOGO.png" />
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">
+      <img src="OFF BACK/BENZY LOGO.png" alt="Benzy Luxury Logo" class="logo-main">
+      <img src="OFF BACK/BLX.png" alt="BLX Logo" class="logo-blx">
+    </div>
+
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li class="has-dropdown">
+          <a href="Shop.html" class="shop-toggle">Shop <span class="chevron">&#9662;</span></a>
+          <ul class="dropdown">
+            <li><a href="Shop.html?cat=all">All Products</a></li>
+            <li><a href="Shop.html?cat=men">Men</a></li>
+            <li><a href="Shop.html?cat=women">Women</a></li>
+            <li><a href="Shop.html?cat=accessories">Accessories</a></li>
+          </ul>
+        </li>
+        <li><a href="About.html">About</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+        <li><a href="Account.html">Account</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-right">
+      <a href="Search.html" class="search-link" aria-label="Search">
+        <img src="OFF BACK/icons8-search-64.png" alt="Search Icon">
+      </a>
+      <a href="Cart.html" class="cart-link" aria-label="Cart">
+        <img src="OFF BACK/icons8-cart-100.png" alt="Cart Icon">
+      </a>
+    </div>
+  </div>
+
+  <main id="product-page" class="product-page">
+    <section class="product-page-intro">
+      <a id="product-back-link" class="product-back-link" href="Shop.html?cat=all">Back to collection</a>
+      <div class="product-page-intro-meta">
+        <p id="product-kicker" class="product-kicker">Collection piece</p>
+        <div class="product-page-badges">
+          <span id="product-sku-badge" class="product-page-badge">BLX-000</span>
+          <span id="product-image-count" class="product-page-badge">1 image</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="product-page-shell">
+      <div class="product-gallery-shell">
+        <div class="product-gallery-head">
+          <p class="product-gallery-kicker">Editorial view</p>
+          <div class="product-gallery-meta">
+            <span id="product-image-stage-count" class="product-gallery-chip">1 / 1</span>
+            <span id="product-gallery-mode" class="product-gallery-chip">Studio detail</span>
+          </div>
+        </div>
+
+        <div class="product-gallery">
+          <div class="product-main-wrap">
+            <img id="product-main-image" src="" alt="Product image">
+            <div class="product-main-overlay">
+              <span id="product-main-image-caption" class="product-main-image-caption">Look 1</span>
+            </div>
+          </div>
+          <p id="product-gallery-note" class="product-gallery-note">Tap a thumbnail to switch the main image.</p>
+          <div id="product-thumbs" class="product-thumbs"></div>
+        </div>
+      </div>
+
+      <div class="product-purchase-card">
+        <div class="product-info">
+          <div class="product-info-topline">
+            <p id="product-collection-label" class="product-collection-label">Collection / Signature piece</p>
+            <p id="product-status-chip" class="product-status-chip">In stock</p>
+          </div>
+
+          <h1 id="product-title"></h1>
+
+          <div class="product-price-cluster">
+            <p id="product-price" class="product-detail-price"></p>
+            <p id="product-stock" class="product-detail-stock"></p>
+            <p id="product-meta" class="product-detail-meta"></p>
+          </div>
+
+          <p id="product-description" class="product-description">
+            A signature Benzy Luxury piece designed for elevated everyday wear.
+          </p>
+
+          <div class="product-highlights" aria-label="Product highlights">
+            <article class="product-highlight">
+              <span>Colorway</span>
+              <strong id="product-highlight-color">Default</strong>
+            </article>
+            <article class="product-highlight">
+              <span>Styling note</span>
+              <strong id="product-highlight-style">Clean statement layering</strong>
+            </article>
+            <article class="product-highlight">
+              <span>Delivery</span>
+              <strong id="product-highlight-delivery">3-6 working days</strong>
+            </article>
+          </div>
+
+          <div class="product-configurator">
+            <div class="product-option">
+              <p id="product-color-label">Color: Default</p>
+              <div class="product-swatch-row">
+                <button type="button" class="product-swatch active" aria-label="Primary color"></button>
+              </div>
+            </div>
+
+            <div class="product-option">
+              <p>Size</p>
+              <div class="product-size-row">
+                <button type="button" class="product-size active">S</button>
+                <button type="button" class="product-size">M</button>
+                <button type="button" class="product-size">L</button>
+                <button type="button" class="product-size">XL</button>
+                <button type="button" class="product-size">2XL</button>
+                <button type="button" class="product-size">3XL</button>
+                <button type="button" class="product-size">4XL</button>
+              </div>
+              <p id="product-size-note" class="product-size-note">Choose your regular size for a balanced fit.</p>
+            </div>
+
+            <label class="product-qty-wrap">
+              Quantity
+              <div class="product-qty-box">
+                <button id="product-qty-minus" type="button" class="product-qty-btn">-</button>
+                <input id="product-qty" type="number" min="1" value="1" />
+                <button id="product-qty-plus" type="button" class="product-qty-btn">+</button>
+              </div>
+            </label>
+          </div>
+
+          <div class="product-trust-row" aria-label="Shopping benefits">
+            <span class="product-trust-pill">Secure checkout</span>
+            <span class="product-trust-pill">Fast dispatch</span>
+            <span class="product-trust-pill">7-day returns</span>
+          </div>
+
+          <div class="product-main-actions">
+            <button id="product-add-cart" class="product-add-main" type="button">Add to cart</button>
+            <button id="product-buy-now" class="product-buy-main" type="button">Buy it now</button>
+          </div>
+
+          <p id="product-checkout-note" class="product-checkout-note">Shipping and taxes are calculated at checkout.</p>
+
+          <div class="product-accordions">
+            <button class="product-acc-toggle" type="button" data-acc-target="details" aria-expanded="false">
+              <span>Product details</span><span class="product-acc-icon">+</span>
+            </button>
+            <div id="product-details-body" class="product-acc-body" data-acc-body="details" hidden>
+              Premium construction, signature branding, and durable finish for everyday wear.
+            </div>
+
+            <button class="product-acc-toggle" type="button" data-acc-target="shipping" aria-expanded="false">
+              <span>Shipping and returns</span><span class="product-acc-icon">+</span>
+            </button>
+            <div id="product-shipping-body" class="product-acc-body" data-acc-body="shipping" hidden>
+              - Standard shipping: 6 working days<br>
+              - Express shipping: 3-5 working days<br>
+              - Free returns within 7 days
+            </div>
+
+            <button class="product-acc-toggle" type="button" data-acc-target="size" aria-expanded="false">
+              <span>Size guide</span><span class="product-acc-icon">+</span>
+            </button>
+            <div id="product-size-body" class="product-acc-body" data-acc-body="size" hidden>
+              True to size fit. For oversized styling, choose one size up.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="product-related">
+      <div class="product-related-head">
+        <p class="product-related-kicker">More to explore</p>
+        <h2>Complete the look</h2>
+        <p class="product-related-summary">Pieces selected from the same mood and category to help finish the outfit.</p>
+      </div>
+      <div id="product-related" class="product-related-grid"></div>
+    </section>
+  </main>
+
+  <script src="cart-api.js"></script>
+  <script src="currency-service.js"></script>
+  <script src="cart-store.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benzy Luxury | Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin-dashboard.css" />
+  <link rel="icon" type="image/png" href="/OFF BACK/BENZY LOGO.png" />
+  <link rel="apple-touch-icon" href="/OFF BACK/BENZY LOGO.png" />
+</head>
+<body class="admin-shell-body">
+  <div class="admin-app-shell">
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div class="admin-brand">
+        <img src="/OFF BACK/BLX.png" alt="Benzy Luxury" class="admin-brand-logo" />
+        <div>
+          <p class="admin-brand-eyebrow">Control Room</p>
+          <h1>Benzy Luxury</h1>
+          <p class="admin-brand-summary">Operations, merchandising, customer care, and campaign control in one private suite.</p>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-panel">
+        <p class="admin-sidebar-panel-label">House status</p>
+        <strong>Private operations live</strong>
+        <p>Monitor catalogue movement, fulfilment pressure, and audience activity from a calmer command view.</p>
+      </div>
+
+      <nav class="admin-nav" id="admin-nav">
+        <div class="admin-nav-group">
+          <p class="admin-nav-group-label">Core</p>
+          <button class="admin-nav-link active" data-section="dashboard">
+            <span class="admin-nav-link-index" aria-hidden="true">01</span>
+            <span class="admin-nav-link-copy">
+              <strong>Dashboard</strong>
+              <small>Pulse, alerts, and daily movement</small>
+            </span>
+          </button>
+          <button class="admin-nav-link" data-section="products">
+            <span class="admin-nav-link-index" aria-hidden="true">02</span>
+            <span class="admin-nav-link-copy">
+              <strong>Products</strong>
+              <small>Catalog, stock, and visibility</small>
+            </span>
+          </button>
+          <button class="admin-nav-link" data-section="orders">
+            <span class="admin-nav-link-index" aria-hidden="true">03</span>
+            <span class="admin-nav-link-copy">
+              <strong>Orders</strong>
+              <small>Fulfilment and payment progress</small>
+            </span>
+          </button>
+          <button class="admin-nav-link" data-section="customers">
+            <span class="admin-nav-link-index" aria-hidden="true">04</span>
+            <span class="admin-nav-link-copy">
+              <strong>Customers</strong>
+              <small>Buyer history and support context</small>
+            </span>
+          </button>
+          <button class="admin-nav-link" data-section="messages">
+            <span class="admin-nav-link-index" aria-hidden="true">05</span>
+            <span class="admin-nav-link-copy">
+              <strong>Messages</strong>
+              <small>Inbox and follow-up requests</small>
+            </span>
+          </button>
+          <button class="admin-nav-link" data-section="payments">
+            <span class="admin-nav-link-index" aria-hidden="true">06</span>
+            <span class="admin-nav-link-copy">
+              <strong>Payments</strong>
+              <small>Wallet, history, and refunds</small>
+            </span>
+          </button>
+        </div>
+
+        <div class="admin-nav-group">
+          <p class="admin-nav-group-label">Growth</p>
+          <button class="admin-nav-link" data-section="coupons">
+            <span class="admin-nav-link-index" aria-hidden="true">07</span>
+            <span class="admin-nav-link-copy">
+              <strong>Coupons</strong>
+              <small>Discount rules and launches</small>
+            </span>
+          </button>
+          <button class="admin-nav-link" data-section="content">
+            <span class="admin-nav-link-index" aria-hidden="true">08</span>
+            <span class="admin-nav-link-copy">
+              <strong>Content</strong>
+              <small>Homepage and policy editing</small>
+            </span>
+          </button>
+          <button class="admin-nav-link" data-section="newsletter">
+            <span class="admin-nav-link-index" aria-hidden="true">09</span>
+            <span class="admin-nav-link-copy">
+              <strong>Newsletter</strong>
+              <small>Subscribers and announcements</small>
+            </span>
+          </button>
+          <button class="admin-nav-link" data-section="reviews">
+            <span class="admin-nav-link-index" aria-hidden="true">10</span>
+            <span class="admin-nav-link-copy">
+              <strong>Reviews</strong>
+              <small>Moderate social proof</small>
+            </span>
+          </button>
+        </div>
+
+        <div class="admin-nav-group">
+          <p class="admin-nav-group-label">Access</p>
+          <button class="admin-nav-link" data-section="settings">
+            <span class="admin-nav-link-index" aria-hidden="true">11</span>
+            <span class="admin-nav-link-copy">
+              <strong>Settings</strong>
+              <small>Shipping, security, and logs</small>
+            </span>
+          </button>
+          <button class="admin-nav-link" data-section="team">
+            <span class="admin-nav-link-index" aria-hidden="true">12</span>
+            <span class="admin-nav-link-copy">
+              <strong>Admin Users</strong>
+              <small>Roles and back-office access</small>
+            </span>
+          </button>
+        </div>
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        <div class="admin-sidebar-footer-copy">
+          <p class="admin-footer-label">Signed in as</p>
+          <strong id="admin-user-name">Admin</strong>
+          <p id="admin-user-role">super_admin</p>
+        </div>
+        <button id="admin-logout-btn" class="admin-ghost-btn" type="button">Log out</button>
+      </div>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-copy">
+          <div class="admin-topbar-kicker-row">
+            <button id="admin-mobile-nav-btn" class="admin-mobile-nav-btn" type="button">Menu</button>
+            <p class="admin-kicker" id="admin-page-kicker">Overview</p>
+          </div>
+          <h2 id="admin-page-title">Business health at a glance</h2>
+          <p class="admin-topbar-text">Keep merchandise, orders, client care, and growth actions moving from one refined operations workspace.</p>
+        </div>
+        <div class="admin-topbar-actions">
+          <a href="/index.html" class="admin-inline-btn admin-link-btn" target="_blank" rel="noreferrer">Open storefront</a>
+          <div class="admin-status-pill" id="admin-session-pill">Session active</div>
+          <div class="admin-time" id="admin-time"></div>
+        </div>
+      </header>
+
+      <div id="admin-flash" class="admin-flash" hidden></div>
+
+      <main class="admin-sections">
+        <section class="admin-section active" data-section="dashboard">
+          <div class="admin-dashboard-shell">
+            <div class="admin-card admin-dashboard-command">
+              <div class="admin-dashboard-command-head">
+                <div>
+                  <p class="admin-card-kicker">Control overview</p>
+                  <h3>Luxury operations at a glance</h3>
+                  <p class="admin-dashboard-command-copy">
+                    Review the store's current pulse, catch friction early, and move between catalogue, fulfilment, and audience decisions without losing context.
+                  </p>
+                </div>
+                <div class="admin-dashboard-command-actions">
+                  <span class="admin-inline-pill">Live overview</span>
+                  <button id="refresh-dashboard-btn" class="admin-ghost-btn" type="button">Refresh view</button>
+                </div>
+              </div>
+              <div class="admin-metric-grid" id="dashboard-metrics"></div>
+            </div>
+
+            <div class="admin-section-grid admin-dashboard-grid">
+              <div class="admin-card">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Alerts</p>
+                    <h3>What needs attention</h3>
+                  </div>
+                </div>
+                <div id="dashboard-alerts" class="admin-stack-list"></div>
+              </div>
+
+              <div class="admin-card admin-span-2">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Recent transactions</p>
+                    <h3>Latest money movement</h3>
+                  </div>
+                </div>
+                <div id="dashboard-transactions" class="admin-transaction-list"></div>
+              </div>
+
+              <div class="admin-card admin-span-2">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Sales trend</p>
+                    <h3>Daily sales</h3>
+                  </div>
+                </div>
+                <div id="dashboard-daily-sales" class="admin-chart-list"></div>
+              </div>
+
+              <div class="admin-card">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Best sellers</p>
+                    <h3>Top moving products</h3>
+                  </div>
+                </div>
+                <div id="dashboard-best-sellers" class="admin-stack-list"></div>
+              </div>
+
+              <div class="admin-card">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Top customers</p>
+                    <h3>Highest spenders</h3>
+                  </div>
+                </div>
+                <div id="dashboard-top-customers" class="admin-stack-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" data-section="products">
+          <div class="admin-section-stack">
+            <div class="admin-card admin-section-spotlight">
+              <div class="admin-section-spotlight-copy">
+                <p class="admin-card-kicker">Merchandise workspace</p>
+                <h3>Curate the catalogue like a luxury release board</h3>
+                <p class="admin-section-copy">Create products, manage imagery, set pricing, and control visibility from one cleaner merchandising workflow.</p>
+              </div>
+              <div class="admin-chip-row">
+                <span class="admin-inline-pill">Editor</span>
+                <span class="admin-inline-pill">Stock health</span>
+                <span class="admin-inline-pill">Publish control</span>
+              </div>
+            </div>
+
+            <div class="admin-section-grid">
+              <div class="admin-card admin-span-2 admin-card-editor">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Product editor</p>
+                    <h3>Add or update catalog items</h3>
+                    <p id="product-editor-state" class="admin-card-copy">Create a new style or open an existing card below to edit it with the same form.</p>
+                  </div>
+                  <button id="product-form-reset" class="admin-ghost-btn" type="button">New product</button>
+                </div>
+                <form id="product-form" class="admin-form">
+                  <input type="hidden" name="productId" />
+                  <label>
+                    Product name
+                    <input name="name" type="text" required />
+                  </label>
+                  <label>
+                    Category
+                    <input name="categoryName" type="text" placeholder="Men, Women, Accessories" required />
+                  </label>
+                  <label>
+                    SKU / product code
+                    <span class="admin-input-action">
+                      <input name="sku" type="text" placeholder="BLX-WOM-019-A7K" />
+                      <button id="product-sku-generate-btn" class="admin-inline-btn" type="button">Generate</button>
+                    </span>
+                  </label>
+                  <label>
+                    Price (NGN)
+                    <input name="price" type="number" min="0" step="100" required />
+                  </label>
+                  <label>
+                    Discount price (NGN)
+                    <input name="discountPrice" type="number" min="0" step="100" />
+                  </label>
+                  <label>
+                    Stock quantity
+                    <input name="stockQuantity" type="number" min="0" step="1" required />
+                  </label>
+                  <label>
+                    Sizes
+                    <input name="sizes" type="text" placeholder="S, M, L, XL" />
+                  </label>
+                  <label>
+                    Colors
+                    <input name="colors" type="text" placeholder="Black, White, Olive, #d4af37" />
+                  </label>
+                  <label class="admin-form-span-full">
+                    Description
+                    <textarea name="description" rows="4" placeholder="Short product note"></textarea>
+                  </label>
+                  <label class="admin-form-span-full">
+                    Image URLs or relative paths
+                    <textarea name="images" rows="4" placeholder="/OFF BACK/your-image.png&#10;https://example.com/image.jpg"></textarea>
+                  </label>
+                  <label class="admin-form-span-full">
+                    Upload images
+                    <input id="product-image-upload" type="file" multiple accept="image/*" />
+                  </label>
+                  <label class="admin-switch-field">
+                    <input name="featured" type="checkbox" />
+                    <span>Featured product</span>
+                  </label>
+                  <label class="admin-switch-field">
+                    <input name="isActive" type="checkbox" checked />
+                    <span>Published</span>
+                  </label>
+                  <button id="product-submit-btn" class="admin-primary-btn admin-form-span-full" type="submit">Save product</button>
+                </form>
+              </div>
+
+              <div class="admin-card admin-product-rail">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Assortment health</p>
+                    <h3>What the catalogue needs now</h3>
+                    <p class="admin-card-copy">Use this quick view to spot hidden products, low stock, and featured count before editing the board.</p>
+                  </div>
+                </div>
+                <div id="products-summary" class="admin-product-summary"></div>
+                <div class="admin-product-guide">
+                  <h4>Merchandising checklist</h4>
+                  <p class="admin-meta">Lead with a clean image, keep price hierarchy obvious, and use featured status only on launch-worthy pieces.</p>
+                </div>
+              </div>
+
+              <div class="admin-card admin-span-full admin-card-browser">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Catalog</p>
+                    <h3>Inventory and visibility</h3>
+                    <p class="admin-card-copy">Review the live assortment with healthier spacing, clearer price hierarchy, and faster edit actions.</p>
+                  </div>
+                </div>
+                <div id="products-grid" class="admin-product-grid"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" data-section="orders">
+          <div class="admin-section-stack">
+            <div class="admin-card admin-section-spotlight">
+              <div class="admin-section-spotlight-copy">
+                <p class="admin-card-kicker">Fulfilment workspace</p>
+                <h3>Move fulfilment faster while payment state stays protected</h3>
+                <p class="admin-section-copy">Review customer context, advance delivery, and let paid orders stay locked while unpaid bank transfers surface only when a one-time review is still needed.</p>
+              </div>
+              <div class="admin-chip-row">
+                <span class="admin-inline-pill">Auto payment logic</span>
+                <span class="admin-inline-pill">Fulfilment steps</span>
+                <span class="admin-inline-pill">Invoice print</span>
+              </div>
+            </div>
+
+            <div class="admin-section-grid">
+              <div class="admin-card admin-card-browser admin-span-2">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Orders management</p>
+                    <h3>Run the fulfilment queue from one board</h3>
+                    <p class="admin-card-copy">Payment status is system-managed. Hosts only step in when a bank transfer is still awaiting review, then continue with delivery and customer updates.</p>
+                  </div>
+                  <div id="orders-summary" class="admin-inline-stats"></div>
+                </div>
+                <div id="orders-list" class="admin-order-list"></div>
+              </div>
+
+              <aside class="admin-card admin-order-rail">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Automation guide</p>
+                    <h3>Payment and status rules</h3>
+                    <p class="admin-card-copy">This side panel explains which parts of the order flow are automatic so admins avoid reconfirming already-paid orders.</p>
+                  </div>
+                </div>
+                <div id="orders-automation" class="admin-order-rule-list"></div>
+                <div class="admin-order-guide">
+                  <h4>Host focus</h4>
+                  <p>Keep your manual work around fulfilment, notes, delivery promise, and customer care. Payment state now stays locked unless a pending bank transfer still needs review.</p>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" data-section="customers">
+          <div class="admin-section-stack">
+            <div class="admin-card admin-section-spotlight">
+              <div class="admin-section-spotlight-copy">
+                <p class="admin-card-kicker">Relationship workspace</p>
+                <h3>Keep buyer history, spend, and trust decisions in one view</h3>
+                <p class="admin-section-copy">Support and retention work is easier when customer identity, order value, and restriction controls are visible together.</p>
+              </div>
+              <div class="admin-chip-row">
+                <span class="admin-inline-pill">Spending insight</span>
+                <span class="admin-inline-pill">Account trust</span>
+                <span class="admin-inline-pill">Quick actions</span>
+              </div>
+            </div>
+
+            <div class="admin-card admin-card-browser">
+              <div class="admin-card-head">
+                <div>
+                  <p class="admin-card-kicker">Customers</p>
+                  <h3>Buyer records and trust controls</h3>
+                  <p class="admin-card-copy">Review customer profiles with cleaner spend snapshots, order history cues, and access actions.</p>
+                </div>
+              </div>
+              <div id="customers-list" class="admin-customer-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" data-section="messages">
+          <div class="admin-section-stack">
+            <div class="admin-card admin-section-spotlight">
+              <div class="admin-section-spotlight-copy">
+                <p class="admin-card-kicker">Support inbox</p>
+                <h3>Turn incoming contact requests into clear support threads</h3>
+                <p class="admin-section-copy">Delivery signals, triage state, follow-up notes, and resolve actions now sit inside a calmer inbox workflow with less manual status babysitting.</p>
+              </div>
+              <div class="admin-chip-row">
+                <span class="admin-inline-pill">Auto triage</span>
+                <span class="admin-inline-pill">Email reply</span>
+                <span class="admin-inline-pill">WhatsApp handoff</span>
+              </div>
+            </div>
+
+            <div class="admin-section-grid">
+              <div class="admin-card admin-card-browser admin-span-2">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Contact inbox</p>
+                    <h3>Incoming support messages</h3>
+                    <p class="admin-card-copy">See message urgency, delivery readiness, and owner notes before you open a reply channel outside the dashboard.</p>
+                  </div>
+                  <div id="messages-summary" class="admin-inline-stats"></div>
+                </div>
+                <div id="messages-list" class="admin-message-list"></div>
+              </div>
+
+              <aside class="admin-card admin-message-rail">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Inbox automation</p>
+                    <h3>System-driven workflow</h3>
+                    <p class="admin-card-copy">New and in-progress states are derived from delivery and note activity, while hosts mainly resolve or reopen the conversation when needed.</p>
+                  </div>
+                </div>
+                <div id="messages-automation" class="admin-message-rule-list"></div>
+                <div class="admin-message-guide">
+                  <h4>Host focus</h4>
+                  <p>Use private notes, reply by email or WhatsApp, then close the thread when the customer is handled. The system now manages inbox triage for the rest.</p>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" data-section="payments">
+          <div class="admin-section-stack">
+            <div class="admin-card admin-section-spotlight">
+              <div class="admin-section-spotlight-copy">
+                <p class="admin-card-kicker">Payments workspace</p>
+                <h3>Track verified, failed, refunded, and wallet activity with more clarity</h3>
+                <p class="admin-section-copy">The section is structured to separate performance summary from transactional follow-up, making finance checks easier to scan.</p>
+              </div>
+              <div class="admin-chip-row">
+                <span class="admin-inline-pill">Verification</span>
+                <span class="admin-inline-pill">Refund tracking</span>
+                <span class="admin-inline-pill">Wallet activity</span>
+              </div>
+            </div>
+
+            <div class="admin-section-grid">
+              <div class="admin-card admin-span-full admin-card-emphasis">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Payments overview</p>
+                    <h3>History, verification, wallet and refunds</h3>
+                    <p class="admin-card-copy">Use the summary row to spot friction before drilling into individual transactions below.</p>
+                  </div>
+                </div>
+                <div id="payments-summary" class="admin-metric-grid"></div>
+              </div>
+              <div class="admin-card admin-span-full admin-card-browser">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Payment records</p>
+                    <h3>Every transaction in one queue</h3>
+                  </div>
+                </div>
+                <div id="payments-list" class="admin-payment-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" data-section="coupons">
+          <div class="admin-section-stack">
+            <div class="admin-card admin-section-spotlight">
+              <div class="admin-section-spotlight-copy">
+                <p class="admin-card-kicker">Campaign workspace</p>
+                <h3>Launch offers with stronger rule control and automatic redemption safety</h3>
+                <p class="admin-section-copy">Create private offers, watch usage health, and pause or relaunch campaigns from one cleaner board while expiry and limit checks stay automatic at checkout.</p>
+              </div>
+              <div class="admin-chip-row">
+                <span class="admin-inline-pill">Auto expiry</span>
+                <span class="admin-inline-pill">Usage caps</span>
+                <span class="admin-inline-pill">Manual pause</span>
+              </div>
+            </div>
+
+            <div class="admin-section-grid">
+              <div class="admin-card admin-card-editor admin-span-2 admin-coupon-create-card">
+                <div class="admin-card-head admin-coupon-create-head">
+                  <div class="admin-coupon-create-copy">
+                    <p class="admin-card-kicker">Create campaign</p>
+                    <h3>Build a cleaner redemption rule</h3>
+                    <p class="admin-card-copy">Set code, discount logic, order thresholds, and shipping perks in one focused offer form.</p>
+                  </div>
+                  <div id="coupons-summary" class="admin-inline-stats"></div>
+                </div>
+                <form id="coupon-form" class="admin-form">
+                  <label>
+                    Coupon code
+                    <span class="admin-input-action">
+                      <input name="code" type="text" placeholder="BLXVIP20" required />
+                      <button id="coupon-code-generate-btn" class="admin-inline-btn" type="button">Generate</button>
+                    </span>
+                  </label>
+                  <label>
+                    Discount type
+                    <select name="discountType">
+                      <option value="percent">Percentage</option>
+                      <option value="fixed">Fixed amount</option>
+                    </select>
+                  </label>
+                  <label>
+                    Discount value
+                    <input name="discountValue" type="number" min="0" step="1" required />
+                  </label>
+                  <label>
+                    Discount cap (percent only)
+                    <input name="maximumDiscountAmount" type="number" min="0" step="100" placeholder="Optional maximum discount" />
+                  </label>
+                  <label>
+                    Minimum order amount
+                    <input name="minimumOrderAmount" type="number" min="0" step="100" />
+                  </label>
+                  <label>
+                    Usage limit
+                    <input name="usageLimit" type="number" min="0" step="1" />
+                  </label>
+                  <label>
+                    Per user limit
+                    <input name="perUserLimit" type="number" min="0" step="1" />
+                  </label>
+                  <label>
+                    Expiry date
+                    <input name="expiresAt" type="datetime-local" />
+                  </label>
+                  <label class="admin-form-span-full admin-coupon-product-target-field">
+                    Product codes for this coupon
+                    <textarea name="applicableProductIds" rows="2" placeholder="Product IDs or SKU codes, separated by commas"></textarea>
+                  </label>
+                  <div class="admin-coupon-create-footer admin-form-span-full">
+                    <label class="admin-switch-field">
+                      <input name="freeShipping" type="checkbox" />
+                      <span>Free shipping</span>
+                    </label>
+                    <label class="admin-switch-field">
+                      <input name="isActive" type="checkbox" checked />
+                      <span>Launch live</span>
+                    </label>
+                    <button class="admin-primary-btn" type="submit">Create coupon</button>
+                  </div>
+                </form>
+              </div>
+
+              <aside class="admin-card admin-coupon-rail">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Redemption guide</p>
+                    <h3>What the system handles for you</h3>
+                    <p class="admin-card-copy">Expired or exhausted offers are blocked automatically. Hosts mainly edit rules, pause campaigns, and relaunch intentional offers.</p>
+                  </div>
+                </div>
+                <div id="coupons-automation" class="admin-coupon-rule-list"></div>
+                <div class="admin-coupon-guide">
+                  <h4>Host focus</h4>
+                  <p>Keep your manual work around campaign wording, discount value, and availability. Checkout already enforces expiry dates, usage limits, and per-customer limits automatically.</p>
+                </div>
+              </aside>
+
+              <div class="admin-card admin-span-full admin-card-browser">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Live coupon board</p>
+                    <h3>Current discount rules and campaign health</h3>
+                    <p class="admin-card-copy">Review each offer with clearer lifecycle state, usage visibility, expiry control, and faster update actions.</p>
+                  </div>
+                </div>
+                <div id="coupons-list" class="admin-coupon-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" data-section="settings">
+          <div class="admin-section-stack">
+            <div class="admin-card admin-section-spotlight">
+              <div class="admin-section-spotlight-copy">
+                <p class="admin-card-kicker">Operations settings</p>
+                <h3>Shape fulfilment policy, security timing, and audit visibility</h3>
+                <p class="admin-section-copy">This workspace keeps store operations rules and admin safety settings together so the back office behaves consistently.</p>
+              </div>
+              <div class="admin-chip-row">
+                <span class="admin-inline-pill">Shipping rules</span>
+                <span class="admin-inline-pill">Session control</span>
+                <span class="admin-inline-pill">Activity logs</span>
+              </div>
+            </div>
+
+            <div class="admin-section-grid">
+              <div class="admin-card admin-span-2 admin-card-editor">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Shipping and security</p>
+                    <h3>Delivery fees, timing and session rules</h3>
+                    <p class="admin-card-copy">Tighten logistics and admin safeguards without leaving the same settings workspace.</p>
+                  </div>
+                </div>
+                <form id="settings-form" class="admin-form">
+                  <label>
+                    Default domestic fee (NGN)
+                    <input name="defaultDomesticFeeNgn" type="number" min="0" step="100" />
+                  </label>
+                  <label>
+                    Lagos fee (NGN)
+                    <input name="lagosFeeNgn" type="number" min="0" step="100" />
+                  </label>
+                  <label>
+                    Other states fee (NGN)
+                    <input name="otherStatesFeeNgn" type="number" min="0" step="100" />
+                  </label>
+                  <label>
+                    International fee (NGN)
+                    <input name="internationalFeeNgn" type="number" min="0" step="100" />
+                  </label>
+                  <label>
+                    Free shipping threshold (NGN)
+                    <input name="freeShippingThresholdNgn" type="number" min="0" step="100" />
+                  </label>
+                  <label>
+                    Lagos delivery time
+                    <input name="lagosDelivery" type="text" />
+                  </label>
+                  <label>
+                    Other states delivery time
+                    <input name="otherStatesDelivery" type="text" />
+                  </label>
+                  <label>
+                    International delivery time
+                    <input name="internationalDelivery" type="text" />
+                  </label>
+                  <label>
+                    Admin session timeout (minutes)
+                    <input name="adminSessionTimeoutMinutes" type="number" min="5" step="5" />
+                  </label>
+                  <label>
+                    Activity log retention (days)
+                    <input name="activityLogsRetentionDays" type="number" min="1" step="1" />
+                  </label>
+                  <label class="admin-switch-field admin-form-span-full">
+                    <input name="twoFactorEnabled" type="checkbox" />
+                    <span>Two-factor toggle reserved for future rollout</span>
+                  </label>
+                  <button class="admin-primary-btn admin-form-span-full" type="submit">Save settings</button>
+                </form>
+              </div>
+
+              <div class="admin-card admin-card-browser">
+              <div class="admin-card-head">
+                <div>
+                  <p class="admin-card-kicker">Activity log</p>
+                  <h3>Recent admin actions</h3>
+                  <p class="admin-card-copy">Track who changed what and when, with cleaner activity cards built for quick trust checks.</p>
+                </div>
+              </div>
+              <div class="admin-log-archive-actions">
+                <div class="admin-log-archive-row">
+                  <span class="admin-log-archive-label">Today</span>
+                  <div class="admin-log-format-buttons">
+                    <button class="admin-inline-btn" type="button" data-log-export="daily" data-log-format="csv">Download CSV</button>
+                    <button class="admin-inline-btn" type="button" data-log-export="daily" data-log-format="pdf">Download PDF</button>
+                    <button class="admin-inline-btn" type="button" data-log-email="daily" data-log-format="csv">Email CSV</button>
+                    <button class="admin-inline-btn" type="button" data-log-email="daily" data-log-format="pdf">Email PDF</button>
+                  </div>
+                </div>
+                <div class="admin-log-archive-row">
+                  <span class="admin-log-archive-label">Week</span>
+                  <div class="admin-log-format-buttons">
+                    <button class="admin-inline-btn" type="button" data-log-export="weekly" data-log-format="csv">Download CSV</button>
+                    <button class="admin-inline-btn" type="button" data-log-export="weekly" data-log-format="pdf">Download PDF</button>
+                    <button class="admin-inline-btn" type="button" data-log-email="weekly" data-log-format="csv">Email CSV</button>
+                    <button class="admin-inline-btn" type="button" data-log-email="weekly" data-log-format="pdf">Email PDF</button>
+                  </div>
+                </div>
+                <div class="admin-log-archive-row">
+                  <span class="admin-log-archive-label">Month</span>
+                  <div class="admin-log-format-buttons">
+                    <button class="admin-inline-btn" type="button" data-log-export="monthly" data-log-format="csv">Download CSV</button>
+                    <button class="admin-inline-btn" type="button" data-log-export="monthly" data-log-format="pdf">Download PDF</button>
+                    <button class="admin-inline-btn" type="button" data-log-email="monthly" data-log-format="csv">Email CSV</button>
+                    <button class="admin-inline-btn" type="button" data-log-email="monthly" data-log-format="pdf">Email PDF</button>
+                  </div>
+                </div>
+                <div class="admin-log-archive-row">
+                  <span class="admin-log-archive-label">Year</span>
+                  <div class="admin-log-format-buttons">
+                    <button class="admin-inline-btn" type="button" data-log-export="yearly" data-log-format="csv">Download CSV</button>
+                    <button class="admin-inline-btn" type="button" data-log-export="yearly" data-log-format="pdf">Download PDF</button>
+                    <button class="admin-inline-btn" type="button" data-log-email="yearly" data-log-format="csv">Email CSV</button>
+                    <button class="admin-inline-btn" type="button" data-log-email="yearly" data-log-format="pdf">Email PDF</button>
+                  </div>
+                </div>
+                <div class="admin-log-archive-row">
+                  <span class="admin-log-archive-label">Retention</span>
+                  <div class="admin-log-format-buttons">
+                    <button class="admin-inline-btn" type="button" data-log-export="retention" data-log-format="csv">Download CSV</button>
+                    <button class="admin-inline-btn" type="button" data-log-export="retention" data-log-format="pdf">Download PDF</button>
+                    <button class="admin-inline-btn" type="button" data-log-email="retention" data-log-format="csv">Email CSV</button>
+                    <button class="admin-inline-btn" type="button" data-log-email="retention" data-log-format="pdf">Email PDF</button>
+                  </div>
+                </div>
+              </div>
+              <p id="log-archive-status" class="admin-log-archive-status" aria-live="polite"></p>
+              <div id="activity-logs" class="admin-stack-list"></div>
+            </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" data-section="content">
+          <div class="admin-section-stack">
+            <div class="admin-card admin-section-spotlight">
+              <div class="admin-section-spotlight-copy">
+                <p class="admin-card-kicker">Brand content workspace</p>
+                <h3>Edit the storefront voice, policies, and conversion copy in one place</h3>
+                <p class="admin-section-copy">This writing workspace is organized for campaign copy, operational policies, and footer messaging without scattering content fields across pages.</p>
+              </div>
+              <div class="admin-chip-row">
+                <span class="admin-inline-pill">Homepage copy</span>
+                <span class="admin-inline-pill">Policy text</span>
+                <span class="admin-inline-pill">Footer messaging</span>
+              </div>
+            </div>
+
+            <div class="admin-card admin-card-editor">
+              <div class="admin-card-head">
+                <div>
+                  <p class="admin-card-kicker">Website content</p>
+                  <h3>Homepage, footer, FAQ and policy copy</h3>
+                  <p class="admin-card-copy">Refine brand language with a calmer long-form editor designed for both marketing and operational content.</p>
+                </div>
+              </div>
+              <form id="content-form" class="admin-form">
+              <label>
+                Homepage banner eyebrow
+                <input name="homepageEyebrow" type="text" />
+              </label>
+              <label>
+                Homepage banner title
+                <input name="homepageTitle" type="text" />
+              </label>
+              <label>
+                Homepage banner CTA label
+                <input name="homepageCtaLabel" type="text" />
+              </label>
+              <label>
+                Homepage banner CTA URL
+                <input name="homepageCtaUrl" type="text" />
+              </label>
+              <label class="admin-form-span-full">
+                Homepage banner subtitle
+                <textarea name="homepageSubtitle" rows="3"></textarea>
+              </label>
+              <label>
+                Hero heading
+                <input name="heroHeading" type="text" />
+              </label>
+              <label class="admin-form-span-full">
+                Hero body
+                <textarea name="heroBody" rows="4"></textarea>
+              </label>
+              <label class="admin-form-span-full">
+                About us
+                <textarea name="aboutUs" rows="5"></textarea>
+              </label>
+              <label>
+                Contact email
+                <input name="contactEmail" type="email" />
+              </label>
+              <label>
+                Contact phone
+                <input name="contactPhone" type="text" />
+              </label>
+              <label class="admin-form-span-full">
+                Contact address
+                <textarea name="contactAddress" rows="3"></textarea>
+              </label>
+              <label class="admin-form-span-full">
+                FAQ (JSON array)
+                <textarea name="faq" rows="6" placeholder='[{"question":"...","answer":"..."}]'></textarea>
+              </label>
+              <label class="admin-form-span-full">
+                Shipping policy
+                <textarea name="policyShipping" rows="4"></textarea>
+              </label>
+              <label class="admin-form-span-full">
+                Returns policy
+                <textarea name="policyReturns" rows="4"></textarea>
+              </label>
+              <label class="admin-form-span-full">
+                Privacy policy
+                <textarea name="policyPrivacy" rows="4"></textarea>
+              </label>
+              <label class="admin-form-span-full">
+                General use policy
+                <textarea name="policyTerms" rows="4"></textarea>
+              </label>
+              <label>
+                Footer headline
+                <input name="footerHeadline" type="text" />
+              </label>
+              <label class="admin-form-span-full">
+                Footer copy
+                <textarea name="footerBody" rows="3"></textarea>
+              </label>
+              <label class="admin-form-span-full">
+                Footer newsletter note
+                <textarea name="footerNewsletterNote" rows="3"></textarea>
+              </label>
+              <label>
+                Newsletter section title
+                <input name="newsletterTitle" type="text" />
+              </label>
+              <label class="admin-form-span-full">
+                Newsletter section copy
+                <textarea name="newsletterBody" rows="3"></textarea>
+              </label>
+                <button class="admin-primary-btn admin-form-span-full" type="submit">Save content</button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" data-section="newsletter">
+          <div class="admin-section-stack">
+            <div class="admin-card admin-section-spotlight">
+              <div class="admin-section-spotlight-copy">
+                <p class="admin-card-kicker">Audience workspace</p>
+                <h3>Write announcements and review subscriber growth from one broadcast view</h3>
+                <p class="admin-section-copy">Campaign writing, export actions, source tracking, and subscriber snapshots now sit inside a more cohesive outreach workspace.</p>
+              </div>
+              <div class="admin-chip-row">
+                <span class="admin-inline-pill">Brevo updates</span>
+                <span class="admin-inline-pill">Subscriber export</span>
+                <span class="admin-inline-pill">Source insight</span>
+              </div>
+            </div>
+
+            <div class="admin-section-grid">
+              <div class="admin-card admin-card-editor">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Announcements</p>
+                    <h3>Send Brevo-backed updates</h3>
+                    <p class="admin-card-copy">Draft campaign messages in a cleaner composer built for high-clarity announcements.</p>
+                  </div>
+                  <button id="export-subscribers-btn" class="admin-ghost-btn" type="button">Export emails</button>
+                </div>
+                <form id="newsletter-form" class="admin-form">
+                  <label>
+                    Subject
+                    <input name="subject" type="text" required />
+                  </label>
+                  <label class="admin-form-span-full">
+                    Message
+                    <textarea name="body" rows="8" required></textarea>
+                  </label>
+                  <button class="admin-primary-btn admin-form-span-full" type="submit">Send announcement</button>
+                </form>
+              </div>
+              <div class="admin-card admin-span-2 admin-card-browser">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Subscribers</p>
+                    <h3>Email list and signup sources</h3>
+                    <p class="admin-card-copy">Review growth signals, coupon usage, and source performance with better spacing and easier scanning.</p>
+                  </div>
+                </div>
+                <div id="newsletter-summary" class="admin-inline-stats"></div>
+                <div id="subscribers-list" class="admin-subscriber-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" data-section="reviews">
+          <div class="admin-section-stack">
+            <div class="admin-card admin-section-spotlight">
+              <div class="admin-section-spotlight-copy">
+                <p class="admin-card-kicker">Social proof workspace</p>
+                <h3>Shape the testimonials customers see with cleaner moderation flow</h3>
+                <p class="admin-section-copy">Add new reviews, feature standout quotes, and keep moderation decisions close to the customer voice itself.</p>
+              </div>
+              <div class="admin-chip-row">
+                <span class="admin-inline-pill">Moderation</span>
+                <span class="admin-inline-pill">Featured proof</span>
+                <span class="admin-inline-pill">Rating control</span>
+              </div>
+            </div>
+
+            <div class="admin-section-grid">
+              <div class="admin-card admin-card-editor">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Add testimonial</p>
+                    <h3>Curate social proof</h3>
+                    <p class="admin-card-copy">Capture strong customer language and decide whether it should be featured publicly right away.</p>
+                  </div>
+                </div>
+                <form id="review-form" class="admin-form">
+                  <label>
+                    Customer name
+                    <input name="customerName" type="text" required />
+                  </label>
+                  <label>
+                    Product name
+                    <input name="productName" type="text" />
+                  </label>
+                  <label>
+                    Rating
+                    <input name="rating" type="number" min="1" max="5" step="1" value="5" />
+                  </label>
+                  <label class="admin-switch-field">
+                    <input name="featured" type="checkbox" />
+                    <span>Feature publicly</span>
+                  </label>
+                  <label class="admin-form-span-full">
+                    Review text
+                    <textarea name="comment" rows="5" required></textarea>
+                  </label>
+                  <button class="admin-primary-btn admin-form-span-full" type="submit">Save review</button>
+                </form>
+              </div>
+              <div class="admin-card admin-span-2 admin-card-browser">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="admin-card-kicker">Moderation</p>
+                    <h3>Approve, reject, feature</h3>
+                    <p class="admin-card-copy">Moderate testimonials with clearer status controls and more readable customer copy cards.</p>
+                  </div>
+                </div>
+                <div id="reviews-list" class="admin-stack-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" data-section="team">
+          <div class="admin-section-stack">
+            <div class="admin-card admin-section-spotlight">
+              <div class="admin-section-spotlight-copy">
+                <p class="admin-card-kicker">Access workspace</p>
+                <h3>Manage back-office people, permissions, and trust levels with more clarity</h3>
+                <p class="admin-section-copy">The team section is organized for role governance, contact details, and restriction states without cluttering the decision flow.</p>
+              </div>
+              <div class="admin-chip-row">
+                <span class="admin-inline-pill">Role assignment</span>
+                <span class="admin-inline-pill">Host access</span>
+                <span class="admin-inline-pill">User safety</span>
+              </div>
+            </div>
+
+            <div class="admin-card admin-card-browser">
+              <div class="admin-card-head">
+                <div>
+                  <p class="admin-card-kicker">Admin users and roles</p>
+                  <h3>Super admin, product, order and support access</h3>
+                  <p class="admin-card-copy">Keep access control readable by editing the people records in a cleaner, more structured team grid.</p>
+                </div>
+              </div>
+              <div id="team-list" class="admin-team-list"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="/admin-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benzy Luxury | Recently Viewed</title>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="OFF BACK/BENZY LOGO.png" />
+  <link rel="apple-touch-icon" href="OFF BACK/BENZY LOGO.png" />
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">
+      <img src="OFF BACK/BENZY LOGO.png" alt="Benzy Luxury Logo" class="logo-main">
+      <img src="OFF BACK/BLX.png" alt="BLX Logo" class="logo-blx">
+    </div>
+
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li class="has-dropdown">
+          <a href="Shop.html" class="shop-toggle">Shop <span class="chevron">▾</span></a>
+          <ul class="dropdown">
+            <li><a href="Shop.html?cat=all">All Products</a></li>
+            <li><a href="Shop.html?cat=men">Men</a></li>
+            <li><a href="Shop.html?cat=women">Women</a></li>
+            <li><a href="Shop.html?cat=accessories">Accessories</a></li>
+          </ul>
+        </li>
+        <li><a href="About.html">About</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+        <li><a href="Account.html">Account</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-right">
+      <a href="Search.html" class="search-link" aria-label="Search">
+        <img src="OFF BACK/icons8-search-64.png" alt="Search Icon">
+      </a>
+      <a href="Cart.html" class="cart-link" aria-label="Cart">
+        <img src="OFF BACK/icons8-cart-100.png" alt="Cart Icon">
+      </a>
+    </div>
+  </div>
+
+  <main class="recently-page">
+    <section class="recently-shell">
+      <h1>Recently viewed products</h1>
+      <p>All products you have viewed recently.</p>
+
+      <div id="recently-all-grid" class="recommend-grid recently-all-grid"></div>
+      <p id="recently-all-empty" class="recently-empty" hidden>No recently viewed products yet.</p>
+    </section>
+  </main>
+
+  <script src="cart-api.js"></script>
+  <script src="currency-service.js"></script>
+  <script src="cart-store.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

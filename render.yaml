@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: benzy-luxury-backend
+    runtime: node
+    rootDir: backend/server
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB_NAME
+        value: benzy_luxury
+      - key: JWT_SECRET
+        sync: false
+      - key: ADMIN_EMAILS
+        sync: false
+      - key: PAYSTACK_PUBLIC_KEY
+        sync: false
+      - key: PAYSTACK_SECRET_KEY
+        sync: false
+      - key: PAYSTACK_CALLBACK_BASE_URL
+        sync: false
+      - key: PUBLIC_SITE_URL
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: BREVO_SENDER_EMAIL
+        sync: false
+      - key: BREVO_SENDER_NAME
+        sync: false
+      - key: BREVO_WEBHOOK_SECRET
+        sync: false
+      - key: WATI_API_ENDPOINT
+        sync: false
+      - key: WATI_TOKEN
+        sync: false
+      - key: WATI_CHANNEL_NUMBER
+        sync: false
+      - key: WATI_TEMPLATE_NAME
+        sync: false

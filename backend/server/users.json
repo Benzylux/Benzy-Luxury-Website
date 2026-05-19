@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1771740348864,
+    "name": "Ekenedilichukwu Benedict Ezeude",
+    "email": "ezeudeben7@gmail.com",
+    "role": "resident",
+    "passwordHash": "$2a$10$1Wx1TxE3QCbDCJhoWxLz1uSY.mIgps9IW6cACfAuEXL2PIQg52CfS",
+    "createdAt": "2026-02-22T06:05:48.864Z",
+    "addresses": [
+      {
+        "type": "shipping",
+        "line1": "Block 2, Flat 13 Ogunmola close, Stadium Bus Stop, Surulere.",
+        "city": "Lagos",
+        "state": "Lagos State",
+        "country": "Nigeria",
+        "phone": "08062706597",
+        "isDefault": true
+      }
+    ],
+    "phone": "ezeudeben7@gmail.com"
+  },
+  {
+    "id": 1771839113526,
+    "name": "lilbenzyy",
+    "email": "benzyluxury@gmail.com",
+    "role": "host",
+    "passwordHash": "$2a$10$aXWs82VyO4ph9Iv2NGGZLe0vP4EBXmtiJaft8tFTGXbGqnY3s9Lte",
+    "createdAt": "2026-02-23T09:31:53.526Z",
+    "addresses": [],
+    "phone": ""
+  }
+]

@@ -1,0 +1,4057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benzy Luxury | My Account</title>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css?v=profile-menu-logo-20260515" />
+  <link rel="icon" type="image/png" href="OFF BACK/BENZY LOGO.png" />
+  <link rel="apple-touch-icon" href="OFF BACK/BENZY LOGO.png" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="profile-body">
+  <!-- Navigation -->
+  <div class="navbar">
+    <a class="logo" href="index.html" aria-label="Go to Benzy Luxury home">
+      <img src="OFF BACK/BENZY LOGO.png" alt="Benzy Luxury Logo" class="logo-main" />
+      <img src="OFF BACK/BLX.png" alt="BLX Logo" class="logo-blx" />
+    </a>
+
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li class="has-dropdown">
+          <a href="Shop.html" class="shop-toggle">Shop <span class="chevron">▼</span></a>
+          <ul class="dropdown">
+            <li><a href="Shop.html?cat=all">All Products</a></li>
+            <li><a href="Shop.html?cat=men">Men</a></li>
+            <li><a href="Shop.html?cat=women">Women</a></li>
+            <li><a href="Shop.html?cat=accessories">Accessories</a></li>
+          </ul>
+        </li>
+        <li><a href="About.html">About</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-right">
+      <a href="Search.html" class="search-link" aria-label="Search">
+        <img src="OFF BACK/icons8-search-64.png" alt="Search Icon" />
+      </a>
+      <a href="Cart.html" class="cart-link" aria-label="Cart">
+        <img src="OFF BACK/icons8-cart-100.png" alt="Cart Icon" />
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Profile Container -->
+  <main class="profile-container" data-profile-layout="split">
+    <!-- Guest Login Section -->
+    <section class="auth-section" id="auth-section">
+      <div class="auth-container">
+        <div class="auth-brand">
+          <div class="auth-logo">
+            <img src="OFF BACK/BENZY LOGO.png" alt="Benzy Luxury" data-default-brand-logo />
+          </div>
+          <h1>Welcome to Benzy Luxury</h1>
+          <p>Sign in to access your account, track orders, and manage your profile</p>
+        </div>
+
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Sign In</button>
+          <button class="auth-tab" data-tab="register">Create Account</button>
+        </div>
+
+        <!-- Login Form -->
+        <form class="auth-form active" id="login-form">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <input type="email" id="login-email" name="resident-email" placeholder="Enter your email address" autocomplete="section-resident username" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <input type="password" id="login-password" name="resident-password" placeholder="Enter your password" autocomplete="section-resident current-password" required />
+              <button type="button" class="password-toggle" onclick="togglePassword('login-password')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-container">
+              <input type="checkbox" id="remember-me" />
+              <span class="checkmark"></span>
+              Remember me
+            </label>
+            <a href="#" class="forgot-link">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn-auth">
+            <span>Sign In</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+
+        </form>
+
+        <!-- Register Form -->
+        <form class="auth-form" id="register-form">
+          <div class="form-group">
+            <label for="register-name">Full Name</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <input type="text" id="register-name" placeholder="Enter your full name" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="register-email">Email Address</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <input type="email" id="register-email" placeholder="Enter your email address" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="register-phone">Phone Number</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <input type="tel" id="register-phone" placeholder="Enter your phone number (+234...)" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <input type="password" id="register-password" placeholder="Create a password (min 8 characters)" required minlength="8" />
+            </div>
+            <span class="password-hint">At least 8 characters with letters and numbers</span>
+          </div>
+
+          <div class="form-group">
+            <label for="register-confirm">Confirm Password</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              <input type="password" id="register-confirm" placeholder="Re-enter your password" required />
+            </div>
+          </div>
+
+          <label class="checkbox-container terms">
+            <input type="checkbox" id="accept-terms" required />
+            <span class="checkmark"></span>
+            I agree to the <a href="StorePolicies.html#terms">Terms of Service</a> and <a href="StorePolicies.html#privacy">Privacy Policy</a>
+          </label>
+
+          <button type="submit" class="btn-auth">
+            <span>Create Account</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </form>
+
+        <p class="auth-switch">
+          <span id="auth-switch-text">Don't have an account?</span>
+          <a href="#" id="auth-switch-link">Sign up</a>
+        </p>
+      </div>
+
+      <div class="auth-features">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+          </div>
+          <h3>Track Orders</h3>
+          <p>Monitor your orders in real-time from placement to delivery</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <h3>Personal Profile</h3>
+          <p>Manage your account details, addresses, and preferences</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+              <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+          </div>
+          <h3>Secure Payments</h3>
+          <p>Save your payment methods for faster checkouts</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard Section (Visible when logged in) -->
+    <section class="dashboard-section" id="dashboard-section" style="display: none;">
+      <!-- Sidebar Navigation -->
+      <aside class="profile-sidebar">
+        <div class="sidebar-header">
+          <div class="user-avatar">
+            <img src="OFF BACK/BENZY LOGO.png" alt="Profile" id="user-avatar-img" data-default-avatar />
+          <div class="avatar-status"></div>
+          </div>
+          <h2 id="profile-name">Guest</h2>
+          <p id="profile-email">guest@benzyluxury.com</p>
+        </div>
+
+        <div class="profile-mobile-menu-toggle" aria-label="Profile menu" aria-expanded="false">
+          <span class="profile-mobile-menu-head" onclick="window.blxToggleProfileMobileMenu && window.blxToggleProfileMobileMenu(event)">
+            <strong>Profile menu</strong>
+            <small id="profile-mobile-menu-label">Dashboard</small>
+          </span>
+          <nav class="profile-mobile-actions" aria-label="Profile sections">
+            <button type="button" class="profile-mobile-action active" data-section="dashboard-home" onclick="window.blxOpenProfileSection && window.blxOpenProfileSection(event, 'dashboard-home')">Dashboard</button>
+            <button type="button" class="profile-mobile-action" data-section="orders" onclick="window.blxOpenProfileSection && window.blxOpenProfileSection(event, 'orders')">My Orders</button>
+            <button type="button" class="profile-mobile-action" data-section="order-tracking" onclick="window.blxOpenProfileSection && window.blxOpenProfileSection(event, 'order-tracking')">Track Order</button>
+            <button type="button" class="profile-mobile-action" data-section="addresses" onclick="window.blxOpenProfileSection && window.blxOpenProfileSection(event, 'addresses')">Addresses</button>
+            <button type="button" class="profile-mobile-action" data-section="wallet" onclick="window.blxOpenProfileSection && window.blxOpenProfileSection(event, 'wallet')">Wallet</button>
+            <button type="button" class="profile-mobile-action" data-section="settings" onclick="window.blxOpenProfileSection && window.blxOpenProfileSection(event, 'settings')">Settings</button>
+            <button type="button" class="profile-mobile-action logout" onclick="event.stopPropagation(); document.getElementById('logout-btn') && document.getElementById('logout-btn').click();">Log Out</button>
+          </nav>
+        </div>
+        
+        <nav class="sidebar-nav" id="profile-mobile-menu">
+          <button class="nav-item active" data-section="dashboard-home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Dashboard</span>
+          </button>
+          
+          <button class="nav-item" data-section="orders">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span>My Orders</span>
+            <span class="badge" id="orders-count">0</span>
+          </button>
+          
+          <button class="nav-item" data-section="order-tracking">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>Track Order</span>
+          </button>
+          
+          <button class="nav-item" data-section="addresses">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span>Addresses</span>
+          </button>
+          
+          <button class="nav-item" data-section="wallet">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+              <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+            <span>Wallet</span>
+          </button>
+          
+          <button class="nav-item" data-section="settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span>Settings</span>
+          </button>
+          
+          <div class="nav-divider"></div>
+          
+          <button class="nav-item logout" id="logout-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>Log Out</span>
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Main Content Area -->
+      <section class="profile-main">
+        <!-- Dashboard Home -->
+        <div class="content-section active" id="section-dashboard-home">
+          <header class="profile-header">
+            <div class="welcome-section">
+              <h1>Welcome back, <span id="profile-welcome-name">Guest</span></h1>
+              <p>Here's what's happening with your account</p>
+            </div>
+            <div class="header-actions">
+              <a href="Shop.html?cat=all" class="btn-shop-now">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Shop Now
+              </a>
+              <div class="layout-switcher" role="group" aria-label="Dashboard layout options">
+                <button type="button" class="layout-btn active" data-layout="split">Split</button>
+                <button type="button" class="layout-btn" data-layout="classic">Classic</button>
+                <button type="button" class="layout-btn" data-layout="single">Single</button>
+              </div>
+            </div>
+          </header>
+
+          <div class="dashboard-grid">
+            <div class="dashboard-primary">
+              <!-- Stats Cards -->
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-icon orders">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                      <line x1="3" y1="6" x2="21" y2="6"></line>
+                      <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                  </div>
+                  <div class="stat-content">
+                    <span class="stat-number" id="stat-orders">0</span>
+                    <span class="stat-label">Total Orders</span>
+                  </div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-icon pending">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                  </div>
+                  <div class="stat-content">
+                    <span class="stat-number" id="stat-pending">0</span>
+                    <span class="stat-label">Pending Orders</span>
+                  </div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-icon delivered">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                  </div>
+                  <div class="stat-content">
+                    <span class="stat-number" id="stat-delivered">0</span>
+                    <span class="stat-label">Delivered</span>
+                  </div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-icon wallet">
+                    <span class="currency-symbol" id="wallet-currency-symbol">₦</span>
+                  </div>
+                  <div class="stat-content">
+                    <span class="stat-number" id="stat-wallet">$0</span>
+                    <span class="stat-label">Wallet Balance</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recent Orders -->
+              <div class="recent-section">
+                <div class="section-header">
+                  <h2>Recent Orders</h2>
+                  <button class="view-all-btn" data-section="orders">View All</button>
+                </div>
+                <div class="recent-orders" id="recent-orders">
+                  <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                      <line x1="3" y1="6" x2="21" y2="6"></line>
+                      <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <p>No orders yet</p>
+                    <a href="Shop.html?cat=all" class="btn-secondary">Start Shopping</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <aside class="dashboard-side">
+              <div class="panel-card overview-card">
+                <div class="panel-header">
+                  <h3>Account Overview</h3>
+                  <span class="panel-badge">Member</span>
+                </div>
+                <div class="profile-progress" id="profile-progress" data-progress="0" style="--progress: 0%;">
+                  <div class="progress-header">
+                    <span>Profile completion</span>
+                    <span class="progress-value" id="profile-progress-value">0%</span>
+                  </div>
+                  <div class="progress-bar">
+                    <span class="progress-fill"></span>
+                  </div>
+                  <p class="progress-note" id="profile-progress-note">Complete your profile for faster checkout.</p>
+                </div>
+                <div class="overview-actions">
+                  <button type="button" class="dashboard-action primary" data-section="settings">Edit Profile</button>
+                  <button type="button" class="dashboard-action" data-section="addresses">Add Address</button>
+                </div>
+              </div>
+
+              <div class="panel-card quick-actions-card">
+                <div class="panel-header">
+                  <h3>Quick Actions</h3>
+                </div>
+                <div class="quick-actions">
+                  <button type="button" class="dashboard-action" data-section="orders">View Orders</button>
+                  <button type="button" class="dashboard-action" data-section="order-tracking">Track an Order</button>
+                  <button type="button" class="dashboard-action" data-section="wallet">Top Up Wallet</button>
+                </div>
+              </div>
+
+              <div class="panel-card support-card">
+                <div class="panel-header">
+                  <h3>Need Assistance?</h3>
+                </div>
+                <p class="support-text">Our concierge team can help with sizing, delivery, and returns.</p>
+                <a href="Contact.html" class="btn-secondary">Contact Support</a>
+              </div>
+
+              <div class="panel-card activity-card">
+                <div class="panel-header">
+                  <h3>Recent Activity</h3>
+                </div>
+                <div class="activity-list">
+                  <div class="activity-item">
+                    <span class="activity-dot"></span>
+                    <div class="activity-content">
+                      <p>Account created</p>
+                      <span>Just now</span>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <span class="activity-dot accent"></span>
+                    <div class="activity-content">
+                      <p>Profile details added</p>
+                      <span>2 min ago</span>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <span class="activity-dot muted"></span>
+                    <div class="activity-content">
+                      <p>Welcome offer unlocked</p>
+                      <span>5 min ago</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <!-- Orders Section -->
+        <div class="content-section" id="section-orders">
+          <div class="section-header">
+            <h2>My Orders</h2>
+            <p>View and manage all your orders</p>
+          </div>
+          
+          <!-- Order Filters -->
+          <div class="order-filters">
+            <button class="filter-btn active" data-filter="all">All Orders</button>
+            <button class="filter-btn" data-filter="pending">Pending Order</button>
+            <button class="filter-btn" data-filter="processing">Processing</button>
+            <button class="filter-btn" data-filter="shipped">Shipped</button>
+            <button class="filter-btn" data-filter="delivered">Delivered</button>
+          </div>
+          
+          <div class="orders-container" id="profile-orders-list">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <p>No orders found</p>
+              <a href="Shop.html?cat=all" class="btn-secondary">Start Shopping</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Tracking Section -->
+        <div class="content-section" id="section-order-tracking">
+          <div class="section-header">
+            <h2>Track Your Order</h2>
+            <p>Enter your order number to track its status</p>
+          </div>
+          
+          <div class="tracking-form">
+            <div class="tracking-input-group">
+              <input type="text" id="track-order-input" placeholder="Enter your order number" />
+              <button type="button" id="track-order-btn" class="btn-track">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                Track
+              </button>
+            </div>
+          </div>
+          
+          <!-- Tracking Result -->
+          <div class="tracking-result" id="tracking-result" style="display: none;">
+            <div class="tracking-header">
+              <div class="tracking-order-info">
+                <h3>Order <span id="tracking-order-id">Pending</span></h3>
+                <p>Placed on <span id="tracking-order-date">To be confirmed</span></p>
+              </div>
+              <div class="tracking-status-badge" id="tracking-status-badge">
+                <span class="status-dot"></span>
+                <span id="tracking-status-text">Processing</span>
+              </div>
+            </div>
+            
+            <!-- Progress Steps -->
+            <div class="order-progress">
+              <div class="progress-step completed" data-step="placed">
+                <div class="step-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                  </svg>
+                </div>
+                <div class="step-content">
+                  <h4>Order Placed</h4>
+                  <p id="placed-date">To be confirmed</p>
+                </div>
+              </div>
+              
+              <div class="progress-line"></div>
+              
+              <div class="progress-step completed" data-step="confirmed">
+                <div class="step-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                </div>
+                <div class="step-content">
+                  <h4>Order Confirmed</h4>
+                  <p id="confirmed-date">To be confirmed</p>
+                </div>
+              </div>
+              
+              <div class="progress-line"></div>
+              
+              <div class="progress-step active" data-step="processing">
+                <div class="step-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </div>
+                <div class="step-content">
+                  <h4>Processing</h4>
+                  <p>Your order is being prepared</p>
+                </div>
+              </div>
+              
+              <div class="progress-line"></div>
+              
+              <div class="progress-step" data-step="shipped">
+                <div class="step-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="3" width="15" height="13"></rect>
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                  </svg>
+                </div>
+                <div class="step-content">
+                  <h4>Shipped</h4>
+                  <p>On the way</p>
+                </div>
+              </div>
+              
+              <div class="progress-line"></div>
+              
+              <div class="progress-step" data-step="delivered">
+                <div class="step-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 6L9 17l-5-5"></path>
+                  </svg>
+                </div>
+                <div class="step-content">
+                  <h4>Delivered</h4>
+                  <p>Order completed</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Order Items Preview -->
+            <div class="tracking-items">
+              <h4>Order Items</h4>
+              <div class="tracking-items-list" id="tracking-items-list">
+                <!-- Items will be populated dynamically -->
+              </div>
+            </div>
+            
+            <!-- Delivery Info -->
+            <div class="delivery-info">
+              <div class="delivery-address">
+                <h4>Delivery Address</h4>
+                <p id="tracking-address">Delivery address will appear here</p>
+              </div>
+              <div class="delivery-contact">
+                <h4>Contact</h4>
+                <p id="tracking-phone">Contact number will appear here</p>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+
+        <!-- Addresses Section -->
+        <div class="content-section" id="section-addresses">
+          <div class="section-header">
+            <h2>My Addresses</h2>
+            <p>Manage your delivery addresses</p>
+          </div>
+          
+          <div class="addresses-grid" id="addresses-list">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <p>No saved addresses</p>
+            </div>
+          </div>
+          
+          <div class="add-address-card">
+            <h3>Add New Address</h3>
+            <form id="address-form" class="compact-form">
+              <div class="form-row">
+                <input type="text" id="address-label" placeholder="Label (e.g., Home, Office)" />
+                <input type="text" id="address-recipient" placeholder="Recipient Name" />
+              </div>
+              <input type="text" id="address-line" placeholder="Street address" />
+              <div class="form-row">
+                <div class="city-field">
+                  <select id="address-city">
+                    <option value="">Select city</option>
+                  </select>
+                  <input type="text" id="address-city-input" placeholder="Enter city" autocomplete="address-level2" hidden />
+                </div>
+                <select id="address-state">
+                  <option value="">Select state</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <select id="address-country">
+                  <option value="">Select country</option>
+                  <option value="Afghanistan">Afghanistan</option>
+                  <option value="Albania">Albania</option>
+                  <option value="Algeria">Algeria</option>
+                  <option value="Andorra">Andorra</option>
+                  <option value="Angola">Angola</option>
+                  <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                  <option value="Argentina">Argentina</option>
+                  <option value="Armenia">Armenia</option>
+                  <option value="Australia">Australia</option>
+                  <option value="Austria">Austria</option>
+                  <option value="Azerbaijan">Azerbaijan</option>
+                  <option value="Bahamas">Bahamas</option>
+                  <option value="Bahrain">Bahrain</option>
+                  <option value="Bangladesh">Bangladesh</option>
+                  <option value="Barbados">Barbados</option>
+                  <option value="Belarus">Belarus</option>
+                  <option value="Belgium">Belgium</option>
+                  <option value="Belize">Belize</option>
+                  <option value="Benin">Benin</option>
+                  <option value="Bhutan">Bhutan</option>
+                  <option value="Bolivia">Bolivia</option>
+                  <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+                  <option value="Botswana">Botswana</option>
+                  <option value="Brazil">Brazil</option>
+                  <option value="Brunei">Brunei</option>
+                  <option value="Bulgaria">Bulgaria</option>
+                  <option value="Burkina Faso">Burkina Faso</option>
+                  <option value="Burundi">Burundi</option>
+                  <option value="Cabo Verde">Cabo Verde</option>
+                  <option value="Cambodia">Cambodia</option>
+                  <option value="Cameroon">Cameroon</option>
+                  <option value="Canada">Canada</option>
+                  <option value="Central African Republic">Central African Republic</option>
+                  <option value="Chad">Chad</option>
+                  <option value="Chile">Chile</option>
+                  <option value="China">China</option>
+                  <option value="Colombia">Colombia</option>
+                  <option value="Comoros">Comoros</option>
+                  <option value="Congo (Democratic Republic of the)">Congo (Democratic Republic of the)</option>
+                  <option value="Congo (Republic of the)">Congo (Republic of the)</option>
+                  <option value="Costa Rica">Costa Rica</option>
+                  <option value="Cote d'Ivoire">Cote d'Ivoire</option>
+                  <option value="Croatia">Croatia</option>
+                  <option value="Cuba">Cuba</option>
+                  <option value="Cyprus">Cyprus</option>
+                  <option value="Czech Republic">Czech Republic</option>
+                  <option value="Denmark">Denmark</option>
+                  <option value="Djibouti">Djibouti</option>
+                  <option value="Dominica">Dominica</option>
+                  <option value="Dominican Republic">Dominican Republic</option>
+                  <option value="Ecuador">Ecuador</option>
+                  <option value="Egypt">Egypt</option>
+                  <option value="El Salvador">El Salvador</option>
+                  <option value="Equatorial Guinea">Equatorial Guinea</option>
+                  <option value="Eritrea">Eritrea</option>
+                  <option value="Estonia">Estonia</option>
+                  <option value="Eswatini">Eswatini</option>
+                  <option value="Ethiopia">Ethiopia</option>
+                  <option value="Fiji">Fiji</option>
+                  <option value="Finland">Finland</option>
+                  <option value="France">France</option>
+                  <option value="Gabon">Gabon</option>
+                  <option value="Gambia">Gambia</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Germany">Germany</option>
+                  <option value="Ghana">Ghana</option>
+                  <option value="Greece">Greece</option>
+                  <option value="Grenada">Grenada</option>
+                  <option value="Guatemala">Guatemala</option>
+                  <option value="Guinea">Guinea</option>
+                  <option value="Guinea-Bissau">Guinea-Bissau</option>
+                  <option value="Guyana">Guyana</option>
+                  <option value="Haiti">Haiti</option>
+                  <option value="Honduras">Honduras</option>
+                  <option value="Hungary">Hungary</option>
+                  <option value="Iceland">Iceland</option>
+                  <option value="India">India</option>
+                  <option value="Indonesia">Indonesia</option>
+                  <option value="Iran">Iran</option>
+                  <option value="Iraq">Iraq</option>
+                  <option value="Ireland">Ireland</option>
+                  <option value="Israel">Israel</option>
+                  <option value="Italy">Italy</option>
+                  <option value="Jamaica">Jamaica</option>
+                  <option value="Japan">Japan</option>
+                  <option value="Jordan">Jordan</option>
+                  <option value="Kazakhstan">Kazakhstan</option>
+                  <option value="Kenya">Kenya</option>
+                  <option value="Kiribati">Kiribati</option>
+                  <option value="Korea, North">Korea, North</option>
+                  <option value="Korea, South">Korea, South</option>
+                  <option value="Kosovo">Kosovo</option>
+                  <option value="Kuwait">Kuwait</option>
+                  <option value="Kyrgyzstan">Kyrgyzstan</option>
+                  <option value="Laos">Laos</option>
+                  <option value="Latvia">Latvia</option>
+                  <option value="Lebanon">Lebanon</option>
+                  <option value="Lesotho">Lesotho</option>
+                  <option value="Liberia">Liberia</option>
+                  <option value="Libya">Libya</option>
+                  <option value="Liechtenstein">Liechtenstein</option>
+                  <option value="Lithuania">Lithuania</option>
+                  <option value="Luxembourg">Luxembourg</option>
+                  <option value="Madagascar">Madagascar</option>
+                  <option value="Malawi">Malawi</option>
+                  <option value="Malaysia">Malaysia</option>
+                  <option value="Maldives">Maldives</option>
+                  <option value="Mali">Mali</option>
+                  <option value="Malta">Malta</option>
+                  <option value="Marshall Islands">Marshall Islands</option>
+                  <option value="Mauritania">Mauritania</option>
+                  <option value="Mauritius">Mauritius</option>
+                  <option value="Mexico">Mexico</option>
+                  <option value="Micronesia">Micronesia</option>
+                  <option value="Moldova">Moldova</option>
+                  <option value="Monaco">Monaco</option>
+                  <option value="Mongolia">Mongolia</option>
+                  <option value="Montenegro">Montenegro</option>
+                  <option value="Morocco">Morocco</option>
+                  <option value="Mozambique">Mozambique</option>
+                  <option value="Myanmar">Myanmar</option>
+                  <option value="Namibia">Namibia</option>
+                  <option value="Nauru">Nauru</option>
+                  <option value="Nepal">Nepal</option>
+                  <option value="Netherlands">Netherlands</option>
+                  <option value="New Zealand">New Zealand</option>
+                  <option value="Nicaragua">Nicaragua</option>
+                  <option value="Niger">Niger</option>
+                  <option value="Nigeria">Nigeria</option>
+                  <option value="North Macedonia">North Macedonia</option>
+                  <option value="Norway">Norway</option>
+                  <option value="Oman">Oman</option>
+                  <option value="Pakistan">Pakistan</option>
+                  <option value="Palau">Palau</option>
+                  <option value="Palestine">Palestine</option>
+                  <option value="Panama">Panama</option>
+                  <option value="Papua New Guinea">Papua New Guinea</option>
+                  <option value="Paraguay">Paraguay</option>
+                  <option value="Peru">Peru</option>
+                  <option value="Philippines">Philippines</option>
+                  <option value="Poland">Poland</option>
+                  <option value="Portugal">Portugal</option>
+                  <option value="Qatar">Qatar</option>
+                  <option value="Romania">Romania</option>
+                  <option value="Russia">Russia</option>
+                  <option value="Rwanda">Rwanda</option>
+                  <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+                  <option value="Saint Lucia">Saint Lucia</option>
+                  <option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
+                  <option value="Samoa">Samoa</option>
+                  <option value="San Marino">San Marino</option>
+                  <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+                  <option value="Saudi Arabia">Saudi Arabia</option>
+                  <option value="Senegal">Senegal</option>
+                  <option value="Serbia">Serbia</option>
+                  <option value="Seychelles">Seychelles</option>
+                  <option value="Sierra Leone">Sierra Leone</option>
+                  <option value="Singapore">Singapore</option>
+                  <option value="Slovakia">Slovakia</option>
+                  <option value="Slovenia">Slovenia</option>
+                  <option value="Solomon Islands">Solomon Islands</option>
+                  <option value="Somalia">Somalia</option>
+                  <option value="South Africa">South Africa</option>
+                  <option value="South Sudan">South Sudan</option>
+                  <option value="Spain">Spain</option>
+                  <option value="Sri Lanka">Sri Lanka</option>
+                  <option value="Sudan">Sudan</option>
+                  <option value="Suriname">Suriname</option>
+                  <option value="Sweden">Sweden</option>
+                  <option value="Switzerland">Switzerland</option>
+                  <option value="Syria">Syria</option>
+                  <option value="Taiwan">Taiwan</option>
+                  <option value="Tajikistan">Tajikistan</option>
+                  <option value="Tanzania">Tanzania</option>
+                  <option value="Thailand">Thailand</option>
+                  <option value="Timor-Leste">Timor-Leste</option>
+                  <option value="Togo">Togo</option>
+                  <option value="Tonga">Tonga</option>
+                  <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                  <option value="Tunisia">Tunisia</option>
+                  <option value="Turkey">Turkey</option>
+                  <option value="Turkmenistan">Turkmenistan</option>
+                  <option value="Tuvalu">Tuvalu</option>
+                  <option value="Uganda">Uganda</option>
+                  <option value="Ukraine">Ukraine</option>
+                  <option value="United Arab Emirates">United Arab Emirates</option>
+                  <option value="United Kingdom">United Kingdom</option>
+                  <option value="United States">United States</option>
+                  <option value="Uruguay">Uruguay</option>
+                  <option value="Uzbekistan">Uzbekistan</option>
+                  <option value="Vanuatu">Vanuatu</option>
+                  <option value="Vatican City">Vatican City</option>
+                  <option value="Venezuela">Venezuela</option>
+                  <option value="Vietnam">Vietnam</option>
+                  <option value="Yemen">Yemen</option>
+                  <option value="Zambia">Zambia</option>
+                  <option value="Zimbabwe">Zimbabwe</option>
+                </select>
+                <input type="text" id="address-postal" placeholder="Postal Code" />
+              </div>
+              <input type="tel" id="address-phone" placeholder="Phone Number" />
+              <button type="submit" class="btn-primary">Save Address</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Wallet Section -->
+        <div class="content-section" id="section-wallet">
+          <div class="section-header wallet-header">
+            <div>
+              <h2>My Wallet</h2>
+              <p>Fund your Benzy wallet, review live balance updates, and pay faster at checkout</p>
+            </div>
+            <span class="wallet-status-pill">Live Payments</span>
+          </div>
+          
+          <div class="wallet-overview-grid">
+            <div class="wallet-balance-card">
+              <span class="wallet-card-eyebrow">Benzy Balance</span>
+              <div class="balance-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+              </div>
+              <span class="balance-label">Available Balance</span>
+              <span class="balance-amount" id="wallet-balance">₦0.00</span>
+              <p class="wallet-card-copy">Top up securely with Paystack and use your wallet balance during checkout. Wallet funds settle in naira.</p>
+              <div class="wallet-actions">
+                <button class="btn-topup" id="topup-btn" type="button">Top Up Now</button>
+                <button class="btn-withdraw" id="wallet-withdraw-btn" type="button" disabled aria-disabled="true">Withdraw Soon</button>
+              </div>
+            </div>
+
+            <div class="wallet-status-card">
+              <span class="wallet-card-eyebrow">Wallet Status</span>
+              <h3>Your wallet is connected to live payments</h3>
+              <p class="wallet-section-copy">Top-ups now route through Paystack, and paid wallet balances can be used directly during checkout.</p>
+              <div class="wallet-status-list">
+                <div class="wallet-status-item">
+                  <span class="wallet-status-label">Top Up</span>
+                  <strong>Live with Paystack</strong>
+                </div>
+                <div class="wallet-status-item">
+                  <span class="wallet-status-label">Checkout</span>
+                  <strong>Wallet balance can pay for orders</strong>
+                </div>
+                <div class="wallet-status-item">
+                  <span class="wallet-status-label">Withdrawals</span>
+                  <strong>Coming Soon</strong>
+                </div>
+              </div>
+              <p class="wallet-status-note">Paystack redirects you to a secure payment page, then brings you back here once the top-up is verified.</p>
+            </div>
+          </div>
+          
+          <div class="wallet-lower-grid">
+            <div class="wallet-form-section">
+              <span class="wallet-card-eyebrow">Live Top Up</span>
+              <h3>Quick Top Up</h3>
+              <p class="wallet-section-copy">Choose a quick amount or enter your own. You will be redirected to Paystack to complete the wallet funding securely.</p>
+              <div class="topup-amounts">
+                <button class="amount-btn" data-amount="5000" type="button">₦5,000</button>
+                <button class="amount-btn" data-amount="10000" type="button">₦10,000</button>
+                <button class="amount-btn" data-amount="25000" type="button">₦25,000</button>
+                <button class="amount-btn" data-amount="50000" type="button">₦50,000</button>
+              </div>
+              <form id="wallet-form" class="compact-form wallet-form-mock">
+                <input type="number" id="wallet-amount" placeholder="Custom top-up amount (NGN)" min="100" step="100" inputmode="numeric" />
+                <button type="submit" class="btn-primary wallet-disabled-cta" id="wallet-topup-submit">Top Up Now</button>
+              </form>
+              <p class="wallet-helper">Minimum top-up is ₦100. Your wallet balance is stored against your account, not just this browser.</p>
+            </div>
+            
+            <div class="wallet-transactions wallet-transactions-card">
+              <span class="wallet-card-eyebrow">Activity Feed</span>
+              <h3>Transaction History</h3>
+              <p class="wallet-section-copy">Every wallet credit and order payment appears here once the backend confirms it.</p>
+              <div id="wallet-transactions" class="transactions-list">
+                <div class="empty-state small wallet-empty-state">
+                  <p>No wallet activity yet</p>
+                  <span>Your Paystack top-ups and wallet order payments will show here.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div class="content-section" id="section-settings">
+          <div class="section-header">
+            <h2>Account Settings</h2>
+            <p>Manage your preferences</p>
+          </div>
+          
+          <div class="settings-group">
+            <div class="settings-card">
+              <h3>Profile Information</h3>
+              <form id="profile-form" class="profile-form">
+                <div class="form-row three">
+                  <div class="form-group">
+                    <label for="profile-firstname">First Name</label>
+                    <input type="text" id="profile-firstname" placeholder="First name" />
+                  </div>
+                  <div class="form-group">
+                    <label for="profile-middlename">Middle Name</label>
+                    <input type="text" id="profile-middlename" placeholder="Middle name" />
+                  </div>
+                  <div class="form-group">
+                    <label for="profile-lastname">Last Name</label>
+                    <input type="text" id="profile-lastname" placeholder="Last name" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group full">
+                    <label for="profile-nickname">Nickname</label>
+                    <input type="text" id="profile-nickname" placeholder="Nickname" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group full">
+                    <label for="profile-avatar-upload">Profile Picture</label>
+                    <div class="profile-avatar-row">
+                      <img src="OFF BACK/BENZY LOGO.png" alt="Profile preview" id="profile-avatar-preview" data-default-avatar />
+                    <div class="profile-avatar-actions">
+                      <input type="file" id="profile-avatar-upload" accept="image/*" />
+                      <button type="button" class="avatar-remove" id="profile-avatar-remove">Remove Photo</button>
+                      <span class="input-hint">JPG or PNG, 10MB max.</span>
+                    </div>
+                  </div>
+                </div>
+                </div>
+
+                <div class="form-row three">
+                  <div class="form-group">
+                    <label for="profile-email-input">Email Address</label>
+                    <input type="email" id="profile-email-input" readonly />
+                    <span class="input-hint">Email is linked to your account.</span>
+                  </div>
+                  <div class="form-group">
+                    <label for="profile-phone">Phone Number</label>
+                    <input type="tel" id="profile-phone" placeholder="+234..." />
+                  </div>
+                  <div class="form-group">
+                    <label for="profile-currency">Currency</label>
+                    <select id="profile-currency">
+                      <option value="">Select currency</option>
+                      <option value="NGN">NGN - Nigerian Naira</option>
+                      <option value="USD">USD - US Dollar</option>
+                    </select>
+                  </div>
+                </div>
+
+                
+                
+                <div class="form-actions">
+                  <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+              </form>
+            </div>
+            
+            <div class="settings-card">
+              <h3>Notifications</h3>
+              <div class="settings-item">
+                <div class="settings-info">
+                  <h4>Email Notifications</h4>
+                  <p>Receive updates about your orders</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="notification-email" data-notification-key="email" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+              
+              <div class="settings-item">
+                <div class="settings-info">
+                  <h4>Marketing Emails</h4>
+                  <p>Receive promotional offers and news</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="notification-marketing" data-notification-key="marketing" />
+                  <span class="slider"></span>
+                </label>
+              </div>
+              
+              <div class="settings-item">
+                <div class="settings-info">
+                  <h4>SMS Notifications</h4>
+                  <p>Receive SMS updates for orders</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="notification-sms" data-notification-key="sms" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="settings-card danger-zone">
+              <h3>Danger Zone</h3>
+              <div class="settings-item">
+                <div class="settings-info">
+                  <h4>Delete Account</h4>
+                  <p>Permanently delete your account and all data</p>
+                </div>
+                <button class="btn-danger">Delete Account</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Order Details Modal -->
+  <div id="order-detail-modal" class="order-detail-modal" hidden>
+    <div class="order-detail-dialog" role="dialog" aria-modal="true" aria-labelledby="order-detail-title">
+      <button type="button" class="order-detail-close" id="order-detail-close" aria-label="Close order details">&times;</button>
+      <div class="order-detail-header">
+        <p class="order-detail-label">Order Details</p>
+        <div class="order-detail-title-row">
+          <h3 id="order-detail-title">Order</h3>
+          <span id="order-detail-status" class="tracking-status-badge pending">
+            <span class="status-dot"></span>
+            <span>Pending</span>
+          </span>
+        </div>
+        <p id="order-detail-meta" class="order-detail-meta"></p>
+      </div>
+      <div id="order-detail-body" class="order-detail-body"></div>
+    </div>
+  </div>
+
+  <script>
+    window.__BENZY_SKIP_PROFILE_BOOT = true;
+    window.__BENZY_SKIP_LOGIN_BOOT = true;
+    window.__BENZY_SKIP_SITE_FOOTER = true;
+  </script>
+  <script src="cart-api.js"></script>
+  <script src="currency-service.js"></script>
+  <script src="cart-store.js"></script>
+  <script src="main.js"></script>
+  <script>
+    window.blxToggleProfileMobileMenu = function blxToggleProfileMobileMenu(event) {
+      if (event && event.target && event.target.closest && event.target.closest('.profile-mobile-action')) {
+        return;
+      }
+      const box = document.querySelector('.profile-mobile-menu-toggle');
+      if (!box) return;
+      const isOpen = !box.classList.contains('is-open');
+      box.classList.toggle('is-open', isOpen);
+      box.setAttribute('aria-expanded', String(isOpen));
+      const list = box.querySelector('.profile-mobile-actions');
+      if (list) list.style.display = isOpen ? 'grid' : 'none';
+      const label = document.getElementById('profile-mobile-menu-label');
+      if (label && isOpen) label.textContent = 'Choose';
+      if (label && !isOpen) {
+        const activeText = document.querySelector('.profile-mobile-action.active')?.textContent?.trim();
+        label.textContent = activeText || 'Dashboard';
+      }
+    };
+
+    window.blxOpenProfileSection = function blxOpenProfileSection(event, section) {
+      if (event) event.stopPropagation();
+      if (!section) return;
+
+      document.querySelectorAll('.nav-item, .profile-mobile-action').forEach((item) => {
+        const isActive = item.getAttribute('data-section') === section;
+        item.classList.toggle('active', isActive);
+      });
+      document.querySelectorAll('.content-section').forEach((item) => {
+        item.classList.toggle('active', item.id === `section-${section}`);
+      });
+
+      const box = document.querySelector('.profile-mobile-menu-toggle');
+      if (box) {
+        box.classList.remove('is-open');
+        box.setAttribute('aria-expanded', 'false');
+        const list = box.querySelector('.profile-mobile-actions');
+        if (list) list.style.display = 'none';
+      }
+      const label = document.getElementById('profile-mobile-menu-label');
+      const activeText = document.querySelector(`.profile-mobile-action[data-section="${section}"]`)?.textContent?.trim();
+      if (label) label.textContent = activeText || 'Dashboard';
+    };
+
+    document.addEventListener('click', function blxProfileMenuClick(event) {
+      const target = event.target;
+      if (!target || !target.closest) return;
+
+      const menuHead = target.closest('.profile-mobile-menu-head');
+      if (menuHead) {
+        window.blxToggleProfileMobileMenu(event);
+        return;
+      }
+
+      const action = target.closest('.profile-mobile-action[data-section]');
+      if (action) {
+        window.blxOpenProfileSection(event, action.getAttribute('data-section'));
+      }
+    }, true);
+  </script>
+  <script>
+    // Auth Tab Switching
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.dataset.tab;
+        
+        // Update tabs
+        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Update forms
+        document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+        document.getElementById(`${tabName}-form`).classList.add('active');
+        
+        // Update switch text
+        const switchText = document.getElementById('auth-switch-text');
+        const switchLink = document.getElementById('auth-switch-link');
+        
+        if (tabName === 'login') {
+          switchText.textContent = "Don't have an account?";
+          switchLink.textContent = "Sign up";
+        } else {
+          switchText.textContent = "Already have an account?";
+          switchLink.textContent = "Sign in";
+        }
+      });
+    });
+
+    // Auth switch link
+    document.getElementById('auth-switch-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      const activeTab = document.querySelector('.auth-tab.active');
+      const newTab = activeTab.dataset.tab === 'login' ? 'register' : 'login';
+      document.querySelector(`.auth-tab[data-tab="${newTab}"]`).click();
+    });
+
+    // Password toggle
+    function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    // Remember Me: prefill email on future visits (never store passwords)
+    const REMEMBER_EMAIL_KEY = 'blxRememberEmail';
+    const TOKEN_KEY = 'benzy_auth_token';
+    const LOGIN_INTENT_KEY = 'benzy_login_intent';
+    const ordersListEl = document.getElementById('profile-orders-list') || document.getElementById('orders-list');
+    const recentOrdersEl = document.getElementById('recent-orders');
+    const ordersCountBadge = document.getElementById('orders-count');
+    const statOrdersEl = document.getElementById('stat-orders');
+    const statPendingEl = document.getElementById('stat-pending');
+    const statDeliveredEl = document.getElementById('stat-delivered');
+    const orderDetailModal = document.getElementById('order-detail-modal');
+    const orderDetailBody = document.getElementById('order-detail-body');
+    const orderDetailTitle = document.getElementById('order-detail-title');
+    const orderDetailStatus = document.getElementById('order-detail-status');
+    const orderDetailMeta = document.getElementById('order-detail-meta');
+    const orderDetailClose = document.getElementById('order-detail-close');
+    const notificationInputs = Array.from(document.querySelectorAll('[data-notification-key]'));
+    const DEFAULT_NOTIFICATION_SETTINGS = {
+      email: true,
+      marketing: false,
+      sms: true
+    };
+    let currentOrders = [];
+    let currentOrderFilter = 'all';
+    let currentOrderEmail = '';
+    const loginEmailInput = document.getElementById('login-email');
+    const rememberMeCheckbox = document.getElementById('remember-me');
+    let currentAuthUser = null;
+    let currentAuthToken = '';
+    let currentProfileEmail = '';
+    let currentAddresses = [];
+    let currentWallet = { balance: 0, currency: 'NGN', transactions: [] };
+    let walletActionInFlight = false;
+    const savedEmail = localStorage.getItem(REMEMBER_EMAIL_KEY);
+    if (savedEmail) {
+      loginEmailInput.value = savedEmail;
+      rememberMeCheckbox.checked = true;
+    }
+
+    function setToken(token) {
+      localStorage.setItem(TOKEN_KEY, String(token || '').trim());
+      currentAuthToken = localStorage.getItem(TOKEN_KEY) || '';
+    }
+
+    function getToken() {
+      return localStorage.getItem(TOKEN_KEY) || '';
+    }
+
+    function normalizeEmail(email) {
+      return String(email || '').trim().toLowerCase();
+    }
+
+    function clearProfileSession() {
+      localStorage.removeItem(TOKEN_KEY);
+      currentAuthToken = '';
+      currentAuthUser = null;
+      currentProfileEmail = '';
+      currentAddresses = [];
+      currentWallet = { balance: 0, currency: 'NGN', transactions: [] };
+      renderWallet(currentWallet);
+    }
+
+    function showDashboardForUser(user) {
+      const email = normalizeEmail(user?.email || '');
+      if (!email) return;
+      const displayName = String(user?.name || '').trim() || String(email).split('@')[0];
+      currentAuthUser = user || null;
+      currentAuthToken = getToken();
+      currentProfileEmail = email;
+
+      document.getElementById('auth-section').style.display = 'none';
+      document.getElementById('dashboard-section').style.display = 'flex';
+
+      document.getElementById('profile-name').textContent = displayName;
+      document.getElementById('profile-email').textContent = email;
+      document.getElementById('profile-welcome-name').textContent = displayName;
+      document.getElementById('user-avatar-img').src = 'OFF BACK/BENZY LOGO.png';
+      document.getElementById('profile-email-input').value = email;
+
+      loadProfileSettings(user);
+      updateProfileCompletion();
+      loadOrdersForUser(email);
+    }
+
+    function switchAuthTab(tabName) {
+      const tab = document.querySelector(`.auth-tab[data-tab="${tabName}"]`);
+      if (tab) tab.click();
+    }
+
+    async function restoreProfileSession() {
+      const token = getToken();
+      if (!token) return;
+      try {
+        const payload = await apiMe(token);
+        if (payload?.user) {
+          if (window.BenzyCartStore?.handleAuthenticatedSessionStart) {
+            await window.BenzyCartStore.handleAuthenticatedSessionStart({ silent: true });
+            window.dispatchEvent(new CustomEvent('benzy:cart-updated'));
+          }
+          showDashboardForUser(payload.user);
+        } else {
+          clearProfileSession();
+        }
+      } catch {
+        clearProfileSession();
+      }
+    }
+
+    // Login form submission
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      if (!email) {
+        showToast('Please enter your email address', 'error');
+        return;
+      }
+
+      if (!password || password.length < 6) {
+        showToast('Please enter your password', 'error');
+        return;
+      }
+
+      try {
+        const authPayload = await apiLogin(email, password);
+        const token = authPayload?.token || '';
+        const user = authPayload?.user || null;
+        if (!token || !user) {
+          throw new Error('Unable to sign in. Please try again.');
+        }
+
+        if (rememberMeCheckbox.checked) {
+          localStorage.setItem(REMEMBER_EMAIL_KEY, email);
+        } else {
+          localStorage.removeItem(REMEMBER_EMAIL_KEY);
+        }
+
+        setToken(token);
+        let redirectPath = '';
+        if (window.BenzyCartStore?.handleAuthenticatedSessionStart) {
+          try {
+            await window.BenzyCartStore.handleAuthenticatedSessionStart({ silent: true });
+            window.dispatchEvent(new CustomEvent('benzy:cart-updated'));
+            redirectPath = window.BenzyCartStore.consumePostLoginRedirect?.() || '';
+          } catch (cartError) {
+            console.error('Cart sync error:', cartError);
+          }
+        }
+        showToast('Welcome back! Logging you in...', 'success');
+
+        setTimeout(() => {
+          if (redirectPath) {
+            window.location.href = redirectPath;
+            return;
+          }
+          showDashboardForUser(user);
+        }, 600);
+      } catch (error) {
+        showToast(error.message || 'Unable to sign in.', 'error');
+      }
+    }, true);
+
+    // Register form submission
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      const name = document.getElementById('register-name').value.trim();
+      const email = document.getElementById('register-email').value.trim();
+      const phone = document.getElementById('register-phone')?.value;
+      const password = document.getElementById('register-password').value;
+      const confirm = document.getElementById('register-confirm').value;
+
+      if (password !== confirm) {
+        showToast('Passwords do not match', 'error');
+        return;
+      }
+
+      if (password.length < 8) {
+        showToast('Password must be at least 8 characters', 'error');
+        return;
+      }
+
+      try {
+        const authPayload = await apiSignup(name, email, phone, password);
+        const token = authPayload?.token || '';
+        const user = authPayload?.user || null;
+        if (!token || !user) {
+          throw new Error('Unable to create account.');
+        }
+
+        setToken(token);
+        let redirectPath = '';
+        if (window.BenzyCartStore?.handleAuthenticatedSessionStart) {
+          try {
+            await window.BenzyCartStore.handleAuthenticatedSessionStart({ silent: true });
+            window.dispatchEvent(new CustomEvent('benzy:cart-updated'));
+            redirectPath = window.BenzyCartStore.consumePostLoginRedirect?.() || '';
+          } catch (cartError) {
+            console.error('Cart sync error:', cartError);
+          }
+        }
+        showToast('Account created successfully!', 'success');
+
+        setTimeout(() => {
+          if (redirectPath) {
+            window.location.href = redirectPath;
+            return;
+          }
+          showDashboardForUser(user);
+          const nameParts = String(name || '').trim().split(/\s+/);
+          const firstName = nameParts[0] || '';
+          const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : '';
+          const middleName = nameParts.length > 2 ? nameParts.slice(1, -1).join(' ') : '';
+          document.getElementById('profile-firstname').value = firstName;
+          document.getElementById('profile-middlename').value = middleName;
+          document.getElementById('profile-lastname').value = lastName;
+          saveProfileSettings();
+          updateProfileCompletion();
+        }, 600);
+      } catch (error) {
+        showToast(error.message || 'Unable to create account.', 'error');
+      }
+    }, true);
+
+    // Section navigation helper
+    function activateSection(section) {
+      if (!section) {
+        return;
+      }
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      document.querySelectorAll('.profile-mobile-action').forEach(i => i.classList.remove('active'));
+      const navItem = document.querySelector(`.nav-item[data-section="${section}"]`);
+      if (navItem) {
+        navItem.classList.add('active');
+      }
+      const mobileAction = document.querySelector(`.profile-mobile-action[data-section="${section}"]`);
+      if (mobileAction) {
+        mobileAction.classList.add('active');
+      }
+      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+      const targetSection = document.getElementById(`section-${section}`);
+      if (targetSection) {
+        targetSection.classList.add('active');
+      }
+      const mobileMenuLabel = document.getElementById('profile-mobile-menu-label');
+      if (mobileMenuLabel && navItem) {
+        const label = navItem.querySelector('span:not(.badge)')?.textContent?.trim();
+        mobileMenuLabel.textContent = label || 'Dashboard';
+      }
+      const mobileMenuToggle = document.querySelector('.profile-mobile-menu-toggle');
+      if (mobileMenuToggle) {
+        mobileMenuToggle.classList.remove('is-open');
+        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        const list = mobileMenuToggle.querySelector('.profile-mobile-actions');
+        if (list) list.style.display = 'none';
+      }
+    }
+
+    // Navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        activateSection(item.dataset.section);
+      });
+    });
+
+    document.querySelectorAll('.profile-mobile-action').forEach(item => {
+      item.addEventListener('click', (event) => {
+        event.stopPropagation();
+        activateSection(item.dataset.section);
+      });
+    });
+
+    function ensureProfileMobileMenu() {
+      const mobileMenuBox = document.querySelector('.profile-mobile-menu-toggle');
+      if (!mobileMenuBox) return;
+
+      let actions = mobileMenuBox.querySelector('.profile-mobile-actions');
+      if (!actions) {
+        actions = document.createElement('nav');
+        actions.className = 'profile-mobile-actions';
+        actions.setAttribute('aria-label', 'Profile sections');
+        mobileMenuBox.appendChild(actions);
+      }
+
+      const items = [
+        ['dashboard-home', 'Dashboard'],
+        ['orders', 'My Orders'],
+        ['order-tracking', 'Track Order'],
+        ['addresses', 'Addresses'],
+        ['wallet', 'Wallet'],
+        ['settings', 'Settings']
+      ];
+
+      if (!actions.querySelector('.profile-mobile-action')) {
+        actions.innerHTML = items.map(([section, label]) => (
+          `<button type="button" class="profile-mobile-action${section === 'dashboard-home' ? ' active' : ''}" data-section="${section}">${label}</button>`
+        )).join('');
+      }
+
+      actions.style.display = mobileMenuBox.classList.contains('is-open') ? 'grid' : 'none';
+      actions.querySelectorAll('.profile-mobile-action').forEach(item => {
+        item.addEventListener('click', (event) => {
+          event.stopPropagation();
+          activateSection(item.dataset.section);
+        });
+      });
+    }
+
+    ensureProfileMobileMenu();
+
+    const profileMobileMenuToggle = document.querySelector('.profile-mobile-menu-toggle');
+    const profileMobileMenuHead = document.querySelector('.profile-mobile-menu-head');
+    if (profileMobileMenuToggle && profileMobileMenuHead) {
+      profileMobileMenuToggle.setAttribute('aria-expanded', 'false');
+      profileMobileMenuHead.setAttribute('role', 'button');
+      profileMobileMenuHead.setAttribute('tabindex', '0');
+      const toggleProfileMobileMenu = () => {
+        const isOpen = profileMobileMenuToggle.classList.toggle('is-open');
+        profileMobileMenuToggle.setAttribute('aria-expanded', String(isOpen));
+        const actions = profileMobileMenuToggle.querySelector('.profile-mobile-actions');
+        if (actions) actions.style.display = isOpen ? 'grid' : 'none';
+      };
+      profileMobileMenuHead.addEventListener('click', toggleProfileMobileMenu);
+      profileMobileMenuHead.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          toggleProfileMobileMenu();
+        }
+      });
+    }
+
+    // View all button
+    document.querySelectorAll('.view-all-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activateSection(btn.dataset.section);
+      });
+    });
+
+    // Dashboard quick actions
+    document.querySelectorAll('.dashboard-action').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activateSection(btn.dataset.section);
+      });
+    });
+
+    const PROFILE_SETTINGS_PREFIX = 'benzy_profile_settings_';
+    const PROFILE_CURRENCY_KEY = 'benzy_currency';
+    const walletStatEl = document.getElementById('stat-wallet');
+    const walletBalanceEl = document.getElementById('wallet-balance');
+    const walletTransactionsEl = document.getElementById('wallet-transactions');
+    const walletFormEl = document.getElementById('wallet-form');
+    const walletFormSectionEl = walletFormEl?.closest('.wallet-form-section');
+    const walletAmountInputEl = document.getElementById('wallet-amount');
+    const walletTopupButtonEl = document.getElementById('topup-btn');
+    const walletTopupSubmitEl = document.getElementById('wallet-topup-submit');
+    const walletStatusPillEl = document.querySelector('.wallet-status-pill');
+    const currencySelect = document.getElementById('profile-currency');
+    const addressCountrySelect = document.getElementById('address-country');
+    const addressStateSelect = document.getElementById('address-state');
+    const addressCitySelect = document.getElementById('address-city');
+    const addressCityInput = document.getElementById('address-city-input');
+    const addressesListEl = document.getElementById('addresses-list');
+    const addressForm = document.getElementById('address-form');
+    const addressLabelInput = document.getElementById('address-label');
+    const addressRecipientInput = document.getElementById('address-recipient');
+    const addressLineInput = document.getElementById('address-line');
+    const addressPostalInput = document.getElementById('address-postal');
+    const addressPhoneInput = document.getElementById('address-phone');
+    const walletCurrencySymbolEl = document.getElementById('wallet-currency-symbol');
+    const avatarImg = document.getElementById('user-avatar-img');
+    const avatarPreview = document.getElementById('profile-avatar-preview');
+    const avatarUpload = document.getElementById('profile-avatar-upload');
+    const avatarRemoveBtn = document.getElementById('profile-avatar-remove');
+    const DEFAULT_AVATAR_SRC = 'OFF BACK/BENZY LOGO.png';
+    const PROFILE_CURRENCY_SYMBOLS = {
+      NGN: '\u20A6',
+      USD: '$'
+    };
+    const CITY_STATE_ALIASES = {
+      nigeria: {
+        fct: 'federal capital territory',
+        abuja: 'federal capital territory'
+      }
+    };
+    const ADDRESS_COUNTRY_CITY_MAP = {
+      nigeria: {
+        'federal capital territory': ['Abuja', 'Gwagwalada', 'Kuje', 'Kwali', 'Bwari'],
+        lagos: ['Lagos', 'Ikeja', 'Ikorodu', 'Lekki', 'Epe', 'Badagry'],
+        oyo: ['Ibadan', 'Ogbomosho', 'Oyo', 'Iseyin', 'Saki'],
+        rivers: ['Port Harcourt', 'Obio-Akpor', 'Bonny', 'Eleme'],
+        kano: ['Kano', 'Wudil', 'Gaya', 'Bichi'],
+        kaduna: ['Kaduna', 'Zaria', 'Kafanchan'],
+        ogun: ['Abeokuta', 'Sagamu', 'Ijebu Ode', 'Ilaro'],
+        anambra: ['Awka', 'Onitsha', 'Nnewi'],
+        delta: ['Asaba', 'Warri', 'Sapele'],
+        edo: ['Benin City', 'Auchi', 'Ekpoma']
+      },
+      'united states': {
+        california: ['Los Angeles', 'San Diego', 'San Jose', 'San Francisco', 'Sacramento'],
+        texas: ['Houston', 'Dallas', 'Austin', 'San Antonio', 'Fort Worth'],
+        'new york': ['New York City', 'Buffalo', 'Rochester', 'Albany', 'Syracuse'],
+        florida: ['Miami', 'Orlando', 'Tampa', 'Jacksonville', 'Tallahassee'],
+        illinois: ['Chicago', 'Aurora', 'Naperville', 'Springfield', 'Peoria'],
+        georgia: ['Atlanta', 'Augusta', 'Savannah', 'Athens', 'Macon'],
+        washington: ['Seattle', 'Spokane', 'Tacoma', 'Vancouver', 'Olympia']
+      },
+      'united kingdom': {
+        england: ['London', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds', 'Bristol'],
+        scotland: ['Edinburgh', 'Glasgow', 'Aberdeen', 'Dundee'],
+        wales: ['Cardiff', 'Swansea', 'Newport'],
+        'northern ireland': ['Belfast', 'Derry', 'Lisburn']
+      }
+    };
+    const ADDRESS_COUNTRY_STATE_MAP = {
+      Nigeria: [
+        'Abia',
+        'Adamawa',
+        'Akwa Ibom',
+        'Anambra',
+        'Bauchi',
+        'Bayelsa',
+        'Benue',
+        'Borno',
+        'Cross River',
+        'Delta',
+        'Ebonyi',
+        'Edo',
+        'Ekiti',
+        'Enugu',
+        'Gombe',
+        'Imo',
+        'Jigawa',
+        'Kaduna',
+        'Kano',
+        'Katsina',
+        'Kebbi',
+        'Kogi',
+        'Kwara',
+        'Lagos',
+        'Nasarawa',
+        'Niger',
+        'Ogun',
+        'Ondo',
+        'Osun',
+        'Oyo',
+        'Plateau',
+        'Rivers',
+        'Sokoto',
+        'Taraba',
+        'Yobe',
+        'Zamfara',
+        'Federal Capital Territory'
+      ],
+      Ghana: [
+        'Ahafo',
+        'Ashanti',
+        'Bono',
+        'Bono East',
+        'Central',
+        'Eastern',
+        'Greater Accra',
+        'North East',
+        'Northern',
+        'Oti',
+        'Savannah',
+        'Upper East',
+        'Upper West',
+        'Volta',
+        'Western',
+        'Western North'
+      ],
+      'United States': [
+        'Alabama',
+        'Alaska',
+        'Arizona',
+        'Arkansas',
+        'California',
+        'Colorado',
+        'Connecticut',
+        'Delaware',
+        'Florida',
+        'Georgia',
+        'Hawaii',
+        'Idaho',
+        'Illinois',
+        'Indiana',
+        'Iowa',
+        'Kansas',
+        'Kentucky',
+        'Louisiana',
+        'Maine',
+        'Maryland',
+        'Massachusetts',
+        'Michigan',
+        'Minnesota',
+        'Mississippi',
+        'Missouri',
+        'Montana',
+        'Nebraska',
+        'Nevada',
+        'New Hampshire',
+        'New Jersey',
+        'New Mexico',
+        'New York',
+        'North Carolina',
+        'North Dakota',
+        'Ohio',
+        'Oklahoma',
+        'Oregon',
+        'Pennsylvania',
+        'Rhode Island',
+        'South Carolina',
+        'South Dakota',
+        'Tennessee',
+        'Texas',
+        'Utah',
+        'Vermont',
+        'Virginia',
+        'Washington',
+        'West Virginia',
+        'Wisconsin',
+        'Wyoming',
+        'District of Columbia'
+      ],
+      'United Kingdom': [
+        'England',
+        'Northern Ireland',
+        'Scotland',
+        'Wales'
+      ]
+    };
+    /* legacy currency symbol block (disabled)
+      NGN: '₦',
+      USD: '$',
+    */
+    let currentAvatarDataUrl = '';
+    const API_BASE_STORAGE_KEY = 'benzy_api_base';
+    const API_REQUEST_TIMEOUT_MS = 6000;
+    const API_BASES = (() => {
+      const bases = [];
+      const storedBase = localStorage.getItem(API_BASE_STORAGE_KEY);
+      if (storedBase) {
+        bases.push(storedBase);
+      }
+      const origin = window.location.origin;
+      if (origin && origin !== 'null') {
+        bases.push(origin);
+      }
+      bases.push('http://localhost:3001');
+      return Array.from(new Set(bases));
+    })();
+
+    function setAvatarSrc(src) {
+      const safeSrc = src || DEFAULT_AVATAR_SRC;
+      const isDefaultAvatar = safeSrc === DEFAULT_AVATAR_SRC;
+      [avatarImg, avatarPreview].forEach((image) => {
+        if (!image) return;
+        image.src = safeSrc;
+        image.toggleAttribute('data-default-avatar', isDefaultAvatar);
+      });
+    }
+
+    function normalizeEmailKey(email) {
+      return String(email || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '_');
+    }
+
+    function profileSettingsKey(email) {
+      return `${PROFILE_SETTINGS_PREFIX}${normalizeEmailKey(email)}`;
+    }
+
+    function notificationSettingsKey(email) {
+      return `benzy_notification_settings_${normalizeEmailKey(email)}`;
+    }
+
+    function localOrdersKey(email) {
+      return `benzy_account_${normalizeEmailKey(email)}_orders`;
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function normalizeOrderStatus(status) {
+      const raw = String(status || '').trim().toLowerCase();
+      if (['placed', 'pending', 'pending verification', 'pending_verification', 'awaiting_confirmation'].includes(raw)) return 'placed';
+      if (raw === 'confirmed') return 'confirmed';
+      if (['processing', 'shipped', 'delivered', 'cancelled', 'failed'].includes(raw)) return raw;
+      return raw || 'placed';
+    }
+
+    const ORDER_STATUS_LABELS = {
+      placed: 'Placed',
+      confirmed: 'Confirmed',
+      processing: 'Processing',
+      shipped: 'Shipped',
+      delivered: 'Delivered',
+      cancelled: 'Cancelled',
+      failed: 'Failed'
+    };
+
+    function formatOrderDate(value) {
+      if (!value) return '-';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return String(value);
+      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function resolveOrderCurrency(order) {
+      if (order && order.currency) return String(order.currency).toUpperCase();
+      return order && order.source === 'api' ? 'NGN' : 'USD';
+    }
+
+    function formatOrderAmount(order) {
+      const amount = Number(order?.total || 0);
+      const currency = resolveOrderCurrency(order);
+      const symbol = PROFILE_CURRENCY_SYMBOLS[currency] || (currency === 'NGN' ? '\u20A6' : '$');
+      const formatted = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(amount);
+      return `${symbol}${formatted}`;
+    }
+
+    function getOrderItemSummary(items) {
+      const safeItems = Array.isArray(items) ? items : [];
+      if (!safeItems.length) return 'Items pending';
+      const parts = safeItems.map(item => {
+        const name = String(item?.name || item?.title || 'Item').trim();
+        const qty = Math.max(1, parseInt(String(item?.quantity || item?.qty || 1), 10));
+        return `${escapeHtml(name)} x${qty}`;
+      });
+      const summary = parts.slice(0, 2).join(', ');
+      const remaining = parts.length - 2;
+      return remaining > 0 ? `${summary} +${remaining} more` : summary;
+    }
+
+    function normalizeOrder(raw, source) {
+      const status = normalizeOrderStatus(raw?.status);
+      const id = String(raw?.orderId || raw?.id || '').trim();
+      const date = String(raw?.orderDate || raw?.date || raw?.createdAt || '').trim();
+      const items = Array.isArray(raw?.items) ? raw.items : [];
+      const subtotal = Number(raw?.subtotal ?? 0);
+      const tax = Number(raw?.tax ?? 0);
+      const total = Number(raw?.total ?? raw?.totalUsd ?? 0);
+      const shippingAddress = String(raw?.shippingAddress || raw?.address || '').trim();
+      const estimatedDelivery = String(raw?.estimatedDelivery || '').trim();
+      const currency = String(raw?.currency || '').trim().toUpperCase();
+      const paymentMethod = String(raw?.paymentMethod || 'Not selected').trim();
+      const paymentStatus = String(raw?.paymentStatus || 'pending').trim();
+      const tracking = raw?.tracking && typeof raw.tracking === 'object' ? raw.tracking : null;
+      const resolvedId = id || `BLX-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+      return {
+        id: resolvedId,
+        orderId: resolvedId,
+        status,
+        date,
+        items,
+        subtotal,
+        tax,
+        total,
+        shippingAddress,
+        estimatedDelivery,
+        currency,
+        paymentMethod,
+        paymentStatus,
+        tracking,
+        source
+      };
+    }
+
+    function buildOrderCard(order, variant = 'full') {
+      const statusLabel = ORDER_STATUS_LABELS[order.status] || 'Placed';
+      const orderDate = formatOrderDate(order.date);
+      const itemsSummary = getOrderItemSummary(order.items);
+      const addressLine = order.shippingAddress ? escapeHtml(order.shippingAddress) : '';
+      const estimate = order.estimatedDelivery ? formatOrderDate(order.estimatedDelivery) : '';
+      const totalLabel = formatOrderAmount(order);
+      const safeId = escapeHtml(order.id);
+      const compact = variant === 'compact';
+      const actionButtons = compact
+        ? `
+            <button type="button" class="order-action-btn" data-action="details" data-order-id="${safeId}">Details</button>
+            <button type="button" class="order-action-btn" data-action="track" data-order-id="${safeId}">Track</button>
+          `
+        : `
+            <button type="button" class="order-action-btn" data-action="details" data-order-id="${safeId}">Details</button>
+            <button type="button" class="order-action-btn" data-action="track" data-order-id="${safeId}">Track</button>
+            <button type="button" class="order-action-btn btn-order-again" data-action="order-again" data-order-id="${safeId}">Order Again</button>
+            ${canCancelOrder(order) ? `<button type="button" class="order-action-btn btn-cancel" data-action="cancel" data-order-id="${safeId}">Cancel Order</button>` : ''}
+          `;
+
+      return `
+        <article class="order-card" data-variant="${compact ? 'compact' : 'full'}" data-status="${order.status}" data-order-id="${safeId}">
+          <div class="order-card-top">
+            <div>
+              <span class="order-label">Order</span>
+              <h3 class="order-id">${safeId}</h3>
+              <p class="order-date">Placed ${escapeHtml(orderDate)}</p>
+            </div>
+            <div class="tracking-status-badge ${order.status}">
+              <span class="status-dot"></span>
+              <span>${escapeHtml(statusLabel)}</span>
+            </div>
+          </div>
+          <div class="order-card-body">
+            <p class="order-items-summary">${itemsSummary}</p>
+            ${!compact && addressLine ? `<p class="order-address">${addressLine}</p>` : ''}
+            ${!compact && estimate ? `<p class="order-estimate">Est. delivery ${escapeHtml(estimate)}</p>` : ''}
+          </div>
+          <div class="order-card-footer">
+            <div class="order-total">
+              <span>Total</span>
+              <strong>${escapeHtml(totalLabel)}</strong>
+            </div>
+            <div class="order-actions">
+              ${actionButtons}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function canCancelOrder(order) {
+      const status = normalizeOrderStatus(order?.status);
+      return ['placed', 'confirmed'].includes(status);
+    }
+
+    function getSafeOrderId(order) {
+      return String(order?.id || order?.orderId || '').trim();
+    }
+
+    function isSameOrder(order, orderId) {
+      return getSafeOrderId(order).toUpperCase() === String(orderId || '').trim().toUpperCase();
+    }
+
+    function normalizeLookupKey(value) {
+      return String(value || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+
+    function loadCartItemsFromStorage() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem('benzy_cart_items') || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveCartItemsFromProfile(items) {
+      localStorage.setItem('benzy_cart_items', JSON.stringify(Array.isArray(items) ? items : []));
+      window.dispatchEvent(new CustomEvent('benzy:cart-updated'));
+    }
+
+    function normalizeCartVariantLabel(value, prefix, fallback) {
+      const trimmed = String(value || '').trim();
+      if (!trimmed) return fallback;
+      return trimmed.toLowerCase().startsWith(prefix.toLowerCase()) ? trimmed : `${prefix} ${trimmed}`;
+    }
+
+    function normalizeCartVariantValue(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    function findCatalogProductForOrderItem(item) {
+      const productId = item?.productId;
+      if (productId !== undefined && productId !== null && typeof getProductById === 'function') {
+        const product = getProductById(productId);
+        if (product) return product;
+      }
+
+      if (typeof BENZY_PRODUCTS === 'undefined' || !Array.isArray(BENZY_PRODUCTS)) return null;
+      const nameKey = normalizeLookupKey(item?.name || item?.title || '');
+      if (!nameKey) return null;
+      const matched = BENZY_PRODUCTS.find(product => normalizeLookupKey(product?.name) === nameKey);
+      if (!matched) return null;
+      return typeof getProductById === 'function' ? (getProductById(matched.id) || matched) : matched;
+    }
+
+    function buildCartItemFromOrderItem(item, order) {
+      const safeQty = Math.max(1, parseInt(String(item?.quantity || item?.qty || 1), 10));
+      const name = String(item?.name || item?.title || 'Product').trim() || 'Product';
+      const color = normalizeCartVariantLabel(item?.color, 'Color:', 'Color: Standard');
+      const size = normalizeCartVariantLabel(item?.size, 'Size:', 'Size: M');
+      const matchedProduct = findCatalogProductForOrderItem(item);
+
+      if (matchedProduct && typeof toCartItemFromProduct === 'function') {
+        return toCartItemFromProduct(matchedProduct, safeQty, { color, size });
+      }
+
+      const currency = resolveOrderCurrency(order);
+      const rawPrice = Number(item?.price ?? item?.priceUsd ?? 0);
+      const safeRate = typeof MANUAL_USD_TO_NGN === 'number' && MANUAL_USD_TO_NGN > 0 ? MANUAL_USD_TO_NGN : 1600;
+      const priceUsd = currency === 'NGN' ? rawPrice / safeRate : rawPrice;
+
+      return {
+        productId: String(item?.productId || ''),
+        name,
+        title: name,
+        color,
+        size,
+        variantId: String(item?.variantId || ''),
+        image: String(item?.image || 'OFF BACK/BLX.png'),
+        alt: String(item?.alt || name),
+        category: String(matchedProduct?.category || 'all'),
+        quantity: safeQty,
+        qty: safeQty,
+        price: Number.isFinite(priceUsd) ? priceUsd : 0,
+        priceUsd: Number.isFinite(priceUsd) ? priceUsd : 0
+      };
+    }
+
+    function mergeCartItems(existingItems, incomingItems) {
+      const cart = Array.isArray(existingItems) ? existingItems.slice() : [];
+      (Array.isArray(incomingItems) ? incomingItems : []).forEach(nextItem => {
+        const existing = cart.find(item =>
+          String(item?.title || '') === String(nextItem?.title || '') &&
+          String(item?.image || '') === String(nextItem?.image || '') &&
+          normalizeCartVariantValue(item?.color) === normalizeCartVariantValue(nextItem?.color) &&
+          normalizeCartVariantValue(item?.size) === normalizeCartVariantValue(nextItem?.size)
+        );
+
+        if (existing) {
+          existing.qty = Math.max(1, parseInt(String(existing.qty || 1), 10)) + Math.max(1, parseInt(String(nextItem?.qty || 1), 10));
+          return;
+        }
+
+        cart.push({
+          ...nextItem,
+          qty: Math.max(1, parseInt(String(nextItem?.qty || 1), 10))
+        });
+      });
+      return cart;
+    }
+
+    function persistLocalOrderUpdate(orderId, patch) {
+      if (!currentOrderEmail) return false;
+      const key = localOrdersKey(currentOrderEmail);
+      try {
+        const parsed = JSON.parse(localStorage.getItem(key) || '[]');
+        const safeList = Array.isArray(parsed) ? parsed : [];
+        let changed = false;
+        const next = safeList.map(order => {
+          if (!isSameOrder(order, orderId)) return order;
+          changed = true;
+          return {
+            ...order,
+            ...(patch && typeof patch === 'object' ? patch : {})
+          };
+        });
+        if (changed) {
+          localStorage.setItem(key, JSON.stringify(next));
+        }
+        return changed;
+      } catch {
+        return false;
+      }
+    }
+
+    function applyOrderUpdate(updatedOrder) {
+      const normalizedUpdated = normalizeOrder(updatedOrder, updatedOrder?.source || 'local');
+      const nextOrders = currentOrders.map(order => {
+        if (!isSameOrder(order, normalizedUpdated.id)) return order;
+        return {
+          ...order,
+          ...normalizedUpdated,
+          tracking: normalizedUpdated.tracking || order?.tracking || null,
+          source: normalizedUpdated.source || order?.source || 'local'
+        };
+      });
+
+      currentOrders = nextOrders.sort((a, b) => getOrderTimestamp(b) - getOrderTimestamp(a));
+      persistLocalOrderUpdate(normalizedUpdated.id, {
+        status: normalizedUpdated.status,
+        orderStatus: normalizedUpdated.status,
+        tracking: normalizedUpdated.tracking || null
+      });
+      updateOrderStats(currentOrders);
+      renderRecentOrders(currentOrders);
+      renderOrdersList(currentOrders);
+
+      if (orderDetailModal && !orderDetailModal.hidden && String(orderDetailModal.dataset.orderId || '').trim() === normalizedUpdated.id) {
+        openOrderDetails(normalizedUpdated.id);
+      }
+
+      return normalizedUpdated;
+    }
+
+    async function orderAgain(orderId) {
+      const order = findOrderById(orderId);
+      if (!order) {
+        showToast('Unable to find that order.', 'error');
+        return;
+      }
+
+      const additions = (Array.isArray(order.items) ? order.items : [])
+        .map(item => buildCartItemFromOrderItem(item, order))
+        .filter(Boolean);
+
+      if (!additions.length) {
+        showToast('There are no items available to order again.', 'error');
+        return;
+      }
+
+      if (window.BenzyCartStore?.addItem) {
+        try {
+          for (const item of additions) {
+            await window.BenzyCartStore.addItem(item, { showToast: false });
+          }
+          window.BenzyCartStore.showToast?.('Items added back to your cart.', 'success');
+          window.location.href = 'Cart.html';
+          return;
+        } catch (error) {
+          showToast(error.message || 'Unable to rebuild this cart right now.', 'error');
+          return;
+        }
+      }
+
+      const nextCart = mergeCartItems(loadCartItemsFromStorage(), additions);
+      saveCartItemsFromProfile(nextCart);
+      window.location.href = 'Cart.html';
+    }
+
+    async function cancelOrder(orderId) {
+      const order = findOrderById(orderId);
+      if (!order) {
+        showToast('Unable to find that order.', 'error');
+        return;
+      }
+
+      if (!canCancelOrder(order)) {
+        showToast('This order can no longer be cancelled.', 'error');
+        return;
+      }
+
+      const token = currentAuthToken || getToken();
+      const isApiOrder = String(order?.source || '').trim().toLowerCase() === 'api';
+
+      try {
+        if (token) {
+          const payload = await fetchApiPayload(`/api/orders/${encodeURIComponent(getSafeOrderId(order))}/cancel`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            }
+          });
+
+          if (payload.ok && payload.data?.order) {
+            applyOrderUpdate({ ...(payload.data.order || {}), source: 'api' });
+            return;
+          }
+
+          if (!payload.ok && payload.status !== 404) {
+            showToast(payload.data?.message || payload.data?.error || 'Unable to cancel this order right now.', 'error');
+            return;
+          }
+        } else if (isApiOrder) {
+          showToast('Please sign in again to cancel this order.', 'error');
+          return;
+        }
+
+        applyOrderUpdate({
+          ...order,
+          status: 'cancelled',
+          orderStatus: 'cancelled'
+        });
+      } catch (error) {
+        console.error('Cancel order error:', error);
+        showToast('Unable to cancel this order right now.', 'error');
+      }
+    }
+
+    function handleOrderAction(action, orderId) {
+      if (!action || !orderId) return;
+      if (action === 'details') {
+        openOrderDetails(orderId);
+        return;
+      }
+      if (action === 'track') {
+        closeOrderDetails();
+        openOrderTracking(orderId);
+        return;
+      }
+      if (action === 'order-again') {
+        void orderAgain(orderId);
+        return;
+      }
+      if (action === 'cancel') {
+        void cancelOrder(orderId);
+      }
+    }
+
+    function parseAmount(value) {
+      const numeric = String(value || '').replace(/[^0-9.\\-]/g, '');
+      const parsed = Number(numeric);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    const baseWalletAmount = parseAmount(walletBalanceEl?.textContent || walletStatEl?.textContent || 0);
+
+    function formatCurrency(amount, currency) {
+      const safeCurrency = currency || 'USD';
+      const safeAmount = Number(amount || 0);
+      const formatted = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(safeAmount);
+      return formatted;
+    }
+
+    function updateWalletCurrency(currency) {
+      const formatted = formatCurrency(baseWalletAmount, currency || 'USD');
+      if (walletStatEl) walletStatEl.textContent = formatted;
+      if (walletBalanceEl) walletBalanceEl.textContent = formatted;
+      if (walletCurrencySymbolEl) {
+        walletCurrencySymbolEl.textContent = PROFILE_CURRENCY_SYMBOLS[currency] || (currency || '¤');
+      }
+    }
+
+    function formatWalletMoney(amount) {
+      return new Intl.NumberFormat('en-NG', {
+        style: 'currency',
+        currency: 'NGN',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(Number(amount || 0));
+    }
+
+    function formatWalletStatAmount(amount) {
+      return new Intl.NumberFormat('en-NG', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(Number(amount || 0));
+    }
+
+    function formatWalletDate(value) {
+      if (!value) return 'Just now';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return 'Just now';
+      return date.toLocaleDateString('en-NG', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    function normalizeWalletPayload(wallet) {
+      const source = wallet && typeof wallet === 'object' ? wallet : {};
+      const transactions = Array.isArray(source.transactions) ? source.transactions : [];
+      return {
+        balance: Number(source.balance || 0),
+        currency: String(source.currency || 'NGN').toUpperCase(),
+        transactions
+      };
+    }
+
+    function renderWalletTransactions(wallet) {
+      if (!walletTransactionsEl) return;
+      const safeWallet = normalizeWalletPayload(wallet);
+      const transactions = Array.isArray(safeWallet.transactions) ? safeWallet.transactions : [];
+      if (!transactions.length) {
+        walletTransactionsEl.innerHTML = `
+          <div class="empty-state small wallet-empty-state">
+            <p>No wallet activity yet</p>
+            <span>Your Paystack top-ups and wallet order payments will show here.</span>
+          </div>
+        `;
+        return;
+      }
+
+      walletTransactionsEl.innerHTML = transactions.map((transaction) => {
+        const amount = Number(transaction?.amount || 0);
+        const absoluteAmount = Math.abs(amount);
+        const direction = amount < 0 ? 'debit' : 'credit';
+        const amountPrefix = amount < 0 ? '-' : '+';
+        const status = String(transaction?.status || 'pending').trim().toLowerCase();
+        const statusLabel = status === 'successful'
+          ? 'Successful'
+          : (status === 'failed' ? 'Failed' : 'Pending');
+        const note = escapeHtml(transaction?.note || (direction === 'credit' ? 'Wallet top-up' : 'Wallet payment'));
+        const meta = escapeHtml(`${statusLabel} • ${formatWalletDate(transaction?.completedAt || transaction?.updatedAt || transaction?.createdAt)}`);
+        return `
+          <div class="wallet-transaction-item">
+            <div class="wallet-transaction-copy">
+              <strong>${note}</strong>
+              <span class="wallet-transaction-meta">${meta}</span>
+            </div>
+            <span class="wallet-transaction-amount ${direction}">${amountPrefix}${escapeHtml(formatWalletMoney(absoluteAmount))}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderWallet(wallet) {
+      currentWallet = normalizeWalletPayload(wallet);
+      if (walletStatEl) walletStatEl.textContent = formatWalletStatAmount(currentWallet.balance);
+      if (walletBalanceEl) walletBalanceEl.textContent = formatWalletMoney(currentWallet.balance);
+      if (walletCurrencySymbolEl) walletCurrencySymbolEl.textContent = '₦';
+      renderWalletTransactions(currentWallet);
+    }
+
+    function updateWalletCurrency() {
+      renderWallet(currentWallet);
+    }
+
+    function setWalletBusy(isBusy, label) {
+      walletActionInFlight = Boolean(isBusy);
+      const statusLabel = String(label || '').trim();
+      if (walletTopupButtonEl) walletTopupButtonEl.disabled = walletActionInFlight;
+      if (walletTopupSubmitEl) {
+        walletTopupSubmitEl.disabled = walletActionInFlight;
+        walletTopupSubmitEl.textContent = walletActionInFlight ? 'Starting Paystack...' : 'Top Up Now';
+      }
+      if (walletAmountInputEl) walletAmountInputEl.disabled = walletActionInFlight;
+      document.querySelectorAll('.amount-btn').forEach((btn) => {
+        btn.disabled = walletActionInFlight;
+      });
+      if (walletStatusPillEl) {
+        walletStatusPillEl.textContent = walletActionInFlight ? (statusLabel || 'Processing...') : 'Live Payments';
+      }
+    }
+
+    async function loadWalletForUser() {
+      const token = getToken();
+      if (!token || !currentProfileEmail) {
+        renderWallet({ balance: 0, currency: 'NGN', transactions: [] });
+        return;
+      }
+
+      try {
+        const payload = await apiGetWallet(token);
+        renderWallet(payload?.wallet || { balance: 0, currency: 'NGN', transactions: [] });
+      } catch (error) {
+        renderWallet({ balance: 0, currency: 'NGN', transactions: [] });
+        showToast(error.message || 'Unable to load wallet balance.', 'error');
+      }
+    }
+
+    async function startWalletTopup(amountNgn) {
+      const token = getToken();
+      if (!token) {
+        showToast('Please sign in again.', 'error');
+        return;
+      }
+
+      const amount = Number(amountNgn || 0);
+      if (!Number.isFinite(amount) || amount < 100) {
+        showToast('Top-up amount must be at least ₦100.', 'error');
+        return;
+      }
+
+      setWalletBusy(true, 'Redirecting to Paystack');
+      try {
+        const payload = await apiStartWalletTopup(token, amount);
+        const nextUrl = String(payload?.authorizationUrl || '').trim();
+        if (!nextUrl) {
+          throw new Error(payload?.message || 'Unable to start wallet top-up.');
+        }
+        window.location.href = nextUrl;
+      } catch (error) {
+        setWalletBusy(false);
+        showToast(error.message || 'Unable to start wallet top-up.', 'error');
+      }
+    }
+
+    function revealWalletTopupForm() {
+      const target = walletFormSectionEl instanceof HTMLElement
+        ? walletFormSectionEl
+        : (walletFormEl instanceof HTMLElement ? walletFormEl : walletAmountInputEl);
+      if (target instanceof HTMLElement) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      if (walletAmountInputEl instanceof HTMLInputElement) {
+        window.setTimeout(() => {
+          walletAmountInputEl.focus({ preventScroll: true });
+          walletAmountInputEl.select();
+        }, 180);
+      }
+    }
+
+    function populateAddressStates(country, selectedState = '') {
+      if (!addressStateSelect) return;
+      const states = ADDRESS_COUNTRY_STATE_MAP[country] || [];
+      addressStateSelect.innerHTML = '<option value="">Select state</option>';
+      states.forEach(state => {
+        const option = document.createElement('option');
+        option.value = state;
+        option.textContent = state;
+        addressStateSelect.appendChild(option);
+      });
+      addressStateSelect.disabled = states.length === 0;
+      if (selectedState && states.includes(selectedState)) {
+        addressStateSelect.value = selectedState;
+      }
+    }
+
+    function setAddressSelectOptions(selectEl, items, placeholder) {
+      if (!selectEl) return;
+      selectEl.innerHTML = '';
+      const placeholderOption = document.createElement('option');
+      placeholderOption.value = '';
+      placeholderOption.textContent = placeholder;
+      selectEl.appendChild(placeholderOption);
+      items.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item;
+        option.textContent = item;
+        selectEl.appendChild(option);
+      });
+    }
+
+    function setCityMode(mode, placeholder) {
+      if (!addressCitySelect || !addressCityInput) return;
+      const useInput = mode === 'input';
+      addressCitySelect.hidden = useInput;
+      addressCitySelect.disabled = useInput;
+      addressCityInput.hidden = !useInput;
+      addressCityInput.disabled = !useInput;
+      if (useInput) {
+        addressCityInput.placeholder = placeholder || 'Enter city';
+        addressCityInput.focus();
+      } else {
+        addressCityInput.value = '';
+      }
+    }
+
+    function getLocalCityFallback(country, state) {
+      const countryKey = String(country || '').trim().toLowerCase();
+      const stateKey = String(state || '').trim().toLowerCase();
+      const countryMap = ADDRESS_COUNTRY_CITY_MAP[countryKey];
+      if (!countryMap) return [];
+      const aliasMap = CITY_STATE_ALIASES[countryKey] || {};
+      const resolvedStateKey = aliasMap[stateKey] || stateKey;
+      const byState = countryMap[resolvedStateKey];
+      if (Array.isArray(byState) && byState.length) return byState;
+      const all = Object.values(countryMap).flat().filter(Boolean);
+      return Array.from(new Set(all));
+    }
+
+    if (addressCityInput && addressCitySelect) {
+      addressCityInput.addEventListener('change', () => {
+        const value = addressCityInput.value.trim();
+        if (!value) return;
+        let option = Array.from(addressCitySelect.options).find(opt => opt.value === value);
+        if (!option) {
+          option = document.createElement('option');
+          option.value = value;
+          option.textContent = value;
+          addressCitySelect.appendChild(option);
+        }
+        addressCitySelect.value = value;
+      });
+    }
+
+    async function requestApi(base, path, options = {}) {
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), API_REQUEST_TIMEOUT_MS);
+
+      try {
+        return await fetch(`${base}${path}`, {
+          ...options,
+          signal: controller.signal
+        });
+      } finally {
+        window.clearTimeout(timer);
+      }
+    }
+
+    async function fetchFromApi(path, options = {}) {
+      let lastError = null;
+      for (const base of API_BASES) {
+        try {
+          const response = await requestApi(base, path, options);
+          let payload = null;
+          try {
+            payload = await response.json();
+          } catch {
+            payload = null;
+          }
+          if (!response.ok) {
+            lastError = new Error(payload?.error || payload?.message || `HTTP ${response.status}`);
+            continue;
+          }
+          localStorage.setItem(API_BASE_STORAGE_KEY, base);
+          return payload || {};
+        } catch (error) {
+          lastError = error?.name === 'AbortError'
+            ? new Error('The server took too long to respond. Please restart the backend and try again.')
+            : error;
+        }
+      }
+      throw lastError || new Error('Unable to reach API');
+    }
+
+    async function fetchApiPayload(path, options = {}) {
+      let lastError = null;
+      for (const base of API_BASES) {
+        try {
+          const response = await requestApi(base, path, options);
+          const data = await response.json().catch(() => null);
+          if (response.ok) {
+            localStorage.setItem(API_BASE_STORAGE_KEY, base);
+            return { ok: true, status: response.status, data };
+          }
+          if (data && (data.message || data.error || data.success === false)) {
+            localStorage.setItem(API_BASE_STORAGE_KEY, base);
+            return { ok: false, status: response.status, data };
+          }
+          lastError = new Error(`HTTP ${response.status}`);
+        } catch (error) {
+          lastError = error?.name === 'AbortError'
+            ? new Error('The server took too long to respond. Please restart the backend and try again.')
+            : error;
+        }
+      }
+      throw lastError || new Error('Unable to reach API');
+    }
+
+    async function apiLogin(email, password) {
+      return fetchFromApi('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+    }
+
+    async function apiSignup(name, email, phone, password) {
+      return fetchFromApi('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, phone, password })
+      });
+    }
+
+    async function apiMe(token) {
+      return fetchFromApi('/api/auth/me', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
+
+    async function apiUpdateProfile(token, payload) {
+      return fetchFromApi('/api/auth/profile', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload || {})
+      });
+    }
+
+    async function apiGetAddresses(token) {
+      return fetchFromApi('/api/profile/addresses', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
+
+    async function apiSaveAddresses(token, addresses) {
+      return fetchFromApi('/api/profile/addresses', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ addresses: addresses || [] })
+      });
+    }
+
+    async function apiGetWallet(token) {
+      return fetchFromApi('/api/profile/wallet', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
+
+    async function apiStartWalletTopup(token, amountNgn) {
+      return fetchFromApi('/api/profile/wallet/topup/paystack/initialize', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ amountNgn })
+      });
+    }
+
+    function buildOrdersEmptyState(message) {
+      const text = escapeHtml(message || 'No orders found');
+      return `
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <p>${text}</p>
+          <a href="Shop.html?cat=all" class="btn-secondary">Start Shopping</a>
+        </div>
+      `;
+    }
+
+    function setOrdersLoadingState() {
+      const loadingMarkup = `
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 6v6l4 2"></path>
+          </svg>
+          <p>Loading your orders...</p>
+        </div>
+      `;
+      if (ordersListEl) ordersListEl.innerHTML = loadingMarkup;
+      if (recentOrdersEl) recentOrdersEl.innerHTML = loadingMarkup;
+    }
+
+    function getOrderTimestamp(order) {
+      const date = new Date(order?.date || '');
+      return Number.isNaN(date.getTime()) ? 0 : date.getTime();
+    }
+
+    function updateOrderStats(orders) {
+      const safeOrders = Array.isArray(orders) ? orders : [];
+      const total = safeOrders.length;
+      const pending = safeOrders.filter(order => ['placed', 'confirmed'].includes(order.status)).length;
+      const delivered = safeOrders.filter(order => order.status === 'delivered').length;
+
+      if (statOrdersEl) statOrdersEl.textContent = String(total);
+      if (statPendingEl) statPendingEl.textContent = String(pending);
+      if (statDeliveredEl) statDeliveredEl.textContent = String(delivered);
+      if (ordersCountBadge) ordersCountBadge.textContent = String(total);
+    }
+
+    function applyOrderFilter(orders) {
+      const safeOrders = Array.isArray(orders) ? orders : [];
+      if (currentOrderFilter === 'all') return safeOrders;
+      if (currentOrderFilter === 'pending') {
+        return safeOrders.filter(order => ['placed', 'confirmed'].includes(order.status));
+      }
+      return safeOrders.filter(order => order.status === currentOrderFilter);
+    }
+
+    function renderOrdersList(orders) {
+      if (!ordersListEl) return;
+      const filtered = applyOrderFilter(orders);
+      if (!filtered.length) {
+        ordersListEl.innerHTML = buildOrdersEmptyState('No orders found');
+        return;
+      }
+      ordersListEl.innerHTML = filtered.map(order => buildOrderCard(order, 'full')).join('');
+    }
+
+    function renderRecentOrders(orders) {
+      if (!recentOrdersEl) return;
+      const safeOrders = Array.isArray(orders) ? orders : [];
+      if (!safeOrders.length) {
+        recentOrdersEl.innerHTML = buildOrdersEmptyState('No orders yet');
+        return;
+      }
+      const sorted = safeOrders.slice().sort((a, b) => getOrderTimestamp(b) - getOrderTimestamp(a));
+      const recent = sorted.slice(0, 3);
+      recentOrdersEl.innerHTML = recent.map(order => buildOrderCard(order, 'compact')).join('');
+    }
+
+    function loadLocalOrders(email) {
+      if (!email) return [];
+      try {
+        const parsed = JSON.parse(localStorage.getItem(localOrdersKey(email)) || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    async function fetchOrdersFromApi(email) {
+      if (!email) return [];
+      try {
+        const payload = await fetchApiPayload(`/api/orders/${encodeURIComponent(email)}`);
+        if (!payload.ok) return [];
+        const list = Array.isArray(payload.data?.orders) ? payload.data.orders : [];
+        return list.map(order => normalizeOrder(order, 'api'));
+      } catch {
+        return [];
+      }
+    }
+
+    function mergeOrders(primary, secondary) {
+      const map = new Map();
+      (Array.isArray(primary) ? primary : []).forEach(order => {
+        if (order && order.id) map.set(order.id, order);
+      });
+      (Array.isArray(secondary) ? secondary : []).forEach(order => {
+        if (order && order.id && !map.has(order.id)) map.set(order.id, order);
+      });
+      return Array.from(map.values());
+    }
+
+    async function loadOrdersForUser(email) {
+      if (!email) return;
+      currentOrderEmail = email;
+      setOrdersLoadingState();
+      const apiOrders = await fetchOrdersFromApi(email);
+      const localOrders = loadLocalOrders(email).map(order => normalizeOrder(order, 'local'));
+      const merged = mergeOrders(apiOrders, localOrders).sort((a, b) => getOrderTimestamp(b) - getOrderTimestamp(a));
+      currentOrders = merged;
+      updateOrderStats(currentOrders);
+      renderRecentOrders(currentOrders);
+      renderOrdersList(currentOrders);
+    }
+
+    window.addEventListener('storage', (event) => {
+      if (!currentOrderEmail) return;
+      if (event.key === localOrdersKey(currentOrderEmail)) {
+        loadOrdersForUser(currentOrderEmail);
+      }
+    });
+
+    async function loadAddressCountries() {
+      if (!addressCountrySelect) return;
+      const fallback = Array.from(addressCountrySelect.options)
+        .map(option => option.value)
+        .filter(Boolean);
+      try {
+        const payload = await fetchFromApi('/api/geo/countries');
+        const countries = Array.isArray(payload.countries) ? payload.countries : [];
+        if (countries.length) {
+          setAddressSelectOptions(addressCountrySelect, countries, 'Select country');
+          return;
+        }
+      } catch (error) {
+        // fallback to existing list
+      }
+      if (fallback.length) {
+        setAddressSelectOptions(addressCountrySelect, fallback, 'Select country');
+      }
+    }
+
+    async function loadAddressStates(country) {
+      if (!addressStateSelect) return;
+      setAddressSelectOptions(addressStateSelect, [], 'Loading states...');
+      if (addressCitySelect) {
+        setAddressSelectOptions(addressCitySelect, [], 'Select city');
+        addressCitySelect.disabled = true;
+      }
+      setCityMode('select');
+      if (!country) {
+        setAddressSelectOptions(addressStateSelect, [], 'Select state');
+        addressStateSelect.disabled = true;
+        return;
+      }
+      try {
+        const payload = await fetchFromApi(`/api/geo/states?country=${encodeURIComponent(country)}`);
+        const states = Array.isArray(payload.states) ? payload.states : [];
+        const placeholder = states.length ? 'Select state' : 'No states found';
+        setAddressSelectOptions(addressStateSelect, states, placeholder);
+        addressStateSelect.disabled = states.length === 0;
+      } catch (error) {
+        if (ADDRESS_COUNTRY_STATE_MAP[country]) {
+          populateAddressStates(country);
+          return;
+        }
+        setAddressSelectOptions(addressStateSelect, [], 'Unable to load states');
+        addressStateSelect.disabled = true;
+      }
+    }
+
+    async function loadAddressCities(country, state) {
+      if (!addressCitySelect) return;
+      setCityMode('select');
+      setAddressSelectOptions(addressCitySelect, [], 'Loading cities...');
+      if (!country || !state) {
+        setAddressSelectOptions(addressCitySelect, [], 'Select city');
+        addressCitySelect.disabled = true;
+        if (addressCityInput) {
+          addressCityInput.hidden = true;
+          addressCityInput.disabled = true;
+        }
+        return;
+      }
+      try {
+        const params = new URLSearchParams({
+          country: country,
+          state: state
+        });
+        const payload = await fetchFromApi(`/api/geo/cities?${params.toString()}`);
+        let cities = Array.isArray(payload.cities) ? payload.cities : [];
+        if (!cities.length) {
+          cities = getLocalCityFallback(country, state);
+        }
+        if (cities.length) {
+          setAddressSelectOptions(addressCitySelect, cities, 'Select city');
+          addressCitySelect.disabled = false;
+          setCityMode('select');
+        } else {
+          setAddressSelectOptions(addressCitySelect, [], 'No cities found');
+          addressCitySelect.disabled = true;
+          setCityMode('input', 'Enter city');
+        }
+      } catch (error) {
+        const fallbackCities = getLocalCityFallback(country, state);
+        if (fallbackCities.length) {
+          setAddressSelectOptions(addressCitySelect, fallbackCities, 'Select city');
+          addressCitySelect.disabled = false;
+          setCityMode('select');
+          return;
+        }
+        setAddressSelectOptions(addressCitySelect, [], 'Unable to load cities');
+        addressCitySelect.disabled = true;
+        setCityMode('input', 'Enter city');
+      }
+    }
+
+    function splitNameParts(fullName) {
+      const parts = String(fullName || '').trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) {
+        return { firstName: '', middleName: '', lastName: '' };
+      }
+      if (parts.length === 1) {
+        return { firstName: parts[0], middleName: '', lastName: '' };
+      }
+      if (parts.length === 2) {
+        return { firstName: parts[0], middleName: '', lastName: parts[1] };
+      }
+      return {
+        firstName: parts[0],
+        middleName: parts.slice(1, -1).join(' '),
+        lastName: parts[parts.length - 1]
+      };
+    }
+
+    function buildFullName(firstName, middleName, lastName) {
+      return [firstName, middleName, lastName].filter(Boolean).join(' ').trim();
+    }
+
+    function getLocalProfileExtras(email) {
+      if (!email) return {};
+      try {
+        const parsed = JSON.parse(localStorage.getItem(profileSettingsKey(email)) || '{}');
+        return parsed && typeof parsed === 'object' ? parsed : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveLocalProfileExtras(email, data) {
+      if (!email) return;
+      const next = {
+        nickname: String(data.nickname || '').trim(),
+        avatarDataUrl: data.avatarDataUrl || '',
+        currency: data.currency || ''
+      };
+      localStorage.setItem(profileSettingsKey(email), JSON.stringify(next));
+    }
+
+    function normalizeNotificationSettings(source) {
+      const settings = source && typeof source === 'object' ? source : {};
+      return {
+        email: settings.email === undefined ? DEFAULT_NOTIFICATION_SETTINGS.email : Boolean(settings.email),
+        marketing: settings.marketing === undefined ? DEFAULT_NOTIFICATION_SETTINGS.marketing : Boolean(settings.marketing),
+        sms: settings.sms === undefined ? DEFAULT_NOTIFICATION_SETTINGS.sms : Boolean(settings.sms)
+      };
+    }
+
+    function readLocalNotificationSettings(email) {
+      if (!email) return normalizeNotificationSettings();
+      try {
+        const parsed = JSON.parse(localStorage.getItem(notificationSettingsKey(email)) || '{}');
+        return normalizeNotificationSettings(parsed);
+      } catch {
+        return normalizeNotificationSettings();
+      }
+    }
+
+    function writeLocalNotificationSettings(email, settings) {
+      if (!email) return;
+      localStorage.setItem(notificationSettingsKey(email), JSON.stringify(normalizeNotificationSettings(settings)));
+    }
+
+    function applyNotificationSettings(settings) {
+      const normalized = normalizeNotificationSettings(settings);
+      notificationInputs.forEach((input) => {
+        const key = input.dataset.notificationKey;
+        input.checked = Boolean(normalized[key]);
+        input.disabled = false;
+      });
+    }
+
+    function getNotificationSettingsFromForm() {
+      const next = normalizeNotificationSettings();
+      notificationInputs.forEach((input) => {
+        const key = input.dataset.notificationKey;
+        if (key) next[key] = Boolean(input.checked);
+      });
+      return next;
+    }
+
+    async function apiGetNotifications(token) {
+      return fetchFromApi('/api/profile/notifications', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
+
+    async function apiSaveNotifications(token, notifications) {
+      return fetchFromApi('/api/profile/notifications', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ notifications })
+      });
+    }
+
+    async function loadNotificationSettingsForUser(user) {
+      const email = normalizeEmail(user?.email || currentProfileEmail || '');
+      const token = getToken();
+      applyNotificationSettings(user?.notifications || readLocalNotificationSettings(email));
+      if (!token) return;
+      try {
+        const payload = await apiGetNotifications(token);
+        if (payload?.notifications) {
+          applyNotificationSettings(payload.notifications);
+          writeLocalNotificationSettings(email, payload.notifications);
+        }
+      } catch (error) {
+        showToast(error.message || 'Unable to load notification settings.', 'error');
+      }
+    }
+
+    async function saveNotificationSettings(options = {}) {
+      const { showToastMessage = true } = options;
+      const email = normalizeEmail(currentProfileEmail || currentAuthUser?.email || '');
+      const token = getToken();
+      const next = getNotificationSettingsFromForm();
+      writeLocalNotificationSettings(email, next);
+
+      if (!token) {
+        if (showToastMessage) showToast('Please sign in again.', 'error');
+        return;
+      }
+
+      notificationInputs.forEach((input) => {
+        input.disabled = true;
+      });
+      try {
+        const payload = await apiSaveNotifications(token, next);
+        const saved = payload?.notifications || next;
+        applyNotificationSettings(saved);
+        writeLocalNotificationSettings(email, saved);
+        if (currentAuthUser) {
+          currentAuthUser.notifications = saved;
+        }
+        if (showToastMessage) {
+          const marketingWarning = payload?.delivery?.marketingSyncError;
+          showToast(marketingWarning || 'Notification settings saved.', marketingWarning ? 'error' : 'success');
+        }
+      } catch (error) {
+        applyNotificationSettings(readLocalNotificationSettings(email));
+        showToast(error.message || 'Unable to save notification settings.', 'error');
+      } finally {
+        notificationInputs.forEach((input) => {
+          input.disabled = false;
+        });
+      }
+    }
+
+    function migrateLocalProfileExtras(oldEmail, newEmail) {
+      if (!oldEmail || !newEmail || oldEmail === newEmail) return;
+      const oldKey = profileSettingsKey(oldEmail);
+      const newKey = profileSettingsKey(newEmail);
+      const existing = localStorage.getItem(oldKey);
+      if (existing && !localStorage.getItem(newKey)) {
+        localStorage.setItem(newKey, existing);
+      }
+      if (existing) {
+        localStorage.removeItem(oldKey);
+      }
+      const oldNotificationKey = notificationSettingsKey(oldEmail);
+      const newNotificationKey = notificationSettingsKey(newEmail);
+      const existingNotifications = localStorage.getItem(oldNotificationKey);
+      if (existingNotifications && !localStorage.getItem(newNotificationKey)) {
+        localStorage.setItem(newNotificationKey, existingNotifications);
+      }
+      if (existingNotifications) {
+        localStorage.removeItem(oldNotificationKey);
+      }
+    }
+
+    function addressMetaKey(email) {
+      return `benzy_address_meta_${normalizeEmailKey(email)}`;
+    }
+
+    function buildAddressKey(address) {
+      const parts = [
+        address?.line1,
+        address?.city,
+        address?.state,
+        address?.country,
+        address?.phone
+      ].map(value => String(value || '').trim().toLowerCase());
+      if (!parts.some(Boolean)) return '';
+      return parts.join('|');
+    }
+
+    function readAddressMeta(email) {
+      if (!email) return {};
+      try {
+        const parsed = JSON.parse(localStorage.getItem(addressMetaKey(email)) || '{}');
+        return parsed && typeof parsed === 'object' ? parsed : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function writeAddressMeta(email, meta) {
+      if (!email) return;
+      localStorage.setItem(addressMetaKey(email), JSON.stringify(meta || {}));
+    }
+
+    function getAddressCityValue() {
+      if (addressCityInput && !addressCityInput.hidden && !addressCityInput.disabled) {
+        return addressCityInput.value.trim();
+      }
+      return addressCitySelect?.value?.trim() || '';
+    }
+
+    function getAddressFormData() {
+      return {
+        label: addressLabelInput?.value?.trim() || '',
+        recipient: addressRecipientInput?.value?.trim() || '',
+        line1: addressLineInput?.value?.trim() || '',
+        city: getAddressCityValue(),
+        state: addressStateSelect?.value?.trim() || '',
+        country: addressCountrySelect?.value?.trim() || '',
+        postal: addressPostalInput?.value?.trim() || '',
+        phone: addressPhoneInput?.value?.trim() || ''
+      };
+    }
+
+    function validateAddressForm(data) {
+      if (!data.line1 || data.line1.length < 5) {
+        return 'Please enter a valid street address.';
+      }
+      if (!data.city || data.city.length < 2) {
+        return 'Please enter a valid city.';
+      }
+      if (!data.state || data.state.length < 2) {
+        return 'Please select a state.';
+      }
+      if (!data.country || data.country.length < 2) {
+        return 'Please select a country.';
+      }
+      const digits = String(data.phone || '').replace(/\D/g, '');
+      if (digits.length < 7) {
+        return 'Please enter a valid phone number.';
+      }
+      return '';
+    }
+
+    function storeAddressMeta(email, address, metaEntry) {
+      if (!email) return;
+      const key = buildAddressKey(address);
+      if (!key) return;
+      const meta = readAddressMeta(email);
+      meta[key] = {
+        label: String(metaEntry?.label || '').trim(),
+        recipient: String(metaEntry?.recipient || '').trim(),
+        postal: String(metaEntry?.postal || '').trim()
+      };
+      writeAddressMeta(email, meta);
+    }
+
+    function buildAddressesEmptyState(message) {
+      const text = escapeHtml(message || 'No saved addresses');
+      return `
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <p>${text}</p>
+        </div>
+      `;
+    }
+
+    function renderAddressList() {
+      if (!addressesListEl) return;
+      const safeList = Array.isArray(currentAddresses) ? currentAddresses : [];
+      if (!safeList.length) {
+        addressesListEl.innerHTML = buildAddressesEmptyState('No saved addresses');
+        return;
+      }
+
+      const meta = readAddressMeta(currentProfileEmail);
+      const knownKeys = new Set();
+      safeList.forEach(address => {
+        const key = buildAddressKey(address);
+        if (key) knownKeys.add(key);
+      });
+      const cleanedMeta = Object.keys(meta).reduce((acc, key) => {
+        if (knownKeys.has(key)) acc[key] = meta[key];
+        return acc;
+      }, {});
+      if (Object.keys(cleanedMeta).length !== Object.keys(meta).length) {
+        writeAddressMeta(currentProfileEmail, cleanedMeta);
+      }
+
+      const cards = safeList.map((address, index) => {
+        const key = buildAddressKey(address);
+        const metaEntry = key ? cleanedMeta[key] || {} : {};
+        const label = metaEntry.label
+          ? escapeHtml(metaEntry.label)
+          : (address.isDefault ? 'Default Address' : 'Shipping Address');
+        const recipient = metaEntry.recipient ? escapeHtml(metaEntry.recipient) : '';
+        const postal = metaEntry.postal ? escapeHtml(metaEntry.postal) : '';
+        const line1 = escapeHtml(address.line1 || '');
+        const city = escapeHtml(address.city || '');
+        const state = escapeHtml(address.state || '');
+        const country = escapeHtml(address.country || '');
+        const phone = escapeHtml(address.phone || '');
+        const cityState = [city, state].filter(Boolean).join(', ');
+        const locationLine = [cityState, country].filter(Boolean).join(' - ');
+
+        return `
+          <div class="address-card" data-index="${index}">
+            ${address.isDefault ? '<span class="default-badge">Default</span>' : ''}
+            <h4>${label}</h4>
+            ${recipient ? `<p>${recipient}</p>` : ''}
+            ${line1 ? `<p>${line1}</p>` : ''}
+            ${locationLine ? `<p>${locationLine}</p>` : ''}
+            ${postal ? `<p>${postal}</p>` : ''}
+            ${phone ? `<p>${phone}</p>` : ''}
+            <div class="address-actions">
+              <button type="button" class="address-remove-btn" data-action="remove-address" data-index="${index}">
+                Remove
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      addressesListEl.innerHTML = cards.join('');
+    }
+
+    async function loadAddressesForUser() {
+      const token = getToken();
+      if (!token || !currentProfileEmail) {
+        currentAddresses = [];
+        renderAddressList();
+        return;
+      }
+      if (addressesListEl) {
+        addressesListEl.innerHTML = buildAddressesEmptyState('Loading addresses...');
+      }
+      try {
+        const payload = await apiGetAddresses(token);
+        currentAddresses = Array.isArray(payload.addresses) ? payload.addresses : [];
+      } catch (error) {
+        currentAddresses = [];
+        showToast(error.message || 'Unable to load addresses.', 'error');
+      }
+      renderAddressList();
+      updateProfileCompletion();
+    }
+
+    function getProfileFormData() {
+      return {
+        firstName: document.getElementById('profile-firstname')?.value?.trim() || '',
+        middleName: document.getElementById('profile-middlename')?.value?.trim() || '',
+        lastName: document.getElementById('profile-lastname')?.value?.trim() || '',
+        nickname: document.getElementById('profile-nickname')?.value?.trim() || '',
+        avatarDataUrl: currentAvatarDataUrl || '',
+        email: document.getElementById('profile-email-input')?.value?.trim() || '',
+        phone: document.getElementById('profile-phone')?.value?.trim() || '',
+        currency: document.getElementById('profile-currency')?.value?.trim() || ''
+      };
+    }
+
+    function applyProfileFormData(data) {
+      if (!data || typeof data !== 'object') return;
+      if (data.firstName) document.getElementById('profile-firstname').value = data.firstName;
+      if (data.middleName) document.getElementById('profile-middlename').value = data.middleName;
+      if (data.lastName) document.getElementById('profile-lastname').value = data.lastName;
+      if (data.nickname) document.getElementById('profile-nickname').value = data.nickname;
+      if (data.avatarDataUrl) {
+        currentAvatarDataUrl = data.avatarDataUrl;
+        setAvatarSrc(data.avatarDataUrl);
+      } else {
+        currentAvatarDataUrl = '';
+        setAvatarSrc(DEFAULT_AVATAR_SRC);
+      }
+      if (data.email) document.getElementById('profile-email-input').value = data.email;
+      if (data.phone) document.getElementById('profile-phone').value = data.phone;
+      if (data.currency && currencySelect) currencySelect.value = data.currency;
+      // City, country, and address removed from the form
+    }
+
+    function getProfileDisplayName() {
+      const data = getProfileFormData();
+      if (data.nickname) {
+        return data.nickname;
+      }
+      return [data.firstName, data.middleName, data.lastName].filter(Boolean).join(' ').trim();
+    }
+
+    function updateProfileDisplayName() {
+      const displayName = getProfileDisplayName();
+      if (!displayName) return;
+      document.getElementById('profile-name').textContent = displayName;
+      document.getElementById('profile-welcome-name').textContent = displayName;
+    }
+
+    function loadProfileSettings(user) {
+      if (!user) return;
+      const email = normalizeEmail(user.email || '');
+      if (!email) return;
+      const extras = getLocalProfileExtras(email);
+      const nameParts = splitNameParts(user.name || '');
+      const data = {
+        ...nameParts,
+        nickname: extras.nickname || '',
+        avatarDataUrl: extras.avatarDataUrl || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        currency: extras.currency || localStorage.getItem(PROFILE_CURRENCY_KEY) || 'USD'
+      };
+      applyProfileFormData(data);
+      updateWalletCurrency(data.currency || localStorage.getItem(PROFILE_CURRENCY_KEY) || 'USD');
+      updateProfileDisplayName();
+      updateProfileCompletion();
+      loadAddressesForUser();
+      loadWalletForUser();
+      loadNotificationSettingsForUser(user);
+    }
+
+    async function saveProfileSettings(options = {}) {
+      const { showToastMessage = false } = options;
+      const data = getProfileFormData();
+      const token = getToken();
+      const normalizedEmail = normalizeEmail(data.email || '');
+      const localEmail = normalizedEmail || currentProfileEmail;
+
+      if (localEmail) {
+        saveLocalProfileExtras(localEmail, data);
+      }
+      if (data.currency) {
+        localStorage.setItem(PROFILE_CURRENCY_KEY, data.currency);
+      }
+      updateWalletCurrency(data.currency || localStorage.getItem(PROFILE_CURRENCY_KEY) || 'USD');
+      updateProfileDisplayName();
+      updateProfileCompletion();
+
+      if (!token) {
+        if (showToastMessage) showToast('Please sign in again.', 'error');
+        return;
+      }
+
+      const fullName = buildFullName(data.firstName, data.middleName, data.lastName);
+      if (!fullName || fullName.length < 2) {
+        showToast('Please enter your full name.', 'error');
+        return;
+      }
+      if (!data.email || !data.email.includes('@')) {
+        showToast('Please enter a valid email address.', 'error');
+        return;
+      }
+
+      try {
+        const payload = await apiUpdateProfile(token, {
+          name: fullName,
+          email: data.email,
+          phone: data.phone
+        });
+        if (payload?.token) {
+          setToken(payload.token);
+        }
+        if (payload?.user) {
+          const updatedUser = payload.user;
+          const updatedEmail = normalizeEmail(updatedUser.email || '');
+          if (currentProfileEmail && updatedEmail && currentProfileEmail !== updatedEmail) {
+            migrateLocalProfileExtras(currentProfileEmail, updatedEmail);
+          }
+          currentAuthUser = updatedUser;
+          currentProfileEmail = updatedEmail || currentProfileEmail;
+          const updatedParts = splitNameParts(updatedUser.name || '');
+          applyProfileFormData({
+            ...data,
+            ...updatedParts,
+            email: updatedUser.email || data.email,
+            phone: updatedUser.phone || data.phone
+          });
+          const profileEmailDisplay = document.getElementById('profile-email');
+          if (profileEmailDisplay) {
+            profileEmailDisplay.textContent = updatedUser.email || data.email;
+          }
+          updateProfileDisplayName();
+          if (updatedEmail && updatedEmail !== normalizeEmail(currentOrderEmail)) {
+            loadOrdersForUser(updatedEmail);
+          }
+        }
+        if (showToastMessage) {
+          showToast('Profile details saved.', 'success');
+        }
+      } catch (error) {
+        showToast(error.message || 'Unable to save profile.', 'error');
+      }
+    }
+
+    if (currencySelect) {
+      const savedCurrency = localStorage.getItem(PROFILE_CURRENCY_KEY);
+      if (savedCurrency && !currencySelect.value) {
+        currencySelect.value = savedCurrency;
+      }
+      updateWalletCurrency(currencySelect.value || savedCurrency || 'USD');
+      currencySelect.addEventListener('change', () => {
+        localStorage.setItem(PROFILE_CURRENCY_KEY, currencySelect.value);
+        updateWalletCurrency(currencySelect.value);
+        updateProfileCompletion();
+      });
+    } else {
+      updateWalletCurrency(localStorage.getItem(PROFILE_CURRENCY_KEY) || 'USD');
+    }
+
+    if (addressCountrySelect) {
+      loadAddressCountries().finally(() => {
+        loadAddressStates(addressCountrySelect.value || '');
+      });
+      addressCountrySelect.addEventListener('change', () => {
+        loadAddressStates(addressCountrySelect.value || '');
+      });
+    }
+
+    notificationInputs.forEach((input) => {
+      input.addEventListener('change', () => {
+        saveNotificationSettings({ showToastMessage: true });
+      });
+    });
+
+    if (addressStateSelect) {
+      addressStateSelect.addEventListener('change', () => {
+        loadAddressCities(addressCountrySelect?.value || '', addressStateSelect.value || '');
+      });
+    }
+
+    if (addressForm instanceof HTMLFormElement) {
+      addressForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const token = getToken();
+        if (!token) {
+          showToast('Please sign in again.', 'error');
+          return;
+        }
+        const formData = getAddressFormData();
+        const validationError = validateAddressForm(formData);
+        if (validationError) {
+          showToast(validationError, 'error');
+          return;
+        }
+
+        const hasDefault = currentAddresses.some(address => address.type === 'shipping' && address.isDefault);
+        const newAddress = {
+          type: 'shipping',
+          line1: formData.line1,
+          city: formData.city,
+          state: formData.state,
+          country: formData.country,
+          phone: formData.phone,
+          isDefault: !currentAddresses.length || !hasDefault
+        };
+
+        try {
+          const payload = await apiSaveAddresses(token, [...currentAddresses, newAddress]);
+          currentAddresses = Array.isArray(payload.addresses) ? payload.addresses : [...currentAddresses, newAddress];
+          const metaEmail = currentProfileEmail || normalizeEmail(currentAuthUser?.email || '');
+          if (metaEmail) {
+            storeAddressMeta(metaEmail, newAddress, formData);
+          }
+          renderAddressList();
+          updateProfileCompletion();
+          addressForm.reset();
+          setCityMode('select');
+          showToast('Address saved.', 'success');
+        } catch (error) {
+          showToast(error.message || 'Unable to save address.', 'error');
+        }
+      });
+    }
+
+    if (addressesListEl) {
+      addressesListEl.addEventListener('click', async (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        const btn = target.closest('[data-action="remove-address"]');
+        if (!(btn instanceof HTMLElement)) return;
+        const index = Number(btn.getAttribute('data-index'));
+        if (Number.isNaN(index)) return;
+        const address = currentAddresses[index];
+        if (!address) return;
+        if (!confirm('Remove this address?')) return;
+        const token = getToken();
+        if (!token) {
+          showToast('Please sign in again.', 'error');
+          return;
+        }
+        try {
+          const nextAddresses = currentAddresses.filter((_, idx) => idx !== index);
+          const payload = await apiSaveAddresses(token, nextAddresses);
+          currentAddresses = Array.isArray(payload.addresses) ? payload.addresses : nextAddresses;
+          const metaEmail = currentProfileEmail || normalizeEmail(currentAuthUser?.email || '');
+          if (metaEmail) {
+            const meta = readAddressMeta(metaEmail);
+            const key = buildAddressKey(address);
+            if (key && meta[key]) {
+              delete meta[key];
+              writeAddressMeta(metaEmail, meta);
+            }
+          }
+          renderAddressList();
+          updateProfileCompletion();
+          showToast('Address removed.', 'success');
+        } catch (error) {
+          showToast(error.message || 'Unable to remove address.', 'error');
+        }
+      });
+    }
+
+    if (avatarUpload instanceof HTMLInputElement) {
+      avatarUpload.addEventListener('change', () => {
+        const file = avatarUpload.files && avatarUpload.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+          showToast('Please choose an image file.', 'error');
+          avatarUpload.value = '';
+          return;
+        }
+        if (file.size > 10 * 1024 * 1024) {
+          showToast('Image must be 10MB or less.', 'error');
+          avatarUpload.value = '';
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = typeof reader.result === 'string' ? reader.result : '';
+          if (!result) return;
+          const image = new Image();
+          image.onload = () => {
+            const size = Math.min(image.width, image.height);
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            const sx = Math.max(0, (image.width - size) / 2);
+            const sy = Math.max(0, (image.height - size) / 2);
+            ctx.drawImage(image, sx, sy, size, size, 0, 0, 256, 256);
+            const outputType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+            const dataUrl = canvas.toDataURL(outputType, 0.9);
+            currentAvatarDataUrl = dataUrl;
+            setAvatarSrc(dataUrl);
+            saveProfileSettings();
+            updateProfileCompletion();
+            showToast('Profile picture updated.', 'success');
+          };
+          image.src = result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    if (avatarRemoveBtn) {
+      avatarRemoveBtn.addEventListener('click', () => {
+        currentAvatarDataUrl = '';
+        setAvatarSrc(DEFAULT_AVATAR_SRC);
+        saveProfileSettings();
+        showToast('Profile picture removed.', 'success');
+      });
+    }
+
+    const profileForm = document.getElementById('profile-form');
+    if (profileForm instanceof HTMLFormElement) {
+      profileForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        saveProfileSettings({ showToastMessage: true });
+      });
+    }
+
+    // Dashboard layout switcher
+    const layoutContainer = document.querySelector('.profile-container');
+    const layoutButtons = document.querySelectorAll('.layout-btn');
+    const savedLayout = localStorage.getItem('blxProfileLayout');
+
+    function setDashboardLayout(layout) {
+      if (!layoutContainer || !layout) {
+        return;
+      }
+      layoutContainer.setAttribute('data-profile-layout', layout);
+      layoutButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.layout === layout);
+      });
+      localStorage.setItem('blxProfileLayout', layout);
+    }
+
+    if (savedLayout) {
+      setDashboardLayout(savedLayout);
+    }
+
+    layoutButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setDashboardLayout(btn.dataset.layout);
+      });
+    });
+
+    function updateProfileCompletion() {
+      const firstNameValue = document.getElementById('profile-firstname')?.value?.trim();
+      const middleNameValue = document.getElementById('profile-middlename')?.value?.trim();
+      const lastNameValue = document.getElementById('profile-lastname')?.value?.trim();
+      const phoneValue = document.getElementById('profile-phone')?.value?.trim();
+      const emailValue = document.getElementById('profile-email-input')?.value?.trim();
+      const currencyValue = document.getElementById('profile-currency')?.value?.trim();
+      const addressesValue = Array.isArray(currentAddresses) && currentAddresses.length ? 'yes' : '';
+
+      const progressItems = [
+        { key: 'firstName', value: firstNameValue },
+        { key: 'middleName', value: middleNameValue },
+        { key: 'lastName', value: lastNameValue },
+        { key: 'phone', value: phoneValue },
+        { key: 'email', value: emailValue },
+        { key: 'currency', value: currencyValue },
+        { key: 'addresses', value: addressesValue }
+      ];
+
+      const completed = progressItems.filter(item => item.value && item.value.length > 0).length;
+      const total = progressItems.length || 1;
+      const percentage = Math.round((completed / total) * 100);
+
+      const progressCard = document.getElementById('profile-progress');
+      const progressValue = document.getElementById('profile-progress-value');
+      const progressNote = document.getElementById('profile-progress-note');
+
+      if (progressCard) {
+        progressCard.style.setProperty('--progress', `${percentage}%`);
+        progressCard.dataset.progress = `${percentage}`;
+      }
+      if (progressValue) {
+        progressValue.textContent = `${percentage}%`;
+      }
+
+      if (progressNote) {
+        if (percentage >= 100) {
+          progressNote.textContent = 'Profile complete. You are ready for seamless checkout.';
+        } else if (percentage >= 70) {
+          progressNote.textContent = 'Nearly there. Add any missing details for faster delivery.';
+        } else if (percentage >= 40) {
+          progressNote.textContent = 'Good start. Add your address and phone number to continue.';
+        } else {
+          progressNote.textContent = 'Complete your profile for faster checkout.';
+        }
+      }
+    }
+
+    document.querySelectorAll('#profile-form input, #profile-form select').forEach(input => {
+      input.addEventListener('input', updateProfileCompletion);
+      input.addEventListener('change', updateProfileCompletion);
+    });
+
+    updateProfileCompletion();
+
+    // Track order button
+    document.getElementById('track-order-btn').addEventListener('click', () => {
+      const orderId = document.getElementById('track-order-input').value.trim();
+      if (orderId) {
+        trackOrder(orderId);
+      } else {
+        showToast('Please enter an order number', 'error');
+      }
+    });
+
+    function buildTrackingSteps(status, orderDate) {
+      const normalized = normalizeOrderStatus(status);
+      const steps = ['placed', 'confirmed', 'processing', 'shipped', 'delivered'];
+      const statusToStep = {
+        placed: 'placed',
+        confirmed: 'confirmed',
+        processing: 'processing',
+        shipped: 'shipped',
+        delivered: 'delivered'
+      };
+      const activeStep = statusToStep[normalized] || 'placed';
+      const activeIndex = Math.max(0, steps.indexOf(activeStep));
+      const safeDate = String(orderDate || new Date().toISOString().slice(0, 10)).trim();
+      return steps.reduce((acc, step, idx) => {
+        acc[step] = { date: idx <= activeIndex ? safeDate : null, completed: idx <= activeIndex };
+        return acc;
+      }, {});
+    }
+
+    function findOrderById(orderId) {
+      const safeOrderId = String(orderId || '').trim().toUpperCase();
+      if (!safeOrderId) return null;
+      return currentOrders.find(item => String(item?.id || item?.orderId || '').trim().toUpperCase() === safeOrderId) || null;
+    }
+
+    function normalizeTrackingOrder(order, fallbackOrderId = '') {
+      const normalized = normalizeOrder(order || {}, order?.source || 'local');
+      const safeOrderId = String(order?.orderId || normalized.orderId || normalized.id || fallbackOrderId || '').trim();
+      return {
+        ...normalized,
+        id: safeOrderId || normalized.id,
+        orderId: safeOrderId || normalized.id,
+        orderDate: String(order?.orderDate || normalized.date || '').trim(),
+        estimatedDelivery: String(order?.estimatedDelivery || normalized.estimatedDelivery || '').trim(),
+        shippingAddress: String(order?.shippingAddress || normalized.shippingAddress || '').trim(),
+        paymentMethod: String(order?.paymentMethod || normalized.paymentMethod || 'Not selected').trim(),
+        paymentStatus: String(order?.paymentStatus || normalized.paymentStatus || 'pending').trim(),
+        tracking: order?.tracking && typeof order.tracking === 'object'
+          ? order.tracking
+          : buildTrackingSteps(order?.status || normalized.status, order?.orderDate || normalized.date),
+        items: Array.isArray(order?.items) ? order.items : normalized.items
+      };
+    }
+
+    function renderTrackingError(message) {
+      const trackingResult = document.getElementById('tracking-result');
+      if (!trackingResult) return;
+      trackingResult.style.display = 'block';
+      trackingResult.innerHTML = `<div class="error-state"><p>${escapeHtml(message)}</p><button onclick="document.getElementById('tracking-result').style.display='none'" class="btn-retry">Try Again</button></div>`;
+    }
+
+    function renderTrackingResult(order, fallbackOrderId = '') {
+      const trackingResult = document.getElementById('tracking-result');
+      if (!trackingResult) return null;
+
+      const trackedOrder = normalizeTrackingOrder(order, fallbackOrderId);
+      const displayOrderId = trackedOrder.orderId || trackedOrder.id || String(fallbackOrderId || '').trim();
+      const displayStatus = ORDER_STATUS_LABELS[normalizeOrderStatus(trackedOrder.status)] || 'Processing';
+      const orderDate = formatOrderDate(trackedOrder.orderDate || trackedOrder.date);
+      const estimatedDelivery = trackedOrder.estimatedDelivery ? formatOrderDate(trackedOrder.estimatedDelivery) : '-';
+      const tracking = trackedOrder.tracking && typeof trackedOrder.tracking === 'object'
+        ? trackedOrder.tracking
+        : buildTrackingSteps(trackedOrder.status, trackedOrder.orderDate || trackedOrder.date);
+      const input = document.getElementById('track-order-input');
+
+      if (input) input.value = displayOrderId;
+
+      trackingResult.innerHTML = `
+        <div class="tracking-header">
+          <div class="tracking-order-info">
+            <h3>Order <span id="tracking-order-id">${escapeHtml(displayOrderId)}</span></h3>
+            <p>Placed on <span id="tracking-order-date">${escapeHtml(orderDate)}</span></p>
+            <p class="delivery-estimate">Estimated Delivery: <strong>${escapeHtml(estimatedDelivery)}</strong></p>
+          </div>
+          <div class="tracking-status-badge ${normalizeOrderStatus(trackedOrder.status)}">
+            <span class="status-dot"></span>
+            <span id="tracking-status-text">${escapeHtml(displayStatus)}</span>
+          </div>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="order-progress">
+          ${Object.entries(tracking).map(([step, info], index, list) => `
+            <div class="progress-step ${info.completed ? 'completed' : ''} ${!info.completed && index === list.findIndex(([, item]) => !item.completed) ? 'active' : ''}" data-step="${step}">
+              <div class="step-icon">
+                ${getStepIcon(step)}
+              </div>
+              <div class="step-content">
+                <h4>${escapeHtml({
+                  placed: 'Order Placed',
+                  confirmed: 'Order Confirmed',
+                  processing: 'Processing',
+                  shipped: 'Shipped',
+                  delivered: 'Delivered'
+                }[step] || step)}</h4>
+                <p>${escapeHtml(info?.date || 'Pending')}</p>
+              </div>
+            </div>
+            ${index < list.length - 1 ? '<div class="progress-line"></div>' : ''}
+          `).join('')}
+        </div>
+
+        <!-- Order Details -->
+        <div class="order-details-section">
+          <h4>Order Details</h4>
+          <div class="order-items">
+            ${(Array.isArray(trackedOrder.items) ? trackedOrder.items : []).map(item => `
+              <div class="order-item">
+                <span class="item-name">${escapeHtml(item.name || item.title || 'Item')}</span>
+                <span class="item-qty">x${Math.max(1, parseInt(String(item.quantity || item.qty || 1), 10))}</span>
+                <span class="item-price">${escapeHtml(formatOrderAmount({ total: item.price || item.priceUsd || 0, currency: trackedOrder.currency, source: trackedOrder.source }))}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="order-total">
+            <span>Total</span>
+            <span>${escapeHtml(formatOrderAmount(trackedOrder))}</span>
+          </div>
+          <div class="shipping-address">
+            <strong>Shipping Address:</strong>
+            <p>${escapeHtml(trackedOrder.shippingAddress || 'Address pending')}</p>
+          </div>
+        </div>
+      `;
+
+      return trackedOrder;
+    }
+
+    // Track order function - now connected to backend
+    async function trackOrder(orderId) {
+      const trackingResult = document.getElementById('tracking-result');
+      if (!trackingResult) return;
+      const safeOrderId = String(orderId || '').trim();
+      const matchedOrder = findOrderById(safeOrderId);
+
+      // Show loading state
+      trackingResult.style.display = 'block';
+      trackingResult.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Searching for order...</p></div>';
+
+      try {
+        const payload = await fetchApiPayload(`/api/track-order/${encodeURIComponent(safeOrderId)}`);
+        if (!payload.ok) {
+          if (matchedOrder) {
+            const trackedOrder = renderTrackingResult(matchedOrder, safeOrderId);
+            showToast(`Order ${trackedOrder?.orderId || safeOrderId} found!`, 'success');
+            return;
+          }
+          const message = payload.data?.message || 'Order not found. Please check your order number and try again.';
+          renderTrackingError(message);
+          showToast(message, 'error');
+          return;
+        }
+
+        const data = payload.data || {};
+        if (data.success === false) {
+          if (matchedOrder) {
+            const trackedOrder = renderTrackingResult(matchedOrder, safeOrderId);
+            showToast(`Order ${trackedOrder?.orderId || safeOrderId} found!`, 'success');
+            return;
+          }
+          const message = data.message || 'Order not found. Please check your order number and try again.';
+          renderTrackingError(message);
+          showToast(message, 'error');
+          return;
+        }
+
+        const trackedOrder = renderTrackingResult({ ...(data.order || {}), source: 'api' }, safeOrderId);
+        showToast(`Order ${trackedOrder?.orderId || safeOrderId} found!`, 'success');
+      } catch (error) {
+        console.error('Track order error:', error);
+        if (matchedOrder) {
+          const trackedOrder = renderTrackingResult(matchedOrder, safeOrderId);
+          showToast(`Order ${trackedOrder?.orderId || safeOrderId} found!`, 'success');
+          return;
+        }
+        renderTrackingError('Unable to track order. Please try again later.');
+        showToast('Connection error. Please try again.', 'error');
+      }
+    }
+
+
+    function openOrderTracking(orderId) {
+      if (!orderId) return;
+      activateSection('order-tracking');
+      const input = document.getElementById('track-order-input');
+      if (input) input.value = orderId;
+      trackOrder(orderId);
+    }
+
+    function renderOrderDetails(order) {
+      if (!orderDetailBody) return;
+      const items = Array.isArray(order?.items) ? order.items : [];
+      const itemMarkup = items.length
+        ? items
+            .map(item => {
+              const name = String(item?.name || item?.title || 'Item').trim();
+              const qty = Math.max(1, parseInt(String(item?.quantity || item?.qty || 1), 10));
+              const price = Number(item?.price ?? item?.priceUsd ?? 0);
+              const lineTotal = price * qty;
+              return `
+                <div class="order-detail-item">
+                  <span>${escapeHtml(name)} x${qty}</span>
+                  <span>${escapeHtml(formatOrderAmount({ total: lineTotal, currency: order.currency, source: order.source }))}</span>
+                </div>
+              `;
+            })
+            .join('')
+        : '<p class="order-detail-meta">Items pending.</p>';
+
+      const subtotalRow = order?.subtotal
+        ? `<div class="order-detail-total-row"><span>Subtotal</span><span>${escapeHtml(formatOrderAmount({ total: order.subtotal, currency: order.currency, source: order.source }))}</span></div>`
+        : '';
+      const taxRow = order?.tax
+        ? `<div class="order-detail-total-row"><span>Tax</span><span>${escapeHtml(formatOrderAmount({ total: order.tax, currency: order.currency, source: order.source }))}</span></div>`
+        : '';
+      const safeId = escapeHtml(getSafeOrderId(order));
+      const actionMarkup = `
+        <div class="order-detail-actions">
+          <button type="button" class="order-action-btn" data-action="track" data-order-id="${safeId}">Track</button>
+          <button type="button" class="order-action-btn btn-order-again" data-action="order-again" data-order-id="${safeId}">Order Again</button>
+          ${canCancelOrder(order) ? `<button type="button" class="order-action-btn btn-cancel" data-action="cancel" data-order-id="${safeId}">Cancel Order</button>` : ''}
+        </div>
+      `;
+
+      orderDetailBody.innerHTML = `
+        <div class="order-detail-section">
+          <h4>Items</h4>
+          <div class="order-detail-items">
+            ${itemMarkup}
+          </div>
+        </div>
+        <div class="order-detail-section">
+          <h4>Delivery</h4>
+          <p class="order-detail-meta">${escapeHtml(order?.shippingAddress || 'Delivery details pending')}</p>
+          ${order?.estimatedDelivery ? `<p class="order-detail-meta">Estimated delivery: ${escapeHtml(formatOrderDate(order.estimatedDelivery))}</p>` : ''}
+        </div>
+        <div class="order-detail-section">
+          <h4>Payment</h4>
+          <p class="order-detail-meta">${escapeHtml(order?.paymentMethod || 'Not selected')}</p>
+        </div>
+        <div class="order-detail-section">
+          <h4>Totals</h4>
+          <div class="order-detail-totals">
+            ${subtotalRow}
+            ${taxRow}
+            <div class="order-detail-total-row"><span>Total</span><strong>${escapeHtml(formatOrderAmount(order))}</strong></div>
+          </div>
+          ${actionMarkup}
+        </div>
+      `;
+    }
+
+    function openOrderDetails(orderId) {
+      if (!orderId || !orderDetailModal) return;
+      const order = currentOrders.find(item => String(item?.id || item?.orderId || '') === String(orderId));
+      if (!order) {
+        showToast('Unable to find order details.', 'error');
+        return;
+      }
+      if (orderDetailTitle) {
+        orderDetailTitle.textContent = `Order ${order.id}`;
+      }
+      if (orderDetailStatus) {
+        const label = ORDER_STATUS_LABELS[order.status] || 'Placed';
+        orderDetailStatus.className = `tracking-status-badge ${order.status}`;
+        orderDetailStatus.innerHTML = `<span class="status-dot"></span><span>${escapeHtml(label)}</span>`;
+      }
+      if (orderDetailMeta) {
+        orderDetailMeta.textContent = `Placed ${formatOrderDate(order.date)}`;
+      }
+      renderOrderDetails(order);
+      orderDetailModal.dataset.orderId = order.id;
+      orderDetailModal.hidden = false;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeOrderDetails() {
+      if (!orderDetailModal) return;
+      orderDetailModal.hidden = true;
+      delete orderDetailModal.dataset.orderId;
+      document.body.style.overflow = '';
+    }
+
+    if (orderDetailClose) {
+      orderDetailClose.addEventListener('click', closeOrderDetails);
+    }
+
+    if (orderDetailModal) {
+      orderDetailModal.addEventListener('click', (event) => {
+        if (event.target === orderDetailModal) {
+          closeOrderDetails();
+        }
+      });
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeOrderDetails();
+    });
+
+    [ordersListEl, recentOrdersEl].forEach(container => {
+      if (!container) return;
+      container.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        const btn = target.closest('[data-action][data-order-id]');
+        if (!(btn instanceof HTMLElement)) return;
+        const orderId = btn.getAttribute('data-order-id');
+        const action = btn.getAttribute('data-action');
+        handleOrderAction(action, orderId);
+      });
+    });
+
+    if (orderDetailBody) {
+      orderDetailBody.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        const btn = target.closest('[data-action][data-order-id]');
+        if (!(btn instanceof HTMLElement)) return;
+        handleOrderAction(btn.getAttribute('data-action'), btn.getAttribute('data-order-id'));
+      });
+    }
+    
+    // Helper function to get SVG icon for each step
+    function getStepIcon(step) {
+      const icons = {
+        placed: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line></svg>',
+        confirmed: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>',
+        processing: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>',
+        shipped: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>',
+        delivered: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>'
+      };
+      return icons[step] || icons.placed;
+    }
+
+    function syncWalletQuickAmountState(selectedAmount) {
+      const selected = String(selectedAmount || '').trim();
+      document.querySelectorAll('.amount-btn').forEach((btn) => {
+        btn.classList.toggle('is-active', selected !== '' && btn.dataset.amount === selected);
+      });
+    }
+
+    document.querySelectorAll('.amount-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (walletActionInFlight || !walletAmountInputEl) return;
+        walletAmountInputEl.value = btn.dataset.amount || '';
+        syncWalletQuickAmountState(walletAmountInputEl.value);
+      });
+    });
+
+    if (walletAmountInputEl) {
+      walletAmountInputEl.addEventListener('input', () => {
+        syncWalletQuickAmountState(walletAmountInputEl.value);
+      });
+    }
+
+    if (walletTopupButtonEl) {
+      walletTopupButtonEl.addEventListener('click', () => {
+        activateSection('wallet');
+        if (!walletAmountInputEl) return;
+        const amount = Number(walletAmountInputEl.value || 0);
+        if (Number.isFinite(amount) && amount >= 100) {
+          void startWalletTopup(amount);
+          return;
+        }
+        revealWalletTopupForm();
+      });
+    }
+
+    if (walletFormEl instanceof HTMLFormElement) {
+      walletFormEl.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!walletAmountInputEl) return;
+        void startWalletTopup(walletAmountInputEl.value);
+      });
+    }
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      clearProfileSession();
+      window.dispatchEvent(new CustomEvent('benzy:auth-logout'));
+      localStorage.setItem(LOGIN_INTENT_KEY, 'resident');
+      showToast('Logging out...', 'success');
+      setTimeout(() => {
+        document.getElementById('dashboard-section').style.display = 'none';
+        document.getElementById('auth-section').style.display = 'grid';
+        document.getElementById('login-form').reset();
+        document.getElementById('register-form').reset();
+        window.BenzyCartStore?.handleLogout?.({ silent: false });
+      }, 1000);
+    });
+
+    restoreProfileSession();
+
+    // Toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = 'toast ' + type;
+      toast.style.display = 'block';
+      
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3000);
+    }
+
+    // Order filters
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentOrderFilter = btn.dataset.filter || 'all';
+        renderOrdersList(currentOrders);
+      });
+    });
+  </script>
+</body>
+</html>

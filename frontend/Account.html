@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benzy Luxury | Account</title>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="OFF BACK/BENZY LOGO.png" />
+  <link rel="apple-touch-icon" href="OFF BACK/BENZY LOGO.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">
+      <img src="OFF BACK/BENZY LOGO.png" alt="Benzy Luxury Logo" class="logo-main">
+      <img src="OFF BACK/BLX.png" alt="BLX Logo" class="logo-blx">
+    </div>
+
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li class="has-dropdown">
+          <a href="Shop.html" class="shop-toggle">Shop <span class="chevron">▾</span></a>
+          <ul class="dropdown">
+            <li><a href="Shop.html?cat=all">All Products</a></li>
+            <li><a href="Shop.html?cat=men">Men</a></li>
+            <li><a href="Shop.html?cat=women">Women</a></li>
+            <li><a href="Shop.html?cat=accessories">Accessories</a></li>
+          </ul>
+        </li>
+        <li><a href="About.html">About</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+        <li><a href="Account.html" class="active">Account</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-right">
+      <a href="Search.html" class="search-link" aria-label="Search">
+        <img src="OFF BACK/icons8-search-64.png" alt="Search Icon">
+      </a>
+      <a href="Cart.html" class="cart-link" aria-label="Cart">
+        <img src="OFF BACK/icons8-cart-100.png" alt="Cart Icon">
+      </a>
+    </div>
+  </div>
+
+  <main id="account-page" class="account-page account-selector-page">
+    <div class="account-orb account-orb-left" aria-hidden="true"></div>
+    <div class="account-orb account-orb-right" aria-hidden="true"></div>
+    <section class="account-shell">
+      <article class="account-card">
+        <div class="account-selector-layout">
+          <section class="account-selector-content">
+            <div class="account-brand">
+              <div class="account-brand-mark">
+                <img src="OFF BACK/BLX.png" alt="BLX logo" class="account-blx-logo">
+                <span class="account-brand-chip">Secure entry</span>
+              </div>
+              <p class="account-selector-overline">Benzy Luxury Access</p>
+              <h1 class="account-selector-title">Choose your account path</h1>
+              <p class="account-selector-copy">
+                Residents can sign in, create an account, and manage orders. Hosts can continue to the protected dashboard entrance.
+              </p>
+              <div class="account-selector-benefits" aria-label="Account benefits">
+                <span>Order tracking</span>
+                <span>Saved details</span>
+                <span>Protected access</span>
+              </div>
+            </div>
+
+            <div id="account-auth" class="account-auth">
+              <div class="account-access-grid" aria-label="Access type">
+                <a id="tab-host" class="account-tab account-access-card active" href="Admin.html">
+                  <span class="account-access-index" aria-hidden="true">01</span>
+                  <span class="account-access-label">Host</span>
+                  <strong class="account-access-title">Enter the protected admin dashboard</strong>
+                  <span class="account-access-copy">
+                    Use the private host login for catalogue control, customer management, and order operations.
+                  </span>
+                  <ul class="account-access-points" aria-label="Host features">
+                    <li>Manage products, orders, and customers</li>
+                    <li>Open the private host authentication flow</li>
+                    <li>Reserved for authorised personnel only</li>
+                  </ul>
+                  <span class="account-access-cta">Continue as Host</span>
+                </a>
+
+                <a id="tab-resident" class="account-tab account-access-card" href="Profile.html">
+                  <span class="account-access-index" aria-hidden="true">02</span>
+                  <span class="account-access-label">Resident</span>
+                  <strong class="account-access-title">Track orders and manage your profile</strong>
+                  <span class="account-access-copy">
+                    Continue to sign in, create an account, save delivery details, and review recent purchases.
+                  </span>
+                  <ul class="account-access-points" aria-label="Resident features">
+                    <li>View order history and delivery progress</li>
+                    <li>Save addresses and checkout details</li>
+                    <li>Return anytime without starting over</li>
+                  </ul>
+                  <span class="account-access-cta">Continue as Resident</span>
+                </a>
+              </div>
+
+              <div class="account-selector-support">
+                <span class="account-selector-support-label">Need help accessing your account?</span>
+                <a href="Contact.html" class="account-selector-support-link">Contact Benzy Luxury</a>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <p id="account-msg" class="account-msg" aria-live="polite"></p>
+      </article>
+    </section>
+  </main>
+
+  <script src="cart-api.js"></script>
+  <script src="currency-service.js"></script>
+  <script src="cart-store.js"></script>
+  <script>
+    window.__BENZY_SKIP_SITE_FOOTER = true;
+  </script>
+  <script src="main.js"></script>
+</body>
+</html>

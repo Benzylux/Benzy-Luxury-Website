@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benzy Luxury | Payment Status</title>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body.payment-result-body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #f8f3ec 0%, #efe2d1 100%);
+      color: #1f1710;
+      font-family: "Inter", sans-serif;
+    }
+
+    .payment-result-shell {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: 48px 20px 64px;
+    }
+
+    .payment-result-card {
+      padding: 32px;
+      border-radius: 28px;
+      background: rgba(255, 252, 247, 0.92);
+      border: 1px solid rgba(23, 18, 13, 0.08);
+      box-shadow: 0 24px 54px rgba(46, 33, 18, 0.12);
+    }
+
+    .payment-result-kicker {
+      margin: 0 0 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #8a6140;
+    }
+
+    .payment-result-card h1 {
+      margin: 0 0 12px;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1.05;
+    }
+
+    .payment-result-copy {
+      margin: 0 0 24px;
+      color: #5f5144;
+      line-height: 1.7;
+    }
+
+    .payment-result-summary {
+      display: grid;
+      gap: 12px;
+      margin: 0 0 28px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(244, 235, 223, 0.76);
+      border: 1px solid rgba(143, 100, 52, 0.12);
+    }
+
+    .payment-result-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 0.96rem;
+    }
+
+    .payment-result-row strong {
+      font-weight: 700;
+      color: #1f1710;
+    }
+
+    .payment-result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .payment-result-actions a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .payment-result-actions a.primary {
+      background: #1f1710;
+      color: #fff7ee;
+    }
+
+    .payment-result-actions a.secondary {
+      border: 1px solid rgba(31, 23, 16, 0.14);
+      color: #1f1710;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .payment-result-status {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(231, 244, 235, 0.95);
+      border: 1px solid rgba(42, 123, 65, 0.16);
+      color: #255d33;
+      font-weight: 600;
+    }
+
+    .payment-result-status[data-state="pending"] {
+      background: rgba(251, 242, 227, 0.95);
+      border-color: rgba(143, 100, 52, 0.18);
+      color: #7d572d;
+    }
+  </style>
+</head>
+<body class="payment-result-body">
+  <main class="payment-result-shell">
+    <section class="payment-result-card">
+      <p class="payment-result-kicker">Checkout Update</p>
+      <h1 id="payment-result-title">Checking your payment...</h1>
+      <p id="payment-result-copy" class="payment-result-copy">Please hold on while we confirm your order.</p>
+      <p id="payment-result-status" class="payment-result-status">Contacting the payment server...</p>
+      <div id="payment-result-summary" class="payment-result-summary" hidden></div>
+      <div class="payment-result-actions">
+        <a class="primary" href="Profile.html">View Orders</a>
+        <a class="secondary" href="Shop.html">Continue Shopping</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function() {
+      var CART_KEY = 'benzy_cart_items';
+      var GUEST_CART_KEY = 'benzy_guest_cart_items';
+      var CART_META_KEY = 'benzy_cart_meta';
+      var COUPON_KEY = 'benzy_discount_coupon';
+      var titleEl = document.getElementById('payment-result-title');
+      var copyEl = document.getElementById('payment-result-copy');
+      var statusEl = document.getElementById('payment-result-status');
+      var summaryEl = document.getElementById('payment-result-summary');
+      var params = new URLSearchParams(window.location.search);
+      var mode = String(params.get('mode') || 'paystack').trim().toLowerCase();
+      var orderId = String(params.get('orderId') || '').trim();
+      var reference = String(params.get('reference') || '').trim();
+
+      function setContent(title, copy, status, state) {
+        if (titleEl) titleEl.textContent = title;
+        if (copyEl) copyEl.textContent = copy;
+        if (statusEl) {
+          statusEl.textContent = status || '';
+          if (state) {
+            statusEl.dataset.state = state;
+          } else {
+            delete statusEl.dataset.state;
+          }
+        }
+      }
+
+      function renderSummary(order) {
+        if (!summaryEl || !order) return;
+        summaryEl.hidden = false;
+        summaryEl.innerHTML = [
+          ['Order ID', order.orderId || orderId || 'Pending'],
+          ['Payment Method', order.paymentMethod || 'Not available'],
+          ['Payment Status', order.paymentStatus || 'Pending'],
+          ['Order Status', order.orderStatus || order.status || 'Pending'],
+          ['Total', order.total != null ? (order.currency ? order.currency + ' ' + order.total : String(order.total)) : 'Pending']
+        ].map(function(entry) {
+          return '<div class="payment-result-row"><span>' + entry[0] + '</span><strong>' + entry[1] + '</strong></div>';
+        }).join('');
+      }
+
+      function renderWalletSummary(wallet, transaction) {
+        if (!summaryEl) return;
+        var transactionStatus = String(transaction && transaction.status || 'Pending');
+        transactionStatus = transactionStatus.charAt(0).toUpperCase() + transactionStatus.slice(1);
+        summaryEl.hidden = false;
+        summaryEl.innerHTML = [
+          ['Reference', transaction && transaction.reference || reference || 'Pending'],
+          ['Payment Method', transaction && transaction.paymentMethod || 'Paystack'],
+          ['Top-up Status', transactionStatus],
+          ['Amount', transaction ? formatWalletAmount(Math.abs(Number(transaction.amount || 0))) : 'Pending'],
+          ['Wallet Balance', wallet ? formatWalletAmount(Number(wallet.balance || 0)) : 'Pending']
+        ].map(function(entry) {
+          return '<div class="payment-result-row"><span>' + entry[0] + '</span><strong>' + entry[1] + '</strong></div>';
+        }).join('');
+      }
+
+      function clearCheckoutState() {
+        localStorage.setItem(CART_KEY, '[]');
+        localStorage.removeItem(GUEST_CART_KEY);
+        localStorage.setItem(CART_META_KEY, JSON.stringify({
+          mode: 'guest',
+          updatedAt: new Date().toISOString(),
+          totals: {
+            currency: 'NGN',
+            itemCount: 0,
+            quantityCount: 0,
+            subtotal: 0,
+            tax: 0,
+            total: 0
+          }
+        }));
+        localStorage.removeItem(COUPON_KEY);
+        window.dispatchEvent(new CustomEvent('benzy:cart-updated'));
+      }
+
+      function getToken() {
+        return localStorage.getItem('benzy_auth_token') || '';
+      }
+
+      function formatWalletAmount(amount) {
+        return new Intl.NumberFormat('en-NG', {
+          style: 'currency',
+          currency: 'NGN',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }).format(Number(amount || 0));
+      }
+
+      async function callApi(path, method, body) {
+        var bases = [];
+        if (window.location.origin && window.location.origin !== 'null') bases.push(window.location.origin);
+        var storedBase = localStorage.getItem('benzy_api_base');
+        if (storedBase) bases.push(storedBase);
+        bases.push('http://localhost:3001');
+
+        for (var i = 0; i < bases.length; i += 1) {
+          try {
+            var headers = body ? { 'Content-Type': 'application/json' } : {};
+            var token = getToken();
+            if (token) headers.Authorization = 'Bearer ' + token;
+            var response = await fetch(bases[i] + path, {
+              method: method || 'GET',
+              headers: Object.keys(headers).length ? headers : undefined,
+              body: body ? JSON.stringify(body) : undefined
+            });
+            var data = await response.json().catch(function() { return {}; });
+            if (response.ok || [400, 401, 403, 404, 409, 422].includes(response.status)) {
+              return { response: response, data: data };
+            }
+          } catch (error) {
+            // Try next base.
+          }
+        }
+
+        throw new Error('Unable to reach the server.');
+      }
+
+      async function loadBankTransferResult() {
+        clearCheckoutState();
+        setContent(
+          'Order received',
+          'Your bank transfer order has been created. Our team will review your proof of payment and confirm the order once the transfer is verified.',
+          'Payment status: pending confirmation.',
+          'pending'
+        );
+
+        if (!orderId) return;
+        var result = await callApi('/api/track-order/' + encodeURIComponent(orderId), 'GET');
+        if (result.response.ok && result.data && result.data.order) {
+          renderSummary(result.data.order);
+        }
+      }
+
+      async function loadWalletTopupResult() {
+        if (!reference) {
+          window.location.href = 'PaymentFailed.html?message=' + encodeURIComponent('Missing wallet payment reference.');
+          return;
+        }
+
+        var result = await callApi('/api/profile/wallet/topup/paystack/verify', 'POST', {
+          reference: reference
+        });
+
+        if (!result.response.ok || !result.data || !result.data.verified) {
+          var message = String(result.data && result.data.message || 'Wallet top-up verification failed.');
+          var failedNext = 'PaymentFailed.html?message=' + encodeURIComponent(message);
+          failedNext += '&reference=' + encodeURIComponent(reference);
+          window.location.href = failedNext;
+          return;
+        }
+
+        setContent(
+          'Wallet funded',
+          'Your Paystack payment was verified successfully and your Benzy wallet balance has been updated.',
+          'Wallet top-up verified successfully.',
+          'success'
+        );
+        renderWalletSummary(result.data.wallet, result.data.transaction);
+      }
+
+      async function loadWalletOrderResult() {
+        clearCheckoutState();
+        setContent(
+          'Wallet payment confirmed',
+          'Your order was paid with your Benzy wallet and is now confirmed.',
+          'Wallet payment completed successfully.',
+          'success'
+        );
+
+        if (!orderId) return;
+        var result = await callApi('/api/track-order/' + encodeURIComponent(orderId), 'GET');
+        if (result.response.ok && result.data && result.data.order) {
+          renderSummary(result.data.order);
+        }
+      }
+
+      async function loadPaystackResult() {
+        if (!reference && !orderId) {
+          window.location.href = 'PaymentFailed.html?message=' + encodeURIComponent('Missing payment reference.');
+          return;
+        }
+
+        var result = await callApi('/api/payments/paystack/verify', 'POST', {
+          reference: reference,
+          orderId: orderId
+        });
+
+        if (!result.response.ok || !result.data || !result.data.verified) {
+          var message = String(result.data && result.data.message || 'Payment verification failed.');
+          var next = 'PaymentFailed.html?message=' + encodeURIComponent(message);
+          if (orderId) next += '&orderId=' + encodeURIComponent(orderId);
+          if (reference) next += '&reference=' + encodeURIComponent(reference);
+          window.location.href = next;
+          return;
+        }
+
+        clearCheckoutState();
+        setContent(
+          'Payment confirmed',
+          'Your Paystack payment was verified successfully and your order is now being prepared.',
+          'Payment verified successfully.',
+          'success'
+        );
+        renderSummary(result.data.order);
+      }
+
+      (async function init() {
+        try {
+          if (mode === 'bank') {
+            await loadBankTransferResult();
+            return;
+          }
+
+          if (mode === 'wallet-topup') {
+            await loadWalletTopupResult();
+            return;
+          }
+
+          if (mode === 'wallet') {
+            await loadWalletOrderResult();
+            return;
+          }
+
+          await loadPaystackResult();
+        } catch (error) {
+          var next = 'PaymentFailed.html?message=' + encodeURIComponent(error && error.message ? error.message : 'Unable to verify payment.');
+          if (orderId) next += '&orderId=' + encodeURIComponent(orderId);
+          if (reference) next += '&reference=' + encodeURIComponent(reference);
+          window.location.href = next;
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>

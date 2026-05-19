@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benzy Luxury | Search</title>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="OFF BACK/BENZY LOGO.png" />
+  <link rel="apple-touch-icon" href="OFF BACK/BENZY LOGO.png" />
+</head>
+<body class="search-page-body">
+  <div class="navbar">
+    <div class="logo">
+      <img src="OFF BACK/BENZY LOGO.png" alt="Benzy Luxury Logo" class="logo-main" />
+      <img src="OFF BACK/BLX.png" alt="BLX Logo" class="logo-blx" />
+    </div>
+
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li class="has-dropdown">
+          <a href="Shop.html" class="shop-toggle">Shop <span class="chevron">▾</span></a>
+          <ul class="dropdown">
+            <li><a href="Shop.html?cat=all">All Products</a></li>
+            <li><a href="Shop.html?cat=men">Men</a></li>
+            <li><a href="Shop.html?cat=women">Women</a></li>
+            <li><a href="Shop.html?cat=accessories">Accessories</a></li>
+          </ul>
+        </li>
+        <li><a href="About.html">About</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+        <li><a href="Account.html">Account</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-right">
+      <a href="Search.html" class="search-link" aria-label="Search">
+        <img src="OFF BACK/icons8-search-64.png" alt="Search Icon" />
+      </a>
+      <a href="Cart.html" class="cart-link" aria-label="Cart">
+        <img src="OFF BACK/icons8-cart-100.png" alt="Cart Icon" />
+      </a>
+    </div>
+  </div>
+
+  <main class="search-page">
+    <section class="search-shell">
+      <div class="search-hero">
+        <div class="search-copy">
+          <span class="search-kicker">Search The Collection</span>
+          <h1>Find your next Benzy Lux piece.</h1>
+          <p>
+            Search by product name or category, jump into a popular edit, and explore the current lineup
+            without bouncing around the site.
+          </p>
+
+          <div class="search-presets" aria-label="Popular searches">
+            <button type="button" class="search-preset" data-search-term="jersey">Jerseys</button>
+            <button type="button" class="search-preset" data-search-term="women">Women</button>
+            <button type="button" class="search-preset" data-search-term="men">Men</button>
+            <button type="button" class="search-preset" data-search-term="accessories">Accessories</button>
+            <button type="button" class="search-preset" data-search-term="basic top">Basic Tops</button>
+          </div>
+        </div>
+
+        <aside class="search-status-card" aria-label="Shop shortcuts">
+          <span class="search-status-kicker">Quick Routes</span>
+          <h2>Need a wider browse first?</h2>
+          <p>Jump into the full catalog or head straight to a category before narrowing things down here.</p>
+
+          <div class="search-shortcuts">
+            <a href="Shop.html?cat=all">Shop All</a>
+            <a href="Shop.html?cat=men">Men</a>
+            <a href="Shop.html?cat=women">Women</a>
+            <a href="Shop.html?cat=accessories">Accessories</a>
+          </div>
+        </aside>
+      </div>
+
+      <section class="search-panel" aria-label="Search products">
+        <label class="search-label" for="product-search">Search by product name or category</label>
+
+        <div class="search-input-wrap">
+          <input
+            id="product-search"
+            type="search"
+            placeholder="Search for jersey, top, accessories..."
+            autocomplete="off"
+            aria-describedby="search-meta"
+          />
+          <button id="clear-search" class="search-clear-btn" type="button" hidden>Clear</button>
+        </div>
+
+        <div class="search-meta" id="search-meta" aria-live="polite">
+          Browse the collection or start typing to narrow it down.
+        </div>
+
+        <section class="search-history" id="search-history">
+          <div class="search-history-head">
+            <h2>Recent Searches</h2>
+            <button id="clear-history" type="button">Clear</button>
+          </div>
+          <div id="history-list" class="history-list"></div>
+        </section>
+
+        <div class="search-results-wrap">
+          <div class="search-results-head">
+            <h2>Results</h2>
+            <p class="search-results-note">Live matches update as you type.</p>
+          </div>
+
+          <div id="search-results" class="search-results"></div>
+          <p id="search-empty" class="search-empty" hidden>No matching products found. Try another keyword or category.</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="cart-api.js"></script>
+  <script src="currency-service.js"></script>
+  <script src="cart-store.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

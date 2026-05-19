@@ -1,0 +1,11 @@
+backend/.env
+backend/server/.env
+frontend/app/.env
+node_modules/
+frontend/app/node_modules/
+frontend/app/dist/
+frontend/app/logs/
+backend/node_modules/
+backend/server/node_modules/
+backend/server/logs/
+frontend/logs/

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benzy Luxury | Payment Failed</title>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body.payment-result-body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #f8f3ec 0%, #efe2d1 100%);
+      color: #1f1710;
+      font-family: "Inter", sans-serif;
+    }
+
+    .payment-result-shell {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: 48px 20px 64px;
+    }
+
+    .payment-result-card {
+      padding: 32px;
+      border-radius: 28px;
+      background: rgba(255, 252, 247, 0.92);
+      border: 1px solid rgba(23, 18, 13, 0.08);
+      box-shadow: 0 24px 54px rgba(46, 33, 18, 0.12);
+    }
+
+    .payment-result-kicker {
+      margin: 0 0 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #8a6140;
+    }
+
+    .payment-result-card h1 {
+      margin: 0 0 12px;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1.05;
+    }
+
+    .payment-result-copy {
+      margin: 0 0 24px;
+      color: #5f5144;
+      line-height: 1.7;
+    }
+
+    .payment-result-status {
+      margin: 0 0 24px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(252, 235, 235, 0.95);
+      border: 1px solid rgba(164, 52, 52, 0.16);
+      color: #8f2f2f;
+      font-weight: 600;
+    }
+
+    .payment-result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .payment-result-actions a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .payment-result-actions a.primary {
+      background: #1f1710;
+      color: #fff7ee;
+    }
+
+    .payment-result-actions a.secondary {
+      border: 1px solid rgba(31, 23, 16, 0.14);
+      color: #1f1710;
+      background: rgba(255, 255, 255, 0.7);
+    }
+  </style>
+</head>
+<body class="payment-result-body">
+  <main class="payment-result-shell">
+    <section class="payment-result-card">
+      <p class="payment-result-kicker">Checkout Update</p>
+      <h1>Payment not completed</h1>
+      <p id="payment-failed-copy" class="payment-result-copy">We could not confirm your payment. You can return to checkout and try again.</p>
+      <p id="payment-failed-status" class="payment-result-status">Verification failed or the payment was not completed.</p>
+      <div class="payment-result-actions">
+        <a class="primary" href="Checkout.html">Return to Checkout</a>
+        <a class="secondary" href="Cart.html">Back to Cart</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function() {
+      var copyEl = document.getElementById('payment-failed-copy');
+      var statusEl = document.getElementById('payment-failed-status');
+      var params = new URLSearchParams(window.location.search);
+      var message = String(params.get('message') || '').trim();
+      var orderId = String(params.get('orderId') || '').trim();
+      var reference = String(params.get('reference') || '').trim();
+
+      if (message && copyEl) {
+        copyEl.textContent = message;
+      }
+
+      if (statusEl && (orderId || reference)) {
+        var details = [];
+        if (orderId) details.push('Order: ' + orderId);
+        if (reference) details.push('Reference: ' + reference);
+        statusEl.textContent = details.join(' | ');
+      }
+    })();
+  </script>
+</body>
+</html>

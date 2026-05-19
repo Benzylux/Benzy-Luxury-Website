@@ -1,0 +1,392 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benzy Luxury | Contact</title>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="OFF BACK/BENZY LOGO.png" />
+  <link rel="apple-touch-icon" href="OFF BACK/BENZY LOGO.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="contact-page-body">
+  <!-- Navigation -->
+  <div class="navbar">
+    <div class="logo">
+      <img src="OFF BACK/BENZY LOGO.png" alt="Benzy Luxury Logo" class="logo-main">
+      <img src="OFF BACK/BLX.png" alt="BLX Logo" class="logo-blx">
+    </div>
+
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li class="has-dropdown">
+          <a href="Shop.html" class="shop-toggle">Shop <span class="chevron">▾</span></a>
+          <ul class="dropdown">
+            <li><a href="Shop.html?cat=all">All Products</a></li>
+            <li><a href="Shop.html?cat=men">Men</a></li>
+            <li><a href="Shop.html?cat=women">Women</a></li>
+            <li><a href="Shop.html?cat=accessories">Accessories</a></li>
+          </ul>
+        </li>
+        <li><a href="About.html">About</a></li>
+        <li><a href="Lookbook.html">Lookbook</a></li>
+        <li><a href="Contact.html" class="active">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-right">
+      <a href="Search.html" class="search-link" aria-label="Search">
+        <img src="OFF BACK/icons8-search-64.png" alt="Search Icon">
+      </a>
+      <a href="Cart.html" class="cart-link" aria-label="Cart">
+        <img src="OFF BACK/icons8-cart-100.png" alt="Cart Icon">
+      </a>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="contact-hero">
+    <div class="contact-hero-bg"></div>
+    <div class="contact-hero-overlay"></div>
+    <div class="contact-hero-content">
+      <h1>Contact Us</h1>
+      <p>We'd love to hear from you</p>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact-section">
+    <div class="contact-container">
+      <!-- Contact Form -->
+      <div class="contact-form-wrapper">
+        <h2>Send us a Message</h2>
+        <p>Have a question or feedback? Fill out the form below.</p>
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="Enter your WhatsApp phone number" required>
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="What is this about?" required>
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Your message..." required></textarea>
+          </div>
+          <p id="contactFormStatus" class="contact-form-status" hidden></p>
+          <button id="contactFormSubmit" type="submit">Send Message</button>
+        </form>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="contact-info-wrapper">
+        <div class="contact-info-card">
+          <h3>Get in Touch</h3>
+          <div class="contact-info-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <p data-site-contact-address>Lagos, Nigeria</p>
+          </div>
+          <div class="contact-info-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            <p><a data-site-contact-phone-link href="tel:+2347011547813"><span data-site-contact-phone>+234 701 154 7813</span></a></p>
+          </div>
+          <div class="contact-info-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <p><a data-site-contact-email-link href="mailto:benzyluxury@gmail.com"><span data-site-contact-email>benzyluxury@gmail.com</span></a></p>
+          </div>
+          <div class="contact-social" aria-label="Social links">
+            <a href="https://x.com/benzylux" target="_blank" rel="noopener noreferrer" aria-label="X">
+              <img src="OFF BACK/icons8-x-50.png" alt="X">
+            </a>
+            <a href="https://www.instagram.com/benzyluxury_" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <img src="OFF BACK/icons8-instagram-50.png" alt="Instagram">
+            </a>
+            <a href="https://www.pinterest.com/benzylux/" target="_blank" rel="noopener noreferrer" aria-label="Pinterest">
+              <img src="OFF BACK/icons8-pinterest-50.png" alt="Pinterest">
+            </a>
+            <a href="https://www.tiktok.com/@benzyluxury_" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+              <img src="OFF BACK/icons8-tiktok-50.png" alt="TikTok">
+            </a>
+            <a href="https://www.snapchat.com/@benzylux" target="_blank" rel="noopener noreferrer" aria-label="Snapchat">
+              <img src="OFF BACK/icons8-snapchat-circled-logo-48.png" alt="Snapchat">
+            </a>
+          </div>
+        </div>
+
+        <div class="contact-info-card">
+          <h3>Business Hours</h3>
+          <div class="contact-info-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p>Monday - Saturday: 10:00 AM - 8:00 PM</p>
+          </div>
+          <div class="contact-info-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p>Sunday: 12:00 PM - 8:00 PM</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map Section -->
+  <section class="contact-map">
+    <div class="contact-map-placeholder">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      <p data-site-contact-address>Lagos, Nigeria</p>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="contact-faq">
+    <div class="faq-header">
+      <span>Help</span>
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-grid" data-site-faq-grid>
+      <div class="faq-item">
+        <button class="faq-question">How do I create an account on the website?</button>
+        <div class="faq-answer">
+          <p>Open the Account page, choose Resident, and continue to the Profile page. There you can use the Create Account tab to register and start managing your orders and details.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">How do I browse products by category?</button>
+        <div class="faq-answer">
+          <p>Use the Shop menu in the navigation bar to open All Products, Men, Women, or Accessories. This lets you move straight to the section you want without searching manually.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">How do I search for a product quickly?</button>
+        <div class="faq-answer">
+          <p>Click the search icon to open the Search page, then type a product name or category. The search area is designed for quick product discovery and recent searches.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">How do I add items to my cart?</button>
+        <div class="faq-answer">
+          <p>Select the product you want, choose any required options, and add it to your cart. You can then open the Cart page to review items, update quantities, or remove products before checkout.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Can I change the currency on the website?</button>
+        <div class="faq-answer">
+          <p>Yes. The website includes a currency selector on key shopping pages like Shop, Cart, and Checkout, so you can switch between supported currencies while viewing your order.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">How do I use my saved address at checkout?</button>
+        <div class="faq-answer">
+          <p>Save your delivery details in your Profile first, then go to Checkout and choose one of your saved addresses from the address dropdown. The checkout page updates once an address is selected.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Where can I track my order on the website?</button>
+        <div class="faq-answer">
+          <p>Sign in to your Profile and open the Orders or Track Your Order section. You can view order history there and enter your order number to check its latest status.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Where can I manage my profile details?</button>
+        <div class="faq-answer">
+          <p>Your Profile page is the main place to manage your account details, saved addresses, orders, and other personal settings connected to your shopping experience.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">What should I do if my payment does not go through?</button>
+        <div class="faq-answer">
+          <p>Return to the Checkout page and try the payment again after confirming your details. If the issue continues, use the Contact page so the Benzy Luxury team can assist you quickly.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">How can I contact Benzy Luxury through the website?</button>
+        <div class="faq-answer">
+          <p>You can send a message directly from the Contact page using the contact form, or reach the brand through the listed email address and phone number for support.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="cart-api.js"></script>
+  <script src="currency-service.js"></script>
+  <script src="cart-store.js"></script>
+  <script src="main.js"></script>
+  <script>
+    // FAQ Accordion
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+      const question = item.querySelector('.faq-question');
+      question.addEventListener('click', () => {
+        // Close other items
+        faqItems.forEach(otherItem => {
+          if (otherItem !== item) {
+            otherItem.classList.remove('active');
+          }
+        });
+        // Toggle current item
+        item.classList.toggle('active');
+      });
+    });
+
+    // Form Submission
+    const contactForm = document.getElementById('contactForm');
+    const contactFormStatus = document.getElementById('contactFormStatus');
+    const contactFormSubmit = document.getElementById('contactFormSubmit');
+
+    function setContactFormStatus(message, state) {
+      if (!contactFormStatus) return;
+      if (!message) {
+        contactFormStatus.hidden = true;
+        contactFormStatus.textContent = '';
+        contactFormStatus.className = 'contact-form-status';
+        return;
+      }
+
+      contactFormStatus.hidden = false;
+      contactFormStatus.textContent = message;
+      contactFormStatus.className = `contact-form-status ${state ? `is-${state}` : ''}`;
+    }
+
+    async function sendContactMessage(payload) {
+      if (window.BenzyCartApi && typeof window.BenzyCartApi.request === 'function') {
+        return window.BenzyCartApi.request('/api/contact-messages', {
+          method: 'POST',
+          body: payload
+        });
+      }
+
+      const response = await fetch('/api/contact-messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(data?.message || data?.error || 'Unable to send your message right now.');
+      }
+      return data;
+    }
+
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(contactForm);
+      const data = Object.fromEntries(formData.entries());
+      const defaultButtonLabel = 'Send Message';
+      let whatsappWindow = null;
+
+      if (contactFormSubmit instanceof HTMLButtonElement) {
+        contactFormSubmit.disabled = true;
+        contactFormSubmit.textContent = 'Sending...';
+      }
+      setContactFormStatus('Sending your message...', 'pending');
+
+      if (typeof window.open === 'function') {
+        whatsappWindow = window.open('', '_blank');
+        if (whatsappWindow) {
+          whatsappWindow.opener = null;
+          whatsappWindow.document.title = 'Benzy Luxury';
+          whatsappWindow.document.body.innerHTML = '<p style="font-family:Arial,sans-serif;padding:24px;color:#231711;">Preparing WhatsApp...</p>';
+        }
+      }
+
+      try {
+        const result = await sendContactMessage(data);
+        contactForm.reset();
+
+        const supportEmailsSent = Array.isArray(result?.email?.supportDelivered) ? result.email.supportDelivered.length : 0;
+        const emailConfigured = Boolean(result?.email?.configured);
+        const whatsappDeliveryMethod = String(result?.whatsapp?.deliveryMethod || '').trim().toLowerCase();
+        const whatsappSent = Boolean(result?.whatsapp?.sent);
+        const whatsappError = String(result?.whatsapp?.error || '').trim();
+        const statusParts = ['Message sent successfully and saved in the support inbox'];
+
+        if (emailConfigured) {
+          statusParts.push(
+            supportEmailsSent
+              ? 'email notifications were sent'
+              : 'email delivery was triggered'
+          );
+        } else {
+          statusParts.push('email service still needs configuration');
+        }
+
+        if (whatsappSent && whatsappDeliveryMethod === 'wati-template') {
+          if (whatsappWindow && !whatsappWindow.closed) {
+            whatsappWindow.close();
+          }
+          statusParts.push('a WhatsApp confirmation was sent automatically');
+        } else if (whatsappDeliveryMethod === 'wati-template' && result?.whatsapp?.url) {
+          if (whatsappWindow && !whatsappWindow.closed) {
+            whatsappWindow.location.replace(result.whatsapp.url);
+            statusParts.push('automatic WhatsApp delivery could not be completed, so WhatsApp is opening now');
+          } else {
+            const popup = window.open(result.whatsapp.url, '_blank', 'noopener,noreferrer');
+            statusParts.push(
+              popup
+                ? 'automatic WhatsApp delivery could not be completed, so WhatsApp has opened in a new tab'
+                : 'automatic WhatsApp delivery could not be completed, so use the WhatsApp number on this page if your popup blocker stopped it'
+            );
+          }
+        } else if (whatsappDeliveryMethod === 'browser-link' && result?.whatsapp?.url) {
+          if (whatsappWindow && !whatsappWindow.closed) {
+            whatsappWindow.location.replace(result.whatsapp.url);
+            statusParts.push('WhatsApp is opening now');
+          } else {
+            const popup = window.open(result.whatsapp.url, '_blank', 'noopener,noreferrer');
+            statusParts.push(
+              popup
+                ? 'WhatsApp has opened in a new tab'
+                : 'use the WhatsApp number on this page if your popup blocker stopped it'
+            );
+          }
+        } else if (whatsappWindow && !whatsappWindow.closed) {
+          whatsappWindow.close();
+          if (result?.whatsapp?.configured) {
+            statusParts.push(whatsappError || 'WhatsApp delivery is configured but still needs the WATI template details completed');
+          }
+        }
+
+        setContactFormStatus(`${statusParts.join('. ')}.`, 'success');
+      } catch (error) {
+        if (whatsappWindow && !whatsappWindow.closed) {
+          whatsappWindow.close();
+        }
+        setContactFormStatus(error?.message || 'Unable to send your message right now.', 'error');
+      } finally {
+        if (contactFormSubmit instanceof HTMLButtonElement) {
+          contactFormSubmit.disabled = false;
+          contactFormSubmit.textContent = defaultButtonLabel;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

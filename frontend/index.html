@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="OFF BACK/BENZY LOGO.png" />
+    <link rel="apple-touch-icon" href="OFF BACK/BENZY LOGO.png" />
+</head>
+<body>
+  <span data-theme-toggle hidden aria-hidden="true"></span>
+  <div id="loading-screen" class="loading-screen">
+    <img src="OFF BACK/3dgifmaker81836.gif" alt="Loading..." />
+  </div>
+
+  <video class="video-bg" autoplay muted loop playsinline preload="metadata" poster="OFF BACK/BENZY LOGO.png">
+    <source src="OFF BACK/Benzy Model video edit.mp4" type="video/mp4" />
+  </video>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <p class="hero-kicker" data-site-homepage-eyebrow>BLX</p>
+        <h1 data-site-homepage-title>Welcome to Benzy Luxury</h1>
+        <p data-site-homepage-subtitle>A House of Timeless Elegance &amp; Modern Luxury.</p>
+        <a href="Shop.html" class="hero-btn" data-site-homepage-cta-link>
+          <span data-site-homepage-cta-label>Explore Luxury</span>
+          <img src="OFF BACK/icons8-cart-100.png" alt="Cart Icon">
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script src="cart-api.js"></script>
+  <script src="currency-service.js"></script>
+  <script src="cart-store.js"></script>
+  <script>
+    window.__BENZY_SKIP_SITE_FOOTER = true;
+  </script>
+  <script src="main.js"></script>
+</body>
+</html>
