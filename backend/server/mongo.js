@@ -1,6 +1,6 @@
 require('./loadEnv');
 
-const { MongoClient } = require('mongodb');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const MONGODB_URI = process.env.MONGO_URL || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017';
 const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || 'benzy_luxury';
@@ -24,6 +24,11 @@ function toPositiveInt(value, fallback) {
 
 function createMongoClient() {
   return new MongoClient(MONGODB_URI, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true
+    },
     serverSelectionTimeoutMS: MONGODB_SERVER_SELECTION_TIMEOUT_MS,
     connectTimeoutMS: MONGODB_CONNECT_TIMEOUT_MS,
     socketTimeoutMS: MONGODB_SOCKET_TIMEOUT_MS

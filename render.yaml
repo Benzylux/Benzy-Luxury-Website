@@ -9,7 +9,7 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: MONGODB_URI
+      - key: MONGO_URL
         sync: false
       - key: MONGODB_DB_NAME
         value: benzy_luxury
