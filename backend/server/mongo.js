@@ -2,7 +2,7 @@ require('./loadEnv');
 
 const { MongoClient } = require('mongodb');
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017';
+const MONGODB_URI = process.env.MONGO_URL || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017';
 const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || 'benzy_luxury';
 const MONGODB_SERVER_SELECTION_TIMEOUT_MS = toPositiveInt(process.env.MONGODB_SERVER_SELECTION_TIMEOUT_MS, 5000);
 const MONGODB_CONNECT_TIMEOUT_MS = toPositiveInt(process.env.MONGODB_CONNECT_TIMEOUT_MS, 5000);

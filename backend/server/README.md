@@ -11,7 +11,7 @@ The server runs on `http://localhost:3001` by default and serves static files fr
 
 ## Environment variables
 - `PORT`
-- `MONGODB_URI`
+- `MONGO_URL` or `MONGODB_URI`
 - `MONGODB_DB_NAME`
 - `JWT_SECRET`
 - `ADMIN_EMAILS`
@@ -243,7 +243,7 @@ If you add another payment gateway later, call `sendOrderConfirmation(email, ord
 
 ## Go-live checklist
 1. Set a strong `JWT_SECRET`.
-2. Point `MONGODB_URI` to your production MongoDB instance.
+2. Point `MONGO_URL` to your production MongoDB instance.
 3. Set a real `PAYSTACK_SECRET_KEY` on the server.
 4. Set `PAYSTACK_CALLBACK_BASE_URL` if frontend and backend are not on the same public origin.
 5. Set all required Brevo values and verify the Brevo sender email.
@@ -257,5 +257,6 @@ If you add another payment gateway later, call `sendOrderConfirmation(email, ord
 - Mongoose now powers the modular cart, coupon, and product catalog layer in `server/src/cart/`.
 - On the first successful MongoDB startup, existing JSON files in `server/` seed the database if matching collections are empty.
 - Passwords are hashed with `bcryptjs`.
+- Set `MONGO_URL` in production. `MONGODB_URI` is also supported for older local configs.
 - Default local MongoDB connection is `mongodb://127.0.0.1:27017` with database `benzy_luxury`.
 - The local server loads `backend/.env` automatically at startup, and shell or hosting-provider environment variables still take priority when they are already set.
