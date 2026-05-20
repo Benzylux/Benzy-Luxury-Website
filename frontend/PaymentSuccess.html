@@ -225,10 +225,10 @@
 
       async function callApi(path, method, body) {
         var bases = [];
-        if (window.location.origin && window.location.origin !== 'null') bases.push(window.location.origin);
+        var origin = window.location.origin;
         var storedBase = localStorage.getItem('benzy_api_base');
-        if (storedBase) bases.push(storedBase);
         bases.push('https://benzy-luxury-website.onrender.com');
+        if (storedBase && storedBase !== origin) bases.push(storedBase);
 
         for (var i = 0; i < bases.length; i += 1) {
           try {

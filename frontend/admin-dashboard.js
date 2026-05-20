@@ -165,10 +165,9 @@
   function getApiBases() {
     const bases = [];
     const stored = localStorage.getItem(API_BASE_STORAGE_KEY);
-    if (window.location.origin && window.location.origin !== "null") bases.push(window.location.origin);
+    const origin = window.location.origin;
     bases.push("https://benzy-luxury-website.onrender.com");
-    if (stored) bases.push(stored);
-    bases.push("https://benzy-luxury-website.onrender.com");
+    if (stored && stored !== origin) bases.push(stored);
     return Array.from(new Set(bases));
   }
 

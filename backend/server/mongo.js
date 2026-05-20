@@ -2,7 +2,7 @@ require('./loadEnv');
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
-const MONGO_URL = String(process.env.MONGO_URL || process.env.MONGODB_URI || '').trim();
+const MONGO_URL = String(process.env.MONGO_URL || process.env.MONGO_URI || process.env.MONGODB_URI || '').trim();
 const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || 'benzy_luxury';
 const MONGODB_SERVER_SELECTION_TIMEOUT_MS = toPositiveInt(process.env.MONGODB_SERVER_SELECTION_TIMEOUT_MS, 5000);
 const MONGODB_CONNECT_TIMEOUT_MS = toPositiveInt(process.env.MONGODB_CONNECT_TIMEOUT_MS, 5000);
@@ -24,7 +24,7 @@ function toPositiveInt(value, fallback) {
 
 function createMongoClient() {
   if (!MONGO_URL) {
-    throw new Error('MONGO_URL or MONGODB_URI environment variable is required.');
+    throw new Error('MONGO_URL, MONGO_URI, or MONGODB_URI environment variable is required.');
   }
 
   return new MongoClient(MONGO_URL, {

@@ -12,9 +12,8 @@
     const storedBase = localStorage.getItem(API_BASE_STORAGE_KEY);
     const origin = window.location.origin;
 
-    if (storedBase) bases.push(storedBase);
-    if (origin && origin !== "null") bases.push(origin);
-    bases.push(FALLBACK_API_BASE, "https://benzy-luxury-website.onrender.com");
+    bases.push(FALLBACK_API_BASE);
+    if (storedBase && storedBase !== origin) bases.push(storedBase);
 
     return Array.from(new Set(bases.filter(Boolean)));
   }

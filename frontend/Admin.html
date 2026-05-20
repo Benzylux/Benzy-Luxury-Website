@@ -133,10 +133,9 @@
     const API_BASES = (() => {
       const bases = [];
       const storedBase = localStorage.getItem(API_BASE_STORAGE_KEY);
-      if (storedBase) bases.push(storedBase);
       const origin = window.location.origin;
-      if (origin && origin !== "null") bases.push(origin);
       bases.push("https://benzy-luxury-website.onrender.com");
+      if (storedBase && storedBase !== origin) bases.push(storedBase);
       return Array.from(new Set(bases));
     })();
 

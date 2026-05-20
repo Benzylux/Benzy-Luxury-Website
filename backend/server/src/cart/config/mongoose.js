@@ -2,14 +2,14 @@ require('../../../loadEnv');
 
 const mongoose = require('mongoose');
 
-const MONGO_URL = String(process.env.MONGO_URL || process.env.MONGODB_URI || '').trim();
+const MONGO_URL = String(process.env.MONGO_URL || process.env.MONGO_URI || process.env.MONGODB_URI || '').trim();
 const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || 'benzy_luxury';
 
 let connectPromise = null;
 
 async function connectCartDatabase() {
   if (!MONGO_URL) {
-    throw new Error('MONGO_URL or MONGODB_URI environment variable is required.');
+    throw new Error('MONGO_URL, MONGO_URI, or MONGODB_URI environment variable is required.');
   }
 
   if (mongoose.connection.readyState === 1) return mongoose.connection;
