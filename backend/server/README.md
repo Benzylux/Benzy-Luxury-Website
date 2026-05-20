@@ -7,11 +7,11 @@
 4. Make sure MongoDB is running
 5. `npm start`
 
-The server runs on `http://localhost:3001` by default and serves static files from `frontend/`.
+The server runs on port `3000` by default and serves static files from `frontend/`.
 
 ## Environment variables
 - `PORT`
-- `MONGO_URL` or `MONGODB_URI`
+- `MONGO_URL`
 - `MONGODB_DB_NAME`
 - `JWT_SECRET`
 - `ADMIN_EMAILS`
@@ -257,6 +257,5 @@ If you add another payment gateway later, call `sendOrderConfirmation(email, ord
 - Mongoose now powers the modular cart, coupon, and product catalog layer in `server/src/cart/`.
 - On the first successful MongoDB startup, existing JSON files in `server/` seed the database if matching collections are empty.
 - Passwords are hashed with `bcryptjs`.
-- Set `MONGO_URL` in production. `MONGODB_URI` is also supported for older local configs.
-- Default local MongoDB connection is `mongodb://127.0.0.1:27017` with database `benzy_luxury`.
+- Set `MONGO_URL` in production.
 - The local server loads `backend/.env` automatically at startup, and shell or hosting-provider environment variables still take priority when they are already set.

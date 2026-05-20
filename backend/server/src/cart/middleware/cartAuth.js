@@ -2,7 +2,7 @@ require('../../../loadEnv');
 
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'change-me-in-production';
+const JWT_SECRET = process.env.JWT_SECRET || '';
 
 function readBearerToken(req) {
   const authHeader = String(req.headers.authorization || '').trim();

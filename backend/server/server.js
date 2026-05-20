@@ -53,8 +53,8 @@ const { DEFAULT_CONTENT, createAdminRouter } = require('./src/admin/adminRoutes'
 const Product = require('./src/cart/models/Product');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
-const JWT_SECRET = process.env.JWT_SECRET || 'change-me-in-production';
+const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || '';
 
 // Paystack Configuration
 // IMPORTANT: Set your Paystack secret key as environment variable: PAYSTACK_SECRET_KEY
@@ -63,7 +63,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'change-me-in-production';
 // Example: https://benzyluxury.com
 
 // Flutterwave Configuration  
-const FLUTTERWAVE_SECRET_KEY = process.env.FLUTTERWAVE_SECRET_KEY || 'FLWSECK_YOUR_SECRET_KEY_HERE';
+const FLUTTERWAVE_SECRET_KEY = process.env.FLUTTERWAVE_SECRET_KEY || '';
 const USERS_FILE = path.join(__dirname, 'users.json');
 const ORDERS_FILE = path.join(__dirname, 'orders.json');
 const SUBSCRIBERS_FILE = path.join(__dirname, 'subscribers.json');
@@ -5092,7 +5092,7 @@ app.use((error, req, res, next) => {
 async function handleStartupFailure(error) {
   if (error?.code === 'EADDRINUSE') {
     const numericPort = Number(PORT);
-    const suggestedPort = Number.isInteger(numericPort) ? numericPort + 1 : 3001;
+    const suggestedPort = Number.isInteger(numericPort) ? numericPort + 1 : 3000;
     console.error(`Port ${PORT} is already in use.`);
     console.error(`Another process is already listening on http://localhost:${PORT}.`);
     console.error(`Stop the running server first, or set PORT=${suggestedPort} before starting the server.`);
@@ -5115,42 +5115,54 @@ async function handleStartupFailure(error) {
   process.exit(1);
 }
 
-async function startServer() {
+function logStartupBanner() {
+  console.log(`Benzy Luxury Server running on port ${PORT}`);
+  console.log(`MongoDB database: ${getMongoConfig().dbName}`);
+  console.log(`API Endpoints:`);
+  console.log(`   GET  /api/track-order/:orderId - Track an order`);
+  console.log(`   POST /api/track-order         - Track with orderId and email`);
+  console.log(`   GET  /api/orders/:email       - Get customer orders`);
+  console.log(`   POST /api/orders              - Create a new order`);
+  console.log(`   GET  /api/cart                - Get authenticated cart`);
+  console.log(`   POST /api/cart/sync           - Sync authenticated cart snapshot`);
+  console.log(`   POST /api/cart/merge          - Merge guest cart into authenticated cart`);
+  console.log(`   POST /api/cart/add            - Add item to authenticated cart`);
+  console.log(`   PATCH /api/cart/item/:id      - Update cart item quantity`);
+  console.log(`   DELETE /api/cart/item/:id     - Remove cart item`);
+  console.log(`   DELETE /api/cart/clear        - Clear authenticated cart`);
+  console.log(`   POST /api/cart/apply-coupon   - Apply coupon to cart`);
+  console.log(`   DELETE /api/cart/remove-coupon - Remove applied coupon`);
+  console.log(`   POST /api/cart/checkout/validate - Validate cart before payment`);
+  console.log(`   POST /api/newsletter/subscribe - Subscribe footer email`);
+  console.log(`   POST /api/contact-messages     - Save contact form messages`);
+  console.log(`   POST /api/giveaway/enter       - Add giveaway lead to Brevo`);
+  console.log(`   POST /api/vip/upgrade          - Add VIP contact to Brevo`);
+  console.log(`   POST /api/webhooks/brevo       - Receive Brevo delivery webhooks`);
+  console.log(`   POST /api/coupons/validate    - Validate first-order coupon`);
+  console.log(`   GET  /api/settings/shipping   - Get shipping fee (NGN)`);
+  console.log(`   PATCH /api/settings/shipping  - Update shipping fee (host)`);
+}
+
+async function initializeDataStoresAfterListen() {
   try {
     await initializeMongo();
     await initializeMongoSeedData();
     await initializeCartSystem();
+    console.log('MongoDB Atlas connected and data stores initialized.');
+  } catch (error) {
+    console.error('MongoDB initialization failed. Server will keep running:', error);
+  }
+}
 
+async function startServer() {
+  try {
     await new Promise((resolve, reject) => {
       const server = app.listen(PORT);
 
       server.once('error', reject);
       server.once('listening', () => {
-        console.log(`Benzy Luxury Server running at http://localhost:${PORT}`);
-        console.log(`MongoDB database: ${getMongoConfig().dbName}`);
-        console.log(`API Endpoints:`);
-        console.log(`   GET  /api/track-order/:orderId - Track an order`);
-        console.log(`   POST /api/track-order         - Track with orderId and email`);
-        console.log(`   GET  /api/orders/:email       - Get customer orders`);
-        console.log(`   POST /api/orders              - Create a new order`);
-        console.log(`   GET  /api/cart                - Get authenticated cart`);
-        console.log(`   POST /api/cart/sync           - Sync authenticated cart snapshot`);
-        console.log(`   POST /api/cart/merge          - Merge guest cart into authenticated cart`);
-        console.log(`   POST /api/cart/add            - Add item to authenticated cart`);
-        console.log(`   PATCH /api/cart/item/:id      - Update cart item quantity`);
-        console.log(`   DELETE /api/cart/item/:id     - Remove cart item`);
-        console.log(`   DELETE /api/cart/clear        - Clear authenticated cart`);
-        console.log(`   POST /api/cart/apply-coupon   - Apply coupon to cart`);
-        console.log(`   DELETE /api/cart/remove-coupon - Remove applied coupon`);
-        console.log(`   POST /api/cart/checkout/validate - Validate cart before payment`);
-        console.log(`   POST /api/newsletter/subscribe - Subscribe footer email`);
-        console.log(`   POST /api/contact-messages     - Save contact form messages`);
-        console.log(`   POST /api/giveaway/enter       - Add giveaway lead to Brevo`);
-        console.log(`   POST /api/vip/upgrade          - Add VIP contact to Brevo`);
-        console.log(`   POST /api/webhooks/brevo       - Receive Brevo delivery webhooks`);
-        console.log(`   POST /api/coupons/validate    - Validate first-order coupon`);
-        console.log(`   GET  /api/settings/shipping   - Get shipping fee (NGN)`);
-        console.log(`   PATCH /api/settings/shipping  - Update shipping fee (host)`);
+        logStartupBanner();
+        initializeDataStoresAfterListen();
         resolve(server);
       });
     });
