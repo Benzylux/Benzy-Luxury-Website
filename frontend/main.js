@@ -130,7 +130,7 @@ window.addEventListener("load", function () {
     if (origin && origin !== "null") bases.push(origin);
     const stored = localStorage.getItem("benzy_api_base");
     if (stored) bases.push(stored);
-    bases.push("http://localhost:3001");
+    bases.push("https://benzy-luxury-website.onrender.com");
     return Array.from(new Set(bases));
   })();
 
@@ -269,7 +269,7 @@ window.addEventListener("load", function () {
     if (origin && origin !== "null") bases.push(origin);
     const stored = localStorage.getItem("benzy_api_base");
     if (stored) bases.push(stored);
-    bases.push("http://localhost:3001");
+    bases.push("https://benzy-luxury-website.onrender.com");
     return Array.from(new Set(bases));
   })();
 
@@ -1181,7 +1181,7 @@ window.addEventListener("load", function () {
   if (!page || !list) return;
   const TOKEN_KEY = "benzy_admin_auth_token";
   const LOGIN_INTENT_KEY = "benzy_login_intent";
-  const API_BASE = localStorage.getItem("benzy_api_base") || "http://localhost:3001";
+  const API_BASE = localStorage.getItem("benzy_api_base") || "https://benzy-luxury-website.onrender.com";
   const LEGACY_ADMIN_EMAILS = ["benzyluxury@gmail.com"];
   const ACCOUNT_KEY_PREFIX = "benzy_account_";
   const ACCOUNT_ORDERS_SUFFIX = "_orders";
@@ -1763,7 +1763,7 @@ window.addEventListener("load", function () {
   const RESIDENT_TOKEN_KEY = "benzy_auth_token";
   const ADMIN_TOKEN_KEY = "benzy_admin_auth_token";
   const LOGIN_INTENT_KEY = "benzy_login_intent";
-  const API_BASE = localStorage.getItem("benzy_api_base") || "http://localhost:3001";
+  const API_BASE = localStorage.getItem("benzy_api_base") || "https://benzy-luxury-website.onrender.com";
   const ACCOUNT_PAGE_URL = "Account.html";
   const LOGIN_PAGE_URL = "Profile.html";
   const RESIDENT_HOME_URL = "Profile.html";
@@ -2016,7 +2016,7 @@ window.addEventListener("load", function () {
 
   const TOKEN_KEY = "benzy_auth_token";
   const LOGIN_INTENT_KEY = "benzy_login_intent";
-  const API_BASE = localStorage.getItem("benzy_api_base") || "http://localhost:3001";
+  const API_BASE = localStorage.getItem("benzy_api_base") || "https://benzy-luxury-website.onrender.com";
 
   const profileMenu = document.getElementById("profile-menu");
   const menuItems = profileMenu ? Array.from(profileMenu.querySelectorAll(".profile-menu-item")) : [];
@@ -2789,7 +2789,7 @@ function getProductApiBases() {
   if (origin && origin !== "null") bases.push(origin);
   const stored = localStorage.getItem("benzy_api_base");
   if (stored) bases.push(stored);
-  bases.push("http://localhost:3001");
+  bases.push("https://benzy-luxury-website.onrender.com");
   return Array.from(new Set(bases));
 }
 
@@ -5065,7 +5065,7 @@ function productToCardHtml(product, cardClass) {
     if (origin && origin !== "null") bases.push(origin);
     const stored = localStorage.getItem("benzy_api_base");
     if (stored) bases.push(stored);
-    bases.push("http://localhost:3001");
+    bases.push("https://benzy-luxury-website.onrender.com");
     return Array.from(new Set(bases));
   })();
 
@@ -6386,7 +6386,7 @@ function productToCardHtml(product, cardClass) {
   if (!isLocal) return;
   if (localStorage.getItem("benzy_hide_api_banner") === "1") return;
 
-  const apiBase = localStorage.getItem("benzy_api_base") || "http://localhost:3001";
+  const apiBase = localStorage.getItem("benzy_api_base") || "https://benzy-luxury-website.onrender.com";
   if (!document.body) return;
 
   const banner = document.createElement("div");
@@ -6418,7 +6418,7 @@ function productToCardHtml(product, cardClass) {
     if (origin && origin !== "null") bases.push(origin);
     const stored = localStorage.getItem("benzy_api_base");
     if (stored) bases.push(stored);
-    bases.push("http://localhost:3001");
+    bases.push("https://benzy-luxury-website.onrender.com");
     return Array.from(new Set(bases));
   })();
   let suppressSync = false;
@@ -6690,3 +6690,4 @@ function productToCardHtml(product, cardClass) {
     void hydrateAuthenticatedCart();
   }
 })();
+

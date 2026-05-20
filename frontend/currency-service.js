@@ -2,7 +2,7 @@
   const SELECTED_CURRENCY_KEY = "benzy_currency";
   const SWR_CACHE_KEY = "benzy_currency_state";
   const API_BASE_STORAGE_KEY = "benzy_api_base";
-  const FALLBACK_API_BASE = "http://localhost:3001";
+  const FALLBACK_API_BASE = "https://benzy-luxury-website.onrender.com";
   const FRANKFURTER_URL = "https://api.frankfurter.dev/v1/latest?base=NGN&symbols=USD";
   const CACHE_STALE_MS = 6 * 60 * 60 * 1000;
   const CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
@@ -727,3 +727,4 @@
 
   void getExchangeRates();
 })();
+

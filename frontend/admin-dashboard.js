@@ -166,9 +166,9 @@
     const bases = [];
     const stored = localStorage.getItem(API_BASE_STORAGE_KEY);
     if (window.location.origin && window.location.origin !== "null") bases.push(window.location.origin);
-    bases.push("http://localhost:3001");
+    bases.push("https://benzy-luxury-website.onrender.com");
     if (stored) bases.push(stored);
-    bases.push("http://localhost:3001");
+    bases.push("https://benzy-luxury-website.onrender.com");
     return Array.from(new Set(bases));
   }
 
@@ -2959,3 +2959,4 @@
     showFlash(error.message || "Unable to load the admin dashboard.", true);
   });
 })();
+

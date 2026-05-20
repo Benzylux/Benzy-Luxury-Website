@@ -363,13 +363,13 @@
       var bankDetailsEl = document.getElementById('bank-details');
       var paymentOptions = document.querySelectorAll('input[name="payment"]');
       var currencySelect = document.getElementById('currency-select');
-      var API_BASE = localStorage.getItem('benzy_api_base') || 'http://localhost:3001';
+      var API_BASE = localStorage.getItem('benzy_api_base') || 'https://benzy-luxury-website.onrender.com';
       var API_BASES = (function() {
         var bases = [];
         var origin = window.location.origin;
         if (origin && origin !== 'null') bases.push(origin);
         if (API_BASE) bases.push(API_BASE);
-        bases.push('http://localhost:3001');
+        bases.push('https://benzy-luxury-website.onrender.com');
         return Array.from(new Set(bases));
       })();
       var COUPON_KEY = 'benzy_discount_coupon';
@@ -2096,4 +2096,5 @@
   </script>
 </body>
 </html>
+
 

@@ -1,7 +1,7 @@
 (function () {
   const TOKEN_KEY = "benzy_auth_token";
   const API_BASE_STORAGE_KEY = "benzy_api_base";
-  const FALLBACK_API_BASE = "http://localhost:3001";
+  const FALLBACK_API_BASE = "https://benzy-luxury-website.onrender.com";
 
   function getToken() {
     return localStorage.getItem(TOKEN_KEY) || "";
@@ -14,7 +14,7 @@
 
     if (storedBase) bases.push(storedBase);
     if (origin && origin !== "null") bases.push(origin);
-    bases.push(FALLBACK_API_BASE, "http://localhost:3001");
+    bases.push(FALLBACK_API_BASE, "https://benzy-luxury-website.onrender.com");
 
     return Array.from(new Set(bases.filter(Boolean)));
   }
@@ -136,3 +136,4 @@
 
   window.BenzyCartApi = api;
 })();
+

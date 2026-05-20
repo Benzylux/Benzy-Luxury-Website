@@ -228,7 +228,7 @@
         if (window.location.origin && window.location.origin !== 'null') bases.push(window.location.origin);
         var storedBase = localStorage.getItem('benzy_api_base');
         if (storedBase) bases.push(storedBase);
-        bases.push('http://localhost:3001');
+        bases.push('https://benzy-luxury-website.onrender.com');
 
         for (var i = 0; i < bases.length; i += 1) {
           try {
@@ -370,3 +370,4 @@
   </script>
 </body>
 </html>
+
