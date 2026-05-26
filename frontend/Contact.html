@@ -273,6 +273,8 @@
     }
 
     async function sendContactMessage(payload) {
+      const apiBase = localStorage.getItem('benzy_api_base') || 'https://benzy-luxury-website.onrender.com';
+
       if (window.BenzyCartApi && typeof window.BenzyCartApi.request === 'function') {
         return window.BenzyCartApi.request('/api/contact-messages', {
           method: 'POST',
@@ -280,7 +282,7 @@
         });
       }
 
-      const response = await fetch('/api/contact-messages', {
+      const response = await fetch(`${apiBase}/api/contact-messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

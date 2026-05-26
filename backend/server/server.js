@@ -102,10 +102,77 @@ const LEGACY_POLICY_PLACEHOLDERS = new Set([
   'Add your privacy policy here.',
   'Add your terms and conditions here.'
 ]);
+const DEFAULT_CORS_ORIGINS = [
+  'http://localhost:5173',
+  'http://localhost:4173',
+  'http://localhost:4174',
+  'https://benzy-luxury-website.onrender.com',
+  'https://benzyluxury.com.ng',
+  'https://www.benzyluxury.com.ng'
+];
+
+function normalizeOrigin(value) {
+  const rawValue = String(value || '').trim();
+  if (!rawValue) return '';
+
+  try {
+    return new URL(rawValue).origin;
+  } catch {
+    return '';
+  }
+}
+
+function buildCorsOrigins() {
+  const configuredOrigins = [
+    process.env.CORS_ORIGINS,
+    process.env.FRONTEND_URL,
+    process.env.PUBLIC_SITE_URL,
+    process.env.SITE_URL,
+    process.env.PAYSTACK_CALLBACK_BASE_URL
+  ]
+    .filter(Boolean)
+    .flatMap((value) => String(value).split(','));
+
+  return new Set(
+    [...DEFAULT_CORS_ORIGINS, ...configuredOrigins]
+      .map(normalizeOrigin)
+      .filter(Boolean)
+  );
+}
+
+const ALLOWED_CORS_ORIGINS = buildCorsOrigins();
+const VERCEL_PREVIEW_HOST_PATTERN = /^[a-z0-9-]+\.vercel\.app$/i;
+
+function isAllowedCorsOrigin(origin) {
+  if (!origin) return true;
+
+  const normalizedOrigin = normalizeOrigin(origin);
+  if (!normalizedOrigin) return false;
+  if (ALLOWED_CORS_ORIGINS.has(normalizedOrigin)) return true;
+
+  try {
+    const { hostname, protocol } = new URL(normalizedOrigin);
+    return protocol === 'https:' && VERCEL_PREVIEW_HOST_PATTERN.test(hostname);
+  } catch {
+    return false;
+  }
+}
+
+const corsOptions = {
+  origin(origin, callback) {
+    if (isAllowedCorsOrigin(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error(`Origin ${origin} is not allowed by CORS.`));
+  },
+  credentials: true
+};
 
 // Middleware
 app.set('trust proxy', true);
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '12mb' }));
 app.use((req, res, next) => {
   if (!shouldRedirectToHttps(req)) {
