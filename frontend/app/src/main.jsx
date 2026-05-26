@@ -23,6 +23,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin/dashboard" element={<AdminPage />} />
           </Routes>
         </Suspense>
       </StoreProvider>

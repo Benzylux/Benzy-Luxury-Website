@@ -221,7 +221,7 @@
         localStorage.setItem(ADMIN_TOKEN_KEY, data.token);
         localStorage.removeItem("benzy_login_intent");
         setSessionStatus("Access granted", "success");
-        window.location.href = "/admin/dashboard";
+        window.location.href = "/AdminDashboard.html";
       } catch (error) {
         setSessionStatus("Retry required", "error");
         setMessage(error?.message || "Unable to log in right now.", true);

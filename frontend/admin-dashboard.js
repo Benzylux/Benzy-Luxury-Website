@@ -159,7 +159,7 @@
 
   function redirectToLogin() {
     clearSession();
-    window.location.href = "/admin/login";
+    window.location.href = "/Admin.html";
   }
 
   function getApiBases() {

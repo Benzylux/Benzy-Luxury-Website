@@ -1,0 +1,60 @@
+{
+  "rewrites": [
+    {
+      "source": "/admin",
+      "destination": "/Admin.html"
+    },
+    {
+      "source": "/admin/login",
+      "destination": "/Admin.html"
+    },
+    {
+      "source": "/admin/dashboard",
+      "destination": "/AdminDashboard.html"
+    },
+    {
+      "source": "/admin/products",
+      "destination": "/AdminDashboard.html"
+    },
+    {
+      "source": "/admin/orders",
+      "destination": "/AdminDashboard.html"
+    },
+    {
+      "source": "/admin/customers",
+      "destination": "/AdminDashboard.html"
+    },
+    {
+      "source": "/admin/messages",
+      "destination": "/AdminDashboard.html"
+    },
+    {
+      "source": "/admin/payments",
+      "destination": "/AdminDashboard.html"
+    },
+    {
+      "source": "/admin/coupons",
+      "destination": "/AdminDashboard.html"
+    },
+    {
+      "source": "/admin/settings",
+      "destination": "/AdminDashboard.html"
+    },
+    {
+      "source": "/admin/content",
+      "destination": "/AdminDashboard.html"
+    },
+    {
+      "source": "/admin/newsletter",
+      "destination": "/AdminDashboard.html"
+    },
+    {
+      "source": "/admin/reviews",
+      "destination": "/AdminDashboard.html"
+    },
+    {
+      "source": "/admin/team",
+      "destination": "/AdminDashboard.html"
+    }
+  ]
+}
