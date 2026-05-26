@@ -11,6 +11,122 @@ function normalizeString(value) {
   return String(value || '').trim();
 }
 
+function normalizeSlug(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function capitalizeWords(value) {
+  return String(value || '')
+    .replace(/[-_]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function isPlaceholderCategory(value) {
+  const normalized = normalizeLookupKey(value);
+  return !normalized || ['all', 'collection', 'collections', 'category', 'uncategorized'].includes(normalized);
+}
+
+function buildSeedLookup() {
+  const lookup = new Map();
+  for (const seed of productSeed) {
+    const productId = normalizeString(seed?.productId);
+    const normalizedName = normalizeLookupKey(seed?.normalizedName || seed?.name);
+    if (productId) lookup.set(`id:${productId}`, seed);
+    if (normalizedName) lookup.set(`name:${normalizedName}`, seed);
+  }
+  return lookup;
+}
+
+function resolveSeedForProduct(product, seedLookup) {
+  const productId = normalizeString(product?.productId);
+  const normalizedName = normalizeLookupKey(product?.normalizedName || product?.name);
+  return seedLookup.get(`id:${productId}`) || seedLookup.get(`name:${normalizedName}`) || null;
+}
+
+function buildCatalogBackfill(product, seed) {
+  const $set = {};
+  const name = normalizeString(product?.name || seed?.name);
+  const normalizedName = normalizeLookupKey(name);
+
+  if (name && product?.name !== name) $set.name = name;
+  if (normalizedName && product?.normalizedName !== normalizedName) $set.normalizedName = normalizedName;
+  if (!normalizeString(product?.slug) && name) $set.slug = normalizeSlug(name);
+  if (!normalizeString(product?.currency)) $set.currency = seed?.currency || 'NGN';
+  if (product?.isActive === undefined || product?.isActive === null) $set.isActive = true;
+
+  const seedCategoryId = normalizeString(seed?.categoryId);
+  const seedCategoryName = normalizeString(seed?.categoryName);
+  const currentCategoryId = normalizeString(product?.categoryId);
+  const currentCategoryName = normalizeString(product?.categoryName);
+
+  if (seed && (isPlaceholderCategory(currentCategoryId) || isPlaceholderCategory(currentCategoryName))) {
+    if (seedCategoryId) $set.categoryId = seedCategoryId;
+    if (seedCategoryName) $set.categoryName = seedCategoryName;
+  } else {
+    if (!currentCategoryId && currentCategoryName) $set.categoryId = normalizeSlug(currentCategoryName) || 'collection';
+    if (!currentCategoryName && currentCategoryId) $set.categoryName = capitalizeWords(currentCategoryId) || 'Collection';
+  }
+
+  const currentImages = Array.isArray(product?.images) ? product.images.filter(Boolean) : [];
+  const seedImages = Array.isArray(seed?.images) ? seed.images.filter(Boolean) : [];
+  if (!normalizeString(product?.image) && normalizeString(seed?.image)) $set.image = seed.image;
+  if (!currentImages.length && seedImages.length) $set.images = seedImages;
+
+  const currentVariants = Array.isArray(product?.variants) ? product.variants : [];
+  if (!currentVariants.length && Array.isArray(seed?.variants) && seed.variants.length) {
+    $set.variants = seed.variants;
+  }
+
+  return $set;
+}
+
+async function backfillExistingProductCatalog() {
+  const products = await Product.find({}).lean();
+  if (!products.length) return;
+
+  const seedLookup = buildSeedLookup();
+  const existingProductIds = new Set(products.map((product) => normalizeString(product?.productId)).filter(Boolean));
+  const existingNames = new Set(products.map((product) => normalizeLookupKey(product?.normalizedName || product?.name)).filter(Boolean));
+  const writes = [];
+
+  for (const product of products) {
+    const seed = resolveSeedForProduct(product, seedLookup);
+    const $set = buildCatalogBackfill(product, seed);
+    if (!Object.keys($set).length) continue;
+
+    writes.push({
+      updateOne: {
+        filter: { _id: product._id },
+        update: { $set }
+      }
+    });
+  }
+
+  for (const seed of productSeed) {
+    const productId = normalizeString(seed?.productId);
+    const normalizedName = normalizeLookupKey(seed?.normalizedName || seed?.name);
+    if ((productId && existingProductIds.has(productId)) || (normalizedName && existingNames.has(normalizedName))) {
+      continue;
+    }
+
+    writes.push({
+      insertOne: {
+        document: seed
+      }
+    });
+  }
+
+  if (writes.length) {
+    await Product.bulkWrite(writes, { ordered: false });
+  }
+}
+
 function buildLineKey(item) {
   return [
     normalizeString(item?.productId).toLowerCase(),
@@ -22,7 +138,10 @@ function buildLineKey(item) {
 
 async function seedProductCatalog() {
   const existing = await Product.estimatedDocumentCount();
-  if (existing > 0) return;
+  if (existing > 0) {
+    await backfillExistingProductCatalog();
+    return;
+  }
   await Product.insertMany(productSeed, { ordered: true });
 }
 
