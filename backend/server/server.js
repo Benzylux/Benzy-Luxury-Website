@@ -49,6 +49,7 @@ const {
   recordCouponRedemption,
   validateCheckoutCartForUser
 } = require('./src/cart');
+const { connectCartDatabase } = require('./src/cart/config/mongoose');
 const { DEFAULT_CONTENT, createAdminRouter } = require('./src/admin/adminRoutes');
 const Product = require('./src/cart/models/Product');
 
@@ -2340,7 +2341,12 @@ function serializeProduct(product) {
   };
 }
 
+async function ensureProductCatalogConnection() {
+  await connectCartDatabase();
+}
+
 app.get('/api/products', asyncHandler(async (req, res) => {
+  await ensureProductCatalogConnection();
   const category = String(req.query?.category || '').trim().toLowerCase();
   const search = String(req.query?.q || '').trim();
   const filter = { isActive: true };
@@ -2352,6 +2358,7 @@ app.get('/api/products', asyncHandler(async (req, res) => {
 }));
 
 app.get('/api/products/:slug', asyncHandler(async (req, res) => {
+  await ensureProductCatalogConnection();
   const key = String(req.params.slug || '').trim();
   const product = await Product.findOne({
     isActive: true,
@@ -2365,6 +2372,7 @@ app.get('/api/products/:slug', asyncHandler(async (req, res) => {
 app.get('/api/admin/products', authMiddleware, asyncHandler(async (req, res) => {
   const ctx = await requireHost(req, res);
   if (!ctx) return;
+  await ensureProductCatalogConnection();
   const products = await Product.find({}).sort({ updatedAt: -1, name: 1 }).lean();
   res.json({ success: true, products: products.map(serializeProduct) });
 }));
@@ -2372,6 +2380,7 @@ app.get('/api/admin/products', authMiddleware, asyncHandler(async (req, res) => 
 app.post('/api/admin/products', authMiddleware, asyncHandler(async (req, res) => {
   const ctx = await requireHost(req, res);
   if (!ctx) return;
+  await ensureProductCatalogConnection();
   const normalized = normalizeProductPayload(req.body || {});
   const product = await Product.create(normalized);
   res.status(201).json({ success: true, product: serializeProduct(product) });
@@ -2380,6 +2389,7 @@ app.post('/api/admin/products', authMiddleware, asyncHandler(async (req, res) =>
 app.patch('/api/admin/products/:productId', authMiddleware, asyncHandler(async (req, res) => {
   const ctx = await requireHost(req, res);
   if (!ctx) return;
+  await ensureProductCatalogConnection();
   const existing = await Product.findOne({ productId: String(req.params.productId || '').trim() });
   if (!existing) return res.status(404).json({ success: false, message: 'Product not found.' });
   const normalized = normalizeProductPayload(req.body || {}, existing.toObject());
@@ -2391,6 +2401,7 @@ app.patch('/api/admin/products/:productId', authMiddleware, asyncHandler(async (
 app.delete('/api/admin/products/:productId', authMiddleware, asyncHandler(async (req, res) => {
   const ctx = await requireHost(req, res);
   if (!ctx) return;
+  await ensureProductCatalogConnection();
   const product = await Product.findOneAndUpdate(
     { productId: String(req.params.productId || '').trim() },
     { $set: { isActive: false } },
