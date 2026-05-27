@@ -3336,8 +3336,8 @@ function productToCardHtml(product, cardClass) {
 
   return `
     <article class="${cardClass}" data-id="${safeId}" data-sku="${safeSku}" data-name="${safeName}" data-category="${safeCategoryTags}" data-price-usd="${priceUsd.toFixed(2)}" data-images="${imagesEncoded}">
-      <button class="product-quick-view" type="button">Quick View</button>
       <div class="product-card-media${hasSecondaryImage ? " has-secondary-image" : ""}">
+        <button class="product-quick-view" type="button">Quick View</button>
         <img class="product-card-image main-img" src="${safePrimaryImage}" alt="${safeName}" loading="lazy" decoding="async" />
         ${hasSecondaryImage
           ? `<img class="product-card-image hover-img" src="${safeSecondaryImage}" alt="" loading="lazy" decoding="async" aria-hidden="true" />`

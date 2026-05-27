@@ -1495,9 +1495,10 @@ body > .currency-inline select {
 
 .product-quick-view {
   position: absolute;
-  top: var(--quick-top);
+  top: auto;
   left: var(--quick-inset);
   right: var(--quick-inset);
+  bottom: var(--quick-inset);
   margin: 0;
   border: 0;
   background: rgba(17, 17, 17, 0.92);
@@ -3045,6 +3046,7 @@ body.shop-collection-mode .shop-card .product-card-image {
 
 body.shop-collection-mode .shop-card .product-quick-view {
   top: 22px;
+  bottom: auto;
   left: auto;
   right: 22px;
   min-width: 126px;
@@ -3132,6 +3134,9 @@ body.shop-collection-mode .product-stock {
 .quick-view-modal {
   position: fixed;
   inset: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   z-index: 2200;
   pointer-events: none;
 }
@@ -3594,7 +3599,7 @@ body.shop-collection-mode .product-stock {
   top: auto;
   left: 0;
   right: 0;
-  bottom: 58px;
+  bottom: 0;
   height: 34px;
   background: rgba(17, 17, 17, 0.95);
   color: #fff;
@@ -4424,7 +4429,7 @@ body.quick-view-open {
   }
 
   .shop-home-split {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .shop-home-split-card {
@@ -4497,13 +4502,18 @@ body.quick-view-open {
 
   .quick-view-panel {
     width: 100%;
-    height: calc(100vh - 72px);
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
     right: 0;
-    top: 72px;
+    top: 0;
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto auto;
     transform: translateX(100%);
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
 
   .quick-view-modal.is-active .quick-view-panel {
@@ -4569,8 +4579,8 @@ body.quick-view-open {
   }
 
   .quick-view-close {
-    top: 8px;
-    right: 8px;
+    top: max(10px, env(safe-area-inset-top));
+    right: max(10px, env(safe-area-inset-right));
     width: 32px;
     height: 32px;
     background: rgba(255, 255, 255, 0.92);
@@ -4824,6 +4834,26 @@ body.quick-view-open {
 
   .shop-grid {
     grid-template-columns: 1fr;
+  }
+
+  .shop-home-split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .shop-home-split-card {
+    padding: 14px 10px;
+  }
+
+  .shop-home-split-card span {
+    font-size: 0.54rem;
+    line-height: 1.25;
+    letter-spacing: 0.12em;
+  }
+
+  .shop-home-split-card strong {
+    font-size: 0.64rem;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
   }
 
   .shop-card .product-quick-view {
