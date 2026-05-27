@@ -21507,7 +21507,7 @@ html[data-theme="dark"] .payment-result-actions a.primary {
   .shop-card .product-card-media,
   .shop-home-card img {
     height: auto;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 3 / 4;
   }
 
   .shop-card h3 {
@@ -21534,10 +21534,6 @@ html[data-theme="dark"] .payment-result-actions a.primary {
     font-size: 0.58rem;
     line-height: 28px;
     letter-spacing: 0.08em;
-  }
-
-  .shop-card .product-card-image {
-    padding: 8px;
   }
 
   .product-stock {
