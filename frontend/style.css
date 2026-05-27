@@ -4837,16 +4837,16 @@ body.quick-view-open {
   }
 
   .shop-home-split {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0;
-    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    width: 100% !important;
   }
 
   .shop-home-split-card {
-    aspect-ratio: 498 / 746.72;
+    aspect-ratio: 498 / 746.72 !important;
     padding: 14px 10px;
-    background-size: cover;
-    background-position: center top;
+    background-size: cover !important;
+    background-position: center top !important;
   }
 
   .shop-home-split-card span {
