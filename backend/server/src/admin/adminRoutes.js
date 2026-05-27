@@ -2802,6 +2802,16 @@ function createAdminRouter(dependencies) {
     current.isBanned = toBoolean(req.body?.isBanned, current.isBanned === true);
     current.banReason = current.isBanned ? safeString(req.body?.banReason || current?.banReason || '', 200) : '';
 
+    const nextPassword = String(req.body?.password || '').trim();
+    if (nextPassword) {
+      if (nextPassword.length < 8) {
+        return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+      }
+      current.passwordHash = await bcrypt.hash(nextPassword, 10);
+      current.passwordUpdatedAt = new Date().toISOString();
+      current.passwordUpdatedBy = normalizeEmail(getAdminContext(req).current?.email);
+    }
+
     users[index] = current;
     await writeUsers(users);
 
@@ -2812,7 +2822,8 @@ function createAdminRouter(dependencies) {
       message: `Updated user ${current.email}.`,
       metadata: {
         role: current.role,
-        adminRole: current.adminRole
+        adminRole: current.adminRole,
+        passwordChanged: Boolean(nextPassword)
       }
     });
 

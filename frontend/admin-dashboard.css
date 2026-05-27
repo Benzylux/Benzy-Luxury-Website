@@ -14,9 +14,9 @@
   --admin-success: #1f7a51;
   --admin-shadow: 0 28px 65px rgba(55, 30, 13, 0.11);
   --admin-shadow-soft: 0 14px 32px rgba(41, 23, 10, 0.08);
-  --admin-radius-xl: 32px;
-  --admin-radius-lg: 24px;
-  --admin-radius-md: 18px;
+  --admin-radius-xl: 24px;
+  --admin-radius-lg: 20px;
+  --admin-radius-md: 16px;
   --admin-radius-sm: 14px;
   --admin-scrollbar-size: 10px;
   --admin-scrollbar-thumb: rgba(61, 39, 26, 0.32);
@@ -139,8 +139,8 @@ a {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
   min-height: 100vh;
-  gap: 18px;
-  padding: 18px;
+  gap: 14px;
+  padding: 14px;
 }
 
 .admin-sidebar {
@@ -339,7 +339,7 @@ a {
 }
 
 .admin-main {
-  padding: 0 0 24px;
+  padding: 0 0 18px;
   overflow: auto;
 }
 
@@ -347,10 +347,10 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 16px;
-  padding: 20px 24px;
-  border-radius: 30px;
+  gap: 14px;
+  margin-bottom: 12px;
+  padding: 16px 20px;
+  border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.48);
   background:
     linear-gradient(180deg, rgba(255, 252, 248, 0.78), rgba(255, 248, 241, 0.68)),
@@ -377,7 +377,7 @@ a {
 }
 
 .admin-topbar h2 {
-  font-size: clamp(2.05rem, 4vw, 3.35rem);
+  font-size: clamp(1.82rem, 3vw, 2.55rem);
   line-height: 0.98;
 }
 
@@ -479,20 +479,20 @@ a {
 .admin-section-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  gap: 14px;
 }
 
 .admin-section-stack {
   display: grid;
-  gap: 16px;
+  gap: 12px;
 }
 
 .admin-section-spotlight {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 14px;
-  padding: 20px 24px;
+  gap: 12px;
+  padding: 16px 20px;
   background:
     linear-gradient(135deg, rgba(255, 250, 244, 0.92), rgba(244, 233, 219, 0.84)),
     radial-gradient(circle at top right, rgba(221, 179, 106, 0.22), transparent 34%);
@@ -560,11 +560,11 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
 
 .admin-dashboard-shell {
   display: grid;
-  gap: 20px;
+  gap: 14px;
 }
 
 .admin-dashboard-command {
-  padding: 28px;
+  padding: 20px;
   background:
     linear-gradient(135deg, rgba(255, 251, 246, 0.92), rgba(247, 237, 226, 0.88)),
     radial-gradient(circle at top right, rgba(221, 179, 106, 0.18), transparent 34%);
@@ -574,15 +574,15 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 20px;
+  gap: 14px;
+  margin-bottom: 14px;
 }
 
 .admin-dashboard-command-copy {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   max-width: 62ch;
   color: var(--admin-muted);
-  line-height: 1.75;
+  line-height: 1.58;
 }
 
 .admin-dashboard-command-actions {
@@ -597,7 +597,7 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
 }
 
 .admin-card {
-  padding: 24px;
+  padding: 18px;
   border-radius: var(--admin-radius-xl);
   background:
     linear-gradient(180deg, var(--admin-panel-strong), rgba(255, 248, 240, 0.86)),
@@ -638,7 +638,7 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
   align-items: flex-start;
   justify-content: space-between;
   gap: 14px;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 .admin-card-head > div {
@@ -647,11 +647,11 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
 }
 
 .admin-card h3 {
-  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-size: clamp(1.55rem, 2.4vw, 2.05rem);
 }
 
 .admin-dashboard-command h3 {
-  font-size: clamp(2.2rem, 4vw, 3.3rem);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
 }
 
 .admin-metric-grid {
@@ -662,11 +662,11 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
 
 .admin-metric {
   position: relative;
-  min-height: 158px;
+  min-height: 118px;
   display: grid;
   align-content: space-between;
   gap: 12px;
-  padding: 20px;
+  padding: 16px;
   border-radius: 24px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 249, 243, 0.88)),
@@ -731,7 +731,7 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
 .admin-product-grid,
 .admin-team-list {
   display: grid;
-  gap: 16px;
+  gap: 12px;
 }
 
 .admin-stack-item,
@@ -743,7 +743,7 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
 .admin-subscriber-card,
 .admin-product-card,
 .admin-team-card {
-  padding: 18px;
+  padding: 14px;
   border-radius: 22px;
   border: 1px solid rgba(99, 70, 48, 0.1);
   background:
@@ -2056,7 +2056,7 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
 }
 
 .admin-team-grid {
-  grid-template-columns: minmax(180px, 1.15fr) minmax(150px, 0.95fr) minmax(140px, 0.75fr) minmax(180px, 0.95fr);
+  grid-template-columns: minmax(160px, 1fr) minmax(140px, 0.8fr) minmax(120px, 0.65fr) minmax(160px, 0.85fr) minmax(160px, 0.9fr);
   gap: 10px;
 }
 
@@ -2280,7 +2280,7 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
 @media (max-width: 980px) {
   .admin-app-shell {
     grid-template-columns: 1fr;
-    padding: 14px;
+    padding: 10px;
   }
 
   .admin-sidebar {
@@ -2302,7 +2302,7 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
   }
 
   .admin-main {
-    padding: 0 0 22px;
+    padding: 0 0 16px;
   }
 
   .admin-topbar,
@@ -2323,7 +2323,29 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
 
   .admin-topbar {
     position: static;
-    padding: 24px;
+    padding: 16px;
+  }
+
+  .admin-topbar-copy,
+  .admin-section-spotlight-copy {
+    flex: 0 1 auto;
+    width: 100%;
+  }
+
+  .admin-topbar-actions,
+  .admin-chip-row {
+    flex: 0 0 auto;
+  }
+
+  .admin-dashboard-command,
+  .admin-section-spotlight {
+    padding: 16px;
+  }
+
+  .admin-dashboard-command-copy,
+  .admin-section-copy,
+  .admin-card-copy {
+    line-height: 1.48;
   }
 
   .admin-order-total-block,
@@ -2396,17 +2418,31 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
 
 @media (max-width: 640px) {
   .admin-card {
-    padding: 18px;
-    border-radius: 22px;
+    padding: 14px;
+    border-radius: 18px;
   }
 
   .admin-topbar {
-    padding: 20px;
-    border-radius: 24px;
+    padding: 14px;
+    border-radius: 18px;
   }
 
   .admin-topbar h2 {
-    font-size: 2.25rem;
+    font-size: 1.78rem;
+    line-height: 1.05;
+  }
+
+  .admin-dashboard-command h3,
+  .admin-card h3 {
+    font-size: 1.45rem;
+    line-height: 1.08;
+  }
+
+  .admin-dashboard-command-head,
+  .admin-card-head,
+  .admin-section-spotlight {
+    gap: 10px;
+    margin-bottom: 10px;
   }
 
   .admin-nav-link {

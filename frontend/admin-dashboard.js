@@ -1793,6 +1793,9 @@
                 </div>
               </details>
             </label>
+            <label class="admin-inline-field">Change password
+              <input data-field="password" type="password" minlength="8" autocomplete="new-password" placeholder="Leave blank to keep current" />
+            </label>
           </div>
         </article>
       `;
@@ -2887,7 +2890,8 @@
               name: card.querySelector('[data-field="name"]')?.value || "",
               phone: card.querySelector('[data-field="phone"]')?.value || "",
               role: card.querySelector('[data-field="role"]')?.value || "resident",
-              adminRole: card.querySelector('[data-field="adminRole"]')?.value || "customer_support_admin"
+              adminRole: card.querySelector('[data-field="adminRole"]')?.value || "customer_support_admin",
+              password: card.querySelector('[data-field="password"]')?.value || ""
             })
           });
           if (result?.token) {
