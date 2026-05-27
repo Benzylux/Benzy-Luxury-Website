@@ -21507,18 +21507,42 @@ html[data-theme="dark"] .payment-result-actions a.primary {
   .shop-card .product-card-media,
   .shop-home-card img {
     height: auto;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 1 / 1;
   }
 
   .shop-card h3 {
-    font-size: 0.72rem;
-    line-height: 1.35;
-    letter-spacing: 0.06em;
+    min-height: 2.6em;
+    margin-top: 7px;
+    padding: 0 3px;
+    font-size: 0.58rem;
+    line-height: 1.3;
+    letter-spacing: 0.035em;
+    overflow-wrap: anywhere;
+    hyphens: auto;
   }
 
   .shop-card p {
-    font-size: 0.82rem;
+    margin-top: 3px;
+    font-size: 0.68rem;
+    line-height: 1.25;
     text-align: center;
+  }
+
+  .shop-card .product-quick-view {
+    height: 28px;
+    padding: 0 6px;
+    font-size: 0.58rem;
+    line-height: 28px;
+    letter-spacing: 0.08em;
+  }
+
+  .shop-card .product-card-image {
+    padding: 8px;
+  }
+
+  .product-stock {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
   }
 }
 
