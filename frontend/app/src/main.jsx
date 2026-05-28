@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { injectSpeedInsights } from '@vercel/speed-insights';
 import { StoreProvider } from './context/StoreContext.jsx';
 import App from './App.jsx';
 import './styles.css';
@@ -10,6 +11,8 @@ const CartPage = lazy(() => import('./pages/CartPage.jsx'));
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage.jsx'));
 const AdminPage = lazy(() => import('./pages/AdminPage.jsx'));
 const OrdersPage = lazy(() => import('./pages/OrdersPage.jsx'));
+
+injectSpeedInsights();
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
