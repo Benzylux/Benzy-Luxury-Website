@@ -3087,6 +3087,12 @@ body.shop-collection-mode .shop-card .product-quick-view:hover {
   .product-card-media .hover-img {
     display: none;
   }
+
+  .shop-card .product-quick-view,
+  .search-card .product-quick-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .shop-card h3 {

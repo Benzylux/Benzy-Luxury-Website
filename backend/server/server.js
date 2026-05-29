@@ -174,7 +174,7 @@ const corsOptions = {
 // Middleware
 app.set('trust proxy', true);
 app.use(cors(corsOptions));
-app.use(express.json({ limit: '12mb' }));
+app.use(express.json({ limit: '30mb' }));
 app.use((req, res, next) => {
   if (!shouldRedirectToHttps(req)) {
     next();

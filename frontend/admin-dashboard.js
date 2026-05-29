@@ -1877,10 +1877,70 @@
     });
   }
 
+  function loadImageFromDataUrl(dataUrl) {
+    return new Promise(function (resolve, reject) {
+      const image = new Image();
+      image.onload = function () {
+        resolve(image);
+      };
+      image.onerror = reject;
+      image.src = dataUrl;
+    });
+  }
+
+  function getImageExtensionFromMime(mimeType) {
+    const normalized = String(mimeType || "").toLowerCase();
+    if (normalized === "image/png") return "png";
+    if (normalized === "image/webp") return "webp";
+    if (normalized === "image/gif") return "gif";
+    return "jpg";
+  }
+
+  function getUploadOutputType() {
+    const canvas = document.createElement("canvas");
+    if (!canvas.toDataURL) return "image/jpeg";
+    try {
+      return canvas.toDataURL("image/webp").startsWith("data:image/webp") ? "image/webp" : "image/jpeg";
+    } catch (_error) {
+      return "image/jpeg";
+    }
+  }
+
+  function canvasToBlob(canvas, type, quality) {
+    return new Promise(function (resolve) {
+      if (typeof canvas.toBlob === "function") {
+        canvas.toBlob(function (blob) {
+          resolve(blob);
+        }, type, quality);
+        return;
+      }
+
+      try {
+        const dataUrl = canvas.toDataURL(type, quality);
+        const parts = String(dataUrl || "").split(",");
+        const match = String(parts[0] || "").match(/^data:([^;]+);base64$/i);
+        if (!parts[1] || !match) {
+          resolve(null);
+          return;
+        }
+        const binary = atob(parts[1]);
+        const bytes = new Uint8Array(binary.length);
+        for (let index = 0; index < binary.length; index += 1) {
+          bytes[index] = binary.charCodeAt(index);
+        }
+        resolve(new Blob([bytes], { type: match[1] }));
+      } catch (_error) {
+        resolve(null);
+      }
+    });
+  }
+
   async function prepareProductUploadImage(file) {
     const safeName = String(file?.name || "product-image").trim() || "product-image";
     const mimeType = String(file?.type || "").toLowerCase();
-    if (!mimeType.startsWith("image/")) {
+    const looksLikeImage = mimeType.startsWith("image/")
+      || /\.(avif|gif|heic|heif|jpe?g|png|webp)$/i.test(safeName);
+    if (!looksLikeImage) {
       throw new Error(`${safeName} is not an image file.`);
     }
 
@@ -1890,8 +1950,13 @@
 
     const objectUrl = URL.createObjectURL(file);
     try {
-      const image = await loadImageFromObjectUrl(objectUrl);
-      const maxSide = 1800;
+      let image;
+      try {
+        image = await loadImageFromObjectUrl(objectUrl);
+      } catch (_error) {
+        image = await loadImageFromDataUrl(await readFileAsDataUrl(file));
+      }
+      const maxSide = 1400;
       const width = Number(image.naturalWidth || image.width || 0);
       const height = Number(image.naturalHeight || image.height || 0);
       if (!width || !height) {
@@ -1908,15 +1973,16 @@
       }
 
       context.drawImage(image, 0, 0, canvas.width, canvas.height);
-      const blob = await new Promise(function (resolve) {
-        canvas.toBlob(resolve, "image/webp", 0.86);
-      });
+      const outputType = getUploadOutputType();
+      const blob = await canvasToBlob(canvas, outputType, outputType === "image/webp" ? 0.84 : 0.82);
       if (!blob) {
         return { name: safeName, dataUrl: await readFileAsDataUrl(file) };
       }
+      const blobType = String(blob.type || outputType || "image/jpeg").toLowerCase();
+      const extension = getImageExtensionFromMime(blobType);
 
       return {
-        name: safeName.replace(/\.[^.]+$/, "") + ".webp",
+        name: safeName.replace(/\.[^.]+$/, "") + `.${extension}`,
         dataUrl: await readBlobAsDataUrl(blob)
       };
     } finally {

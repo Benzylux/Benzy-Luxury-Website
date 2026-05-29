@@ -3253,12 +3253,14 @@ function escapeProductHtml(value) {
 
 function bindProductCardEffects(root) {
   const cards = root.querySelectorAll(".shop-card, .search-card");
+  const mobileMediaQuery = window.matchMedia ? window.matchMedia("(hover: none), (pointer: coarse)") : null;
   cards.forEach((card) => {
     if (card.dataset.fxBound === "1") return;
     card.dataset.fxBound = "1";
 
     const media = card.querySelector(".product-card-media");
     if (!(media instanceof HTMLElement)) return;
+    const mainImage = media.querySelector(".main-img");
 
     let images = [];
     try {
@@ -3273,11 +3275,14 @@ function bindProductCardEffects(root) {
     }
 
     const hoverImage = media.querySelector(".hover-img");
-    if (!(hoverImage instanceof HTMLImageElement) || images.length < 2) return;
+    if (!(mainImage instanceof HTMLImageElement) || images.length < 2) return;
 
     const hoverImages = images.slice(1).filter(Boolean);
     let hoverIndex = 0;
     let hoverTimer = 0;
+    let mobileTimer = 0;
+    let mobileIndex = 0;
+    let cardIsVisible = true;
 
     hoverImages.forEach(function (src) {
       const preload = new Image();
@@ -3285,6 +3290,7 @@ function bindProductCardEffects(root) {
     });
 
     function showHoverImage(index) {
+      if (!(hoverImage instanceof HTMLImageElement)) return;
       if (!hoverImages.length) return;
       hoverIndex = ((index % hoverImages.length) + hoverImages.length) % hoverImages.length;
       const nextSrc = hoverImages[hoverIndex];
@@ -3294,6 +3300,7 @@ function bindProductCardEffects(root) {
     }
 
     function startHoverCycle() {
+      if (!(hoverImage instanceof HTMLImageElement)) return;
       showHoverImage(0);
       if (hoverImages.length < 2 || hoverTimer) return;
       hoverTimer = window.setInterval(function () {
@@ -3309,10 +3316,80 @@ function bindProductCardEffects(root) {
       showHoverImage(0);
     }
 
+    function isCoarsePointer() {
+      return mobileMediaQuery ? mobileMediaQuery.matches : false;
+    }
+
+    function stopMobileCycle(restorePrimary) {
+      if (mobileTimer) {
+        window.clearInterval(mobileTimer);
+        mobileTimer = 0;
+      }
+      if (restorePrimary && images[0]) {
+        mobileIndex = 0;
+        mainImage.src = images[0];
+      }
+      media.classList.remove("is-mobile-cycling");
+    }
+
+    function showMobileImage(index) {
+      if (!images.length) return;
+      mobileIndex = ((index % images.length) + images.length) % images.length;
+      const nextSrc = images[mobileIndex];
+      if (nextSrc && mainImage.getAttribute("src") !== nextSrc) {
+        mainImage.src = nextSrc;
+      }
+    }
+
+    function startMobileCycle() {
+      if (!isCoarsePointer() || !cardIsVisible || images.length < 2) {
+        stopMobileCycle(false);
+        return;
+      }
+      media.classList.add("is-mobile-cycling");
+      if (mobileTimer) return;
+      mobileTimer = window.setInterval(function () {
+        showMobileImage(mobileIndex + 1);
+      }, 1500);
+    }
+
     card.addEventListener("mouseenter", startHoverCycle);
     card.addEventListener("mouseleave", stopHoverCycle);
     card.addEventListener("focusin", startHoverCycle);
     card.addEventListener("focusout", stopHoverCycle);
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(function (entries) {
+        const entry = entries[0];
+        cardIsVisible = Boolean(entry?.isIntersecting);
+        if (cardIsVisible) {
+          startMobileCycle();
+        } else {
+          stopMobileCycle(false);
+        }
+      }, { threshold: 0.45 });
+      observer.observe(card);
+    } else {
+      startMobileCycle();
+    }
+
+    if (mobileMediaQuery?.addEventListener) {
+      mobileMediaQuery.addEventListener("change", function () {
+        if (isCoarsePointer()) {
+          startMobileCycle();
+        } else {
+          stopMobileCycle(true);
+        }
+      });
+    } else if (mobileMediaQuery?.addListener) {
+      mobileMediaQuery.addListener(function () {
+        if (isCoarsePointer()) {
+          startMobileCycle();
+        } else {
+          stopMobileCycle(true);
+        }
+      });
+    }
   });
 }
 
