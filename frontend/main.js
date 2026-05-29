@@ -3238,8 +3238,22 @@ function getCardGlowFromImage(img) {
 
 function normalizeProductImages(product) {
   const explicitImages = Array.isArray(product?.images) ? product.images.filter(Boolean) : [];
-  if (explicitImages.length) return explicitImages;
-  return [product?.image1, product?.image2].filter(Boolean);
+  const images = explicitImages.length ? explicitImages : [product?.image1, product?.image2].filter(Boolean);
+  return images
+    .map((src) => normalizeProductImageUrl(src))
+    .filter(Boolean)
+    .filter((src, index, list) => list.indexOf(src) === index);
+}
+
+function normalizeProductImageUrl(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  if (/^(https?:|data:|blob:)/i.test(raw)) return raw;
+  const uploadPath = raw.startsWith("/") ? raw : `/${raw.replace(/^\.?\/*/, "")}`;
+  if (uploadPath.startsWith("/uploads/products/")) {
+    return `${getProductApiBases()[0]}${uploadPath}`;
+  }
+  return raw;
 }
 
 function escapeProductHtml(value) {

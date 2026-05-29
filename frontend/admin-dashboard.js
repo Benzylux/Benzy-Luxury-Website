@@ -237,8 +237,11 @@
           throw new Error(data?.error || data?.message || "Image upload failed.");
         }
         localStorage.setItem(API_BASE_STORAGE_KEY, base);
-        const url = Array.isArray(data?.urls) ? data.urls[0] : data?.url;
+        let url = Array.isArray(data?.urls) ? data.urls[0] : data?.url;
         if (!url) throw new Error("Image upload did not return a URL.");
+        if (String(url).startsWith("/uploads/products/")) {
+          url = `${base}${url}`;
+        }
         return url;
       } catch (error) {
         lastError = error;
