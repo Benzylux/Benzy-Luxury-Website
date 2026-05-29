@@ -254,8 +254,9 @@
 
   function normalizeUploadedProductUrl(url, base) {
     const raw = String(url || "").trim();
-    if (raw.startsWith("/uploads/products/")) return `${base}${raw}`;
-    return raw;
+    const repaired = raw.replace(/(\/uploads\/products\/[^?#]+)\.(?=([?#]|$))/, "$1.webp");
+    if (repaired.startsWith("/uploads/products/")) return `${base}${repaired}`;
+    return repaired;
   }
 
   async function uploadProductImageJsonFallback(upload) {

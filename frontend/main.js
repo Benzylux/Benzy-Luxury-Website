@@ -3248,12 +3248,13 @@ function normalizeProductImages(product) {
 function normalizeProductImageUrl(value) {
   const raw = String(value || "").trim();
   if (!raw) return "";
-  if (/^(https?:|data:|blob:)/i.test(raw)) return raw;
-  const uploadPath = raw.startsWith("/") ? raw : `/${raw.replace(/^\.?\/*/, "")}`;
+  const repaired = raw.replace(/(\/uploads\/products\/[^?#]+)\.(?=([?#]|$))/, "$1.webp");
+  if (/^(https?:|data:|blob:)/i.test(repaired)) return repaired;
+  const uploadPath = repaired.startsWith("/") ? repaired : `/${repaired.replace(/^\.?\/*/, "")}`;
   if (uploadPath.startsWith("/uploads/products/")) {
     return `${getProductApiBases()[0]}${uploadPath}`;
   }
-  return raw;
+  return repaired;
 }
 
 function escapeProductHtml(value) {
