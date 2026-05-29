@@ -1271,6 +1271,18 @@ function createAdminRouter(dependencies) {
     };
   }
 
+  function buildProductUploadFileName(name, mimeType) {
+    const extension = PRODUCT_UPLOAD_TYPES.get(String(mimeType || '').trim().toLowerCase());
+    if (!extension) return null;
+    const originalName = safeString(name || 'product-image', 80)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 40) || 'product-image';
+    const uniqueSuffix = `${Date.now().toString(36)}-${crypto.randomBytes(5).toString('hex')}`;
+    return `${originalName}-${uniqueSuffix}.${extension}`;
+  }
+
   async function saveProductUploads(images) {
     const entries = Array.isArray(images) ? images.slice(0, 8) : [];
     const saved = [];
@@ -1292,6 +1304,31 @@ function createAdminRouter(dependencies) {
     }
 
     return saved;
+  }
+
+  async function saveProductUploadBuffer(buffer, options = {}) {
+    if (!Buffer.isBuffer(buffer) || !buffer.length) {
+      const error = new Error('Uploaded image is empty.');
+      error.status = 400;
+      throw error;
+    }
+    if (buffer.length > PRODUCT_UPLOAD_MAX_BYTES) {
+      const error = new Error('Each uploaded image must be 8MB or smaller.');
+      error.status = 400;
+      throw error;
+    }
+
+    const fileName = buildProductUploadFileName(options.name, options.mimeType);
+    if (!fileName) {
+      const error = new Error('Only JPG, PNG, WEBP, and GIF images can be uploaded.');
+      error.status = 400;
+      throw error;
+    }
+
+    await fs.promises.mkdir(PRODUCT_UPLOAD_DIR, { recursive: true });
+    const filePath = path.join(PRODUCT_UPLOAD_DIR, fileName);
+    await fs.promises.writeFile(filePath, buffer, { flag: 'wx' });
+    return `${PRODUCT_UPLOAD_PUBLIC_PATH}/${fileName}`;
   }
 
   function sortByDateDesc(items, dateSelector) {
@@ -2048,6 +2085,18 @@ function createAdminRouter(dependencies) {
     if (!requirePermission(req, res, 'products')) return;
     const urls = await saveProductUploads(req.body?.images);
     res.status(201).json({ success: true, urls });
+  }));
+
+  router.post('/uploads/products/raw', express.raw({
+    type: ['image/*', 'application/octet-stream'],
+    limit: PRODUCT_UPLOAD_MAX_BYTES
+  }), asyncHandler(async (req, res) => {
+    if (!requirePermission(req, res, 'products')) return;
+    const url = await saveProductUploadBuffer(req.body, {
+      mimeType: req.headers['content-type'],
+      name: req.headers['x-upload-filename']
+    });
+    res.status(201).json({ success: true, url, urls: [url] });
   }));
 
   router.post('/products', asyncHandler(async (req, res) => {

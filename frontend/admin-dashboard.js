@@ -208,6 +208,49 @@
     throw new Error(`${lastError?.message || "Unable to reach the admin API."} Tried: ${attemptedBases.join(", ")}`);
   }
 
+  async function uploadProductImageBlob(upload) {
+    const token = getToken();
+    let lastError = null;
+    const safeName = String(upload?.name || "product-image").trim() || "product-image";
+    const blob = upload?.blob;
+    if (!(blob instanceof Blob)) {
+      throw new Error(`${safeName} could not be prepared for upload.`);
+    }
+
+    const attemptedBases = getApiBases();
+    for (const base of attemptedBases) {
+      try {
+        const headers = {
+          "Content-Type": blob.type || "application/octet-stream",
+          "X-Upload-Filename": safeName
+        };
+        if (token) headers.Authorization = `Bearer ${token}`;
+        const response = await fetch(`${base}/api/admin/uploads/products/raw`, {
+          method: "POST",
+          headers,
+          body: blob
+        });
+        const data = await response.json().catch(function () {
+          return null;
+        });
+        if (!response.ok) {
+          throw new Error(data?.error || data?.message || "Image upload failed.");
+        }
+        localStorage.setItem(API_BASE_STORAGE_KEY, base);
+        const url = Array.isArray(data?.urls) ? data.urls[0] : data?.url;
+        if (!url) throw new Error("Image upload did not return a URL.");
+        return url;
+      } catch (error) {
+        lastError = error;
+        if (localStorage.getItem(API_BASE_STORAGE_KEY) === base) {
+          localStorage.removeItem(API_BASE_STORAGE_KEY);
+        }
+      }
+    }
+
+    throw new Error(`${lastError?.message || "Unable to upload image."} Tried: ${attemptedBases.join(", ")}`);
+  }
+
   async function downloadAdminFile(path, filename) {
     const token = getToken();
     let lastError = null;
@@ -1945,7 +1988,7 @@
     }
 
     if (mimeType === "image/gif") {
-      return { name: safeName, dataUrl: await readFileAsDataUrl(file) };
+      return { name: safeName, blob: file };
     }
 
     const objectUrl = URL.createObjectURL(file);
@@ -1960,7 +2003,7 @@
       const width = Number(image.naturalWidth || image.width || 0);
       const height = Number(image.naturalHeight || image.height || 0);
       if (!width || !height) {
-        return { name: safeName, dataUrl: await readFileAsDataUrl(file) };
+        return { name: safeName, blob: file };
       }
 
       const scale = Math.min(1, maxSide / Math.max(width, height));
@@ -1969,21 +2012,21 @@
       canvas.height = Math.max(1, Math.round(height * scale));
       const context = canvas.getContext("2d");
       if (!context) {
-        return { name: safeName, dataUrl: await readFileAsDataUrl(file) };
+        return { name: safeName, blob: file };
       }
 
       context.drawImage(image, 0, 0, canvas.width, canvas.height);
       const outputType = getUploadOutputType();
       const blob = await canvasToBlob(canvas, outputType, outputType === "image/webp" ? 0.84 : 0.82);
       if (!blob) {
-        return { name: safeName, dataUrl: await readFileAsDataUrl(file) };
+        return { name: safeName, blob: file };
       }
       const blobType = String(blob.type || outputType || "image/jpeg").toLowerCase();
       const extension = getImageExtensionFromMime(blobType);
 
       return {
         name: safeName.replace(/\.[^.]+$/, "") + `.${extension}`,
-        dataUrl: await readBlobAsDataUrl(blob)
+        blob
       };
     } finally {
       URL.revokeObjectURL(objectUrl);
@@ -1995,15 +2038,12 @@
       return [];
     }
     const files = Array.from(nodes.productImageUpload.files);
-    const images = [];
+    const urls = [];
     for (const file of files) {
-      images.push(await prepareProductUploadImage(file));
+      const prepared = await prepareProductUploadImage(file);
+      urls.push(await uploadProductImageBlob(prepared));
     }
-    const data = await api("/api/admin/uploads/products", {
-      method: "POST",
-      body: JSON.stringify({ images })
-    });
-    return Array.isArray(data?.urls) ? data.urls : [];
+    return urls;
   }
 
   async function ensureHostSession() {

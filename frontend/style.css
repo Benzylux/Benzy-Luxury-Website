@@ -3093,6 +3093,10 @@ body.shop-collection-mode .shop-card .product-quick-view:hover {
     opacity: 1;
     transform: translateY(0);
   }
+
+  .product-card-media.has-secondary-image {
+    cursor: pointer;
+  }
 }
 
 .shop-card h3 {

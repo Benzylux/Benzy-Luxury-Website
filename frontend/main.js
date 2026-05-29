@@ -3280,9 +3280,7 @@ function bindProductCardEffects(root) {
     const hoverImages = images.slice(1).filter(Boolean);
     let hoverIndex = 0;
     let hoverTimer = 0;
-    let mobileTimer = 0;
     let mobileIndex = 0;
-    let cardIsVisible = true;
 
     hoverImages.forEach(function (src) {
       const preload = new Image();
@@ -3320,16 +3318,12 @@ function bindProductCardEffects(root) {
       return mobileMediaQuery ? mobileMediaQuery.matches : false;
     }
 
-    function stopMobileCycle(restorePrimary) {
-      if (mobileTimer) {
-        window.clearInterval(mobileTimer);
-        mobileTimer = 0;
-      }
+    function resetMobileImage(restorePrimary) {
       if (restorePrimary && images[0]) {
         mobileIndex = 0;
         mainImage.src = images[0];
       }
-      media.classList.remove("is-mobile-cycling");
+      media.classList.remove("is-touch-selected");
     }
 
     function showMobileImage(index) {
@@ -3341,53 +3335,28 @@ function bindProductCardEffects(root) {
       }
     }
 
-    function startMobileCycle() {
-      if (!isCoarsePointer() || !cardIsVisible || images.length < 2) {
-        stopMobileCycle(false);
-        return;
-      }
-      media.classList.add("is-mobile-cycling");
-      if (mobileTimer) return;
-      mobileTimer = window.setInterval(function () {
-        showMobileImage(mobileIndex + 1);
-      }, 1500);
+    function handleManualMobileSwap(event) {
+      if (!isCoarsePointer() || images.length < 2) return;
+      if (event.target instanceof HTMLElement && event.target.closest(".product-quick-view")) return;
+      event.preventDefault();
+      event.stopPropagation();
+      media.classList.add("is-touch-selected");
+      showMobileImage(mobileIndex + 1);
     }
 
     card.addEventListener("mouseenter", startHoverCycle);
     card.addEventListener("mouseleave", stopHoverCycle);
     card.addEventListener("focusin", startHoverCycle);
     card.addEventListener("focusout", stopHoverCycle);
-
-    if ("IntersectionObserver" in window) {
-      const observer = new IntersectionObserver(function (entries) {
-        const entry = entries[0];
-        cardIsVisible = Boolean(entry?.isIntersecting);
-        if (cardIsVisible) {
-          startMobileCycle();
-        } else {
-          stopMobileCycle(false);
-        }
-      }, { threshold: 0.45 });
-      observer.observe(card);
-    } else {
-      startMobileCycle();
-    }
+    media.addEventListener("click", handleManualMobileSwap);
 
     if (mobileMediaQuery?.addEventListener) {
       mobileMediaQuery.addEventListener("change", function () {
-        if (isCoarsePointer()) {
-          startMobileCycle();
-        } else {
-          stopMobileCycle(true);
-        }
+        if (!isCoarsePointer()) resetMobileImage(true);
       });
     } else if (mobileMediaQuery?.addListener) {
       mobileMediaQuery.addListener(function () {
-        if (isCoarsePointer()) {
-          startMobileCycle();
-        } else {
-          stopMobileCycle(true);
-        }
+        if (!isCoarsePointer()) resetMobileImage(true);
       });
     }
   });
