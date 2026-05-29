@@ -239,9 +239,7 @@
         localStorage.setItem(API_BASE_STORAGE_KEY, base);
         let url = Array.isArray(data?.urls) ? data.urls[0] : data?.url;
         if (!url) throw new Error("Image upload did not return a URL.");
-        if (String(url).startsWith("/uploads/products/")) {
-          url = `${base}${url}`;
-        }
+        url = normalizeUploadedProductUrl(url, base);
         return url;
       } catch (error) {
         lastError = error;
@@ -252,6 +250,41 @@
     }
 
     throw new Error(`${lastError?.message || "Unable to upload image."} Tried: ${attemptedBases.join(", ")}`);
+  }
+
+  function normalizeUploadedProductUrl(url, base) {
+    const raw = String(url || "").trim();
+    if (raw.startsWith("/uploads/products/")) return `${base}${raw}`;
+    return raw;
+  }
+
+  async function uploadProductImageJsonFallback(upload) {
+    const safeName = String(upload?.name || "product-image").trim() || "product-image";
+    const blob = upload?.blob;
+    if (!(blob instanceof Blob)) {
+      throw new Error(`${safeName} could not be prepared for upload.`);
+    }
+    const image = {
+      name: safeName,
+      dataUrl: await readBlobAsDataUrl(blob)
+    };
+    const data = await api("/api/admin/uploads/products", {
+      method: "POST",
+      body: JSON.stringify({ images: [image] })
+    });
+    const url = Array.isArray(data?.urls) ? data.urls[0] : data?.url;
+    const base = localStorage.getItem(API_BASE_STORAGE_KEY) || getApiBases()[0];
+    const normalized = normalizeUploadedProductUrl(url, base);
+    if (!normalized) throw new Error("Image upload did not return a URL.");
+    return normalized;
+  }
+
+  async function uploadPreparedProductImage(upload) {
+    try {
+      return await uploadProductImageBlob(upload);
+    } catch (_rawError) {
+      return uploadProductImageJsonFallback(upload);
+    }
   }
 
   async function downloadAdminFile(path, filename) {
@@ -2044,7 +2077,7 @@
     const urls = [];
     for (const file of files) {
       const prepared = await prepareProductUploadImage(file);
-      urls.push(await uploadProductImageBlob(prepared));
+      urls.push(await uploadPreparedProductImage(prepared));
     }
     return urls;
   }
