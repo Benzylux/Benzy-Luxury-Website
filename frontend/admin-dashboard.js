@@ -140,8 +140,14 @@
   function normalizeAssetUrl(value) {
     const raw = String(value || "").trim();
     if (!raw) return "/OFF BACK/BLX.png";
-    if (/^(https?:|data:|blob:|\/)/i.test(raw)) return raw;
-    return `/${raw.replace(/^\.?\/*/, "")}`;
+    const repaired = raw.replace(/(\/uploads\/products\/[^?#]+)\.(?=([?#]|$))/, "$1.webp");
+    if (/^(data:|blob:)/i.test(repaired)) return repaired;
+    if (/^https?:/i.test(repaired)) return repaired;
+    const path = repaired.startsWith("/") ? repaired : `/${repaired.replace(/^\.?\/*/, "")}`;
+    if (path.startsWith("/uploads/products/")) {
+      return `${getApiBases()[0]}${path}`;
+    }
+    return path;
   }
 
   function getToken() {
