@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const https = require('https');
 
 const BREVO_HOSTNAME = 'api.brevo.com';
+const DEFAULT_BREVO_REQUEST_TIMEOUT_MS = 15000;
 
 const BREVO_LIST_ENV_KEYS = Object.freeze({
   newsletter: 'BREVO_LIST_NEWSLETTER',
@@ -15,6 +16,20 @@ const BREVO_LIST_ENV_KEYS = Object.freeze({
   preorder: 'BREVO_LIST_PREORDER',
   events: 'BREVO_LIST_EVENTS',
   wallet_top_up: 'BREVO_LIST_WALLET_TOP_UP'
+});
+
+const DEFAULT_BREVO_LIST_IDS = Object.freeze({
+  newsletter: 3,
+  customers: 4,
+  vip: 5,
+  abandoned_cart: 6,
+  giveaway: 7,
+  influencers: 8,
+  wholesale: 9,
+  support: 10,
+  preorder: 11,
+  events: 12,
+  wallet_top_up: 13
 });
 
 const LEGACY_BREVO_LIST_ENV_KEYS = Object.freeze({
@@ -97,7 +112,12 @@ function getBrevoListConfig() {
 
   for (const [key, envKey] of Object.entries(BREVO_LIST_ENV_KEYS)) {
     const legacyEnvKey = LEGACY_BREVO_LIST_ENV_KEYS[key];
-    lists[key] = toPositiveInteger(process.env[envKey] || process.env[legacyEnvKey] || '');
+    lists[key] = toPositiveInteger(
+      process.env[envKey]
+      || process.env[legacyEnvKey]
+      || DEFAULT_BREVO_LIST_IDS[key]
+      || ''
+    );
   }
 
   return lists;
@@ -105,11 +125,15 @@ function getBrevoListConfig() {
 
 function getBrevoConfig() {
   const lists = getBrevoListConfig();
+  const requestTimeoutMs = Number.parseInt(String(process.env.BREVO_REQUEST_TIMEOUT_MS || ''), 10);
 
   return {
     apiKey: String(process.env.BREVO_API_KEY || '').trim(),
     senderEmail: normalizeEmail(process.env.BREVO_SENDER_EMAIL || ''),
     senderName: sanitizePlainText(process.env.BREVO_SENDER_NAME || 'Benzy Luxury', 80),
+    requestTimeoutMs: Number.isFinite(requestTimeoutMs) && requestTimeoutMs > 0
+      ? requestTimeoutMs
+      : DEFAULT_BREVO_REQUEST_TIMEOUT_MS,
     lists,
     newsletterListId: lists.newsletter || null,
     customersListId: lists.customers || null,
@@ -174,7 +198,26 @@ function sendBrevoRequest({ method = 'POST', path, body }) {
   const config = requireBrevoConfig(['apiKey']);
 
   return new Promise((resolve, reject) => {
-    const request = https.request(
+    let settled = false;
+    let request = null;
+    const settle = (callback, value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutHandle);
+      callback(value);
+    };
+    const timeoutHandle = setTimeout(() => {
+      if (request) {
+        request.destroy(
+          new BrevoError('Brevo request timed out.', {
+            statusCode: 504,
+            details: { timeoutMs: config.requestTimeoutMs }
+          })
+        );
+      }
+    }, config.requestTimeoutMs);
+
+    request = https.request(
       {
         hostname: BREVO_HOSTNAME,
         path,
@@ -183,7 +226,8 @@ function sendBrevoRequest({ method = 'POST', path, body }) {
           accept: 'application/json',
           'api-key': config.apiKey,
           'content-type': 'application/json'
-        }
+        },
+        timeout: config.requestTimeoutMs
       },
       (response) => {
         let rawBody = '';
@@ -205,11 +249,12 @@ function sendBrevoRequest({ method = 'POST', path, body }) {
 
           const statusCode = response.statusCode || 500;
           if (statusCode >= 200 && statusCode < 300) {
-            resolve({ statusCode, data: parsedBody });
+            settle(resolve, { statusCode, data: parsedBody });
             return;
           }
 
-          reject(
+          settle(
+            reject,
             new BrevoError(
               parsedBody.message || parsedBody.code || 'Brevo request failed.',
               {
@@ -223,9 +268,24 @@ function sendBrevoRequest({ method = 'POST', path, body }) {
     );
 
     request.on('error', (error) => {
-      reject(
+      if (error instanceof BrevoError) {
+        settle(reject, error);
+        return;
+      }
+
+      settle(
+        reject,
         new BrevoError(error.message || 'Unable to reach Brevo.', {
           statusCode: 502
+        })
+      );
+    });
+
+    request.on('timeout', () => {
+      request.destroy(
+        new BrevoError('Brevo request timed out.', {
+          statusCode: 504,
+          details: { timeoutMs: config.requestTimeoutMs }
         })
       );
     });

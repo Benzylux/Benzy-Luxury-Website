@@ -33,6 +33,28 @@ services:
         sync: false
       - key: BREVO_API_KEY
         sync: false
+      - key: BREVO_LIST_NEWSLETTER
+        value: 3
+      - key: BREVO_LIST_CUSTOMERS
+        value: 4
+      - key: BREVO_LIST_VIP
+        value: 5
+      - key: BREVO_LIST_ABANDONED_CART
+        value: 6
+      - key: BREVO_LIST_GIVEAWAY
+        value: 7
+      - key: BREVO_LIST_INFLUENCERS
+        value: 8
+      - key: BREVO_LIST_WHOLESALE
+        value: 9
+      - key: BREVO_LIST_SUPPORT
+        value: 10
+      - key: BREVO_LIST_PREORDER
+        value: 11
+      - key: BREVO_LIST_EVENTS
+        value: 12
+      - key: BREVO_LIST_WALLET_TOP_UP
+        value: 13
       - key: BREVO_SENDER_EMAIL
         sync: false
       - key: BREVO_SENDER_NAME

@@ -1640,6 +1640,17 @@ function getBrevoNewsletterErrorMessage(error) {
   }
 
   if ([401, 403, 503].includes(error.statusCode)) {
+    const missing = Array.isArray(error.details?.missing)
+      ? error.details.missing
+      : [];
+    const missingListKey = error.details?.listKey
+      ? `BREVO_LIST_${String(error.details.listKey).toUpperCase()}`
+      : '';
+
+    if (missing.length || missingListKey) {
+      return `Newsletter email service is missing server config: ${[...missing, missingListKey].filter(Boolean).join(', ')}.`;
+    }
+
     return 'Newsletter email service is not configured on the server yet.';
   }
 
