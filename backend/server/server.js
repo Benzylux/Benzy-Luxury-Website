@@ -27,6 +27,7 @@ const {
   addSupportContact,
   addCustomerContact,
   addGiveawayContact,
+  getBrevoConfig,
   isBrevoConfigured,
   addNewsletterContact,
   addWalletTopUpContact,
@@ -3464,6 +3465,28 @@ app.post('/api/newsletter/subscribe', newsletterRateLimiter, asyncHandler(async 
     discountCode: subscriber.discountCode,
     welcomeEmailSent,
     subscriber: buildSubscriberResponse(subscriber)
+  });
+}));
+
+app.get('/api/newsletter/diagnostics', asyncHandler(async (req, res) => {
+  const config = getBrevoConfig();
+  const listIds = config.lists && typeof config.lists === 'object' ? config.lists : {};
+  const missing = [
+    config.apiKey ? '' : 'BREVO_API_KEY',
+    config.senderEmail ? '' : 'BREVO_SENDER_EMAIL',
+    config.senderName ? '' : 'BREVO_SENDER_NAME',
+    listIds.newsletter ? '' : 'BREVO_LIST_NEWSLETTER'
+  ].filter(Boolean);
+
+  res.json({
+    success: true,
+    configured: isBrevoConfigured() && Boolean(listIds.newsletter),
+    missing,
+    senderEmailConfigured: Boolean(config.senderEmail),
+    senderNameConfigured: Boolean(config.senderName),
+    apiKeyConfigured: Boolean(config.apiKey),
+    newsletterListIdConfigured: Boolean(listIds.newsletter),
+    requestTimeoutMs: config.requestTimeoutMs || null
   });
 }));
 
