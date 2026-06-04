@@ -8,6 +8,7 @@ loadEnvironment();
 
 const BREVO_HOSTNAME = 'api.brevo.com';
 const OUTPUT_FILE = path.resolve(__dirname, '..', 'brevo-templates.json');
+const DEFAULT_LOGO_URL = 'https://benzyluxury.com.ng/OFF%20BACK/BLX.png';
 
 function env(name, fallback = '') {
   return String(process.env[name] || fallback).trim();
@@ -75,13 +76,19 @@ function requestBrevo({ method = 'GET', path: requestPath, body }) {
   });
 }
 
+function getLogoUrl() {
+  return env('BREVO_LOGO_URL', DEFAULT_LOGO_URL);
+}
+
 function baseHtml(title, body, content) {
+  const logoUrl = escapeHtml(getLogoUrl());
   return `
     <div style="margin:0;padding:32px 16px;background:#f6f0ea;font-family:Arial,Helvetica,sans-serif;color:#231711;">
       <div style="max-width:680px;margin:0 auto;background:#ffffff;border:1px solid #eadfd3;border-radius:16px;overflow:hidden;">
-        <div style="padding:28px 32px;background:#111111;color:#ffffff;">
-          <div style="font-size:12px;letter-spacing:.24em;text-transform:uppercase;">BENZY LUXURY</div>
-          <h1 style="margin:12px 0 0;font-size:30px;line-height:1.2;">${escapeHtml(title)}</h1>
+        <div style="padding:30px 32px 26px;background:#f6f0ea;color:#111111;text-align:center;border-bottom:1px solid #eadfd3;">
+          <img src="${logoUrl}" width="96" alt="BLX" style="display:block;width:96px;height:auto;margin:0 auto 14px;border:0;outline:none;text-decoration:none;">
+          <div style="font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#6b5a4d;">BENZY LUXURY</div>
+          <h1 style="margin:12px 0 0;font-size:30px;line-height:1.2;color:#111111;">${escapeHtml(title)}</h1>
         </div>
         <div style="padding:32px;">
           <p style="margin:0 0 18px;font-size:16px;line-height:1.7;">Hi {{ params.firstName | default:'there' }},</p>
