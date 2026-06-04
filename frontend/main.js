@@ -4009,9 +4009,43 @@ function productToCardHtml(product, cardClass) {
     return arr;
   }
 
+  function getProductFreshnessTime(product) {
+    const createdTime = Date.parse(String(product?.createdAt || ""));
+    if (Number.isFinite(createdTime)) return createdTime;
+
+    const updatedTime = Date.parse(String(product?.updatedAt || ""));
+    if (Number.isFinite(updatedTime)) return updatedTime;
+
+    const numericId = Number(product?.id);
+    return Number.isFinite(numericId) ? numericId : 0;
+  }
+
+  function isNewCollectionProduct(product) {
+    const metadata = product?.metadata && typeof product.metadata === "object" ? product.metadata : {};
+    const collectionText = [
+      product?.collection,
+      product?.collectionName,
+      product?.categoryName,
+      metadata.collection,
+      metadata.collectionName
+    ].map((value) => String(value || "").toLowerCase()).join(" ");
+
+    return product?.newIn === true
+      || product?.isNew === true
+      || product?.featured === true
+      || metadata.newIn === true
+      || metadata.isNew === true
+      || metadata.newCollection === true
+      || metadata.featured === true
+      || collectionText.includes("new collection")
+      || collectionText.includes("new in");
+  }
+
   function renderShopHomeGrids() {
-    const byNewest = [...BENZY_PRODUCTS].sort((a, b) => (b.id || 0) - (a.id || 0));
-    const newIn = byNewest.slice(0, 4);
+    const byNewest = [...BENZY_PRODUCTS].sort((a, b) => getProductFreshnessTime(b) - getProductFreshnessTime(a));
+    const curatedNewIn = byNewest.filter(isNewCollectionProduct);
+    const newInPool = curatedNewIn.length >= 4 ? curatedNewIn : byNewest.slice(0, Math.max(4, Math.min(8, byNewest.length)));
+    const newIn = shuffleProducts(newInPool).slice(0, 4);
     const allProducts = shuffleProducts(BENZY_PRODUCTS).slice(0, 12);
 
     if (shopHomeNewInGrid) {

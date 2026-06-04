@@ -1,6 +1,7 @@
 (function () {
   const API_BASE_STORAGE_KEY = "benzy_api_base";
   const ADMIN_TOKEN_KEY = "benzy_admin_auth_token";
+  const ADMIN_SESSION_EXPIRES_KEY = "benzy_admin_session_expires_at";
   const LOGIN_INTENT_KEY = "benzy_login_intent";
   const SECTION_TITLES = {
     dashboard: { kicker: "Overview", title: "Business health at a glance", permission: "dashboard" },
@@ -41,7 +42,8 @@
     users: [],
     logs: [],
     loaded: {},
-    sessionTimeoutHandle: null
+    sessionTimeoutHandle: null,
+    sessionTimeoutMinutes: 30
   };
 
   const nodes = {
@@ -154,6 +156,23 @@
     return localStorage.getItem(ADMIN_TOKEN_KEY) || "";
   }
 
+  function getStoredSessionExpiry() {
+    const value = Number(localStorage.getItem(ADMIN_SESSION_EXPIRES_KEY) || 0);
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  function isAdminSessionExpired() {
+    const expiresAt = getStoredSessionExpiry();
+    return expiresAt > 0 && expiresAt <= Date.now();
+  }
+
+  function writeSessionExpiry(minutes) {
+    const safeMinutes = Math.max(5, Number.isFinite(minutes) ? minutes : state.sessionTimeoutMinutes || 30);
+    const expiresAt = Date.now() + (safeMinutes * 60 * 1000);
+    localStorage.setItem(ADMIN_SESSION_EXPIRES_KEY, String(expiresAt));
+    return expiresAt;
+  }
+
   function readStoredApiBase() {
     const stored = String(localStorage.getItem(API_BASE_STORAGE_KEY) || "").trim();
     if (!stored) return "";
@@ -172,10 +191,12 @@
 
   function setToken(value) {
     localStorage.setItem(ADMIN_TOKEN_KEY, value || "");
+    if (value) writeSessionExpiry(state.sessionTimeoutMinutes);
   }
 
   function clearSession() {
     localStorage.removeItem(ADMIN_TOKEN_KEY);
+    localStorage.removeItem(ADMIN_SESSION_EXPIRES_KEY);
     localStorage.setItem(LOGIN_INTENT_KEY, "host");
   }
 
@@ -198,6 +219,11 @@
     const token = getToken();
     let lastError = null;
 
+    if (token && isAdminSessionExpired()) {
+      redirectToLogin();
+      throw new Error("Session timed out. Please sign in again.");
+    }
+
     const attemptedBases = getApiBases();
     for (const base of attemptedBases) {
       try {
@@ -218,6 +244,7 @@
           throw new Error(data?.error || data?.message || "Request failed.");
         }
         localStorage.setItem(API_BASE_STORAGE_KEY, base);
+        if (token && state.sessionTimeoutMinutes) writeSessionExpiry(state.sessionTimeoutMinutes);
         return data;
       } catch (error) {
         lastError = error;
@@ -2158,6 +2185,10 @@
       renderCurrentUser();
       refreshVisibleNav();
     }
+    if (state.overview?.settings) {
+      state.settings = { ...(state.settings || {}), ...state.overview.settings };
+      setSessionTimeout(Number(state.settings?.security?.adminSessionTimeoutMinutes || 30));
+    }
     renderDashboard();
   }
 
@@ -2312,11 +2343,14 @@
 
   function setSessionTimeout(minutes) {
     const safeMinutes = Math.max(5, Number.isFinite(minutes) ? minutes : 30);
+    state.sessionTimeoutMinutes = safeMinutes;
     if (nodes.sessionPill) {
       nodes.sessionPill.textContent = `Auto logout in ${safeMinutes} min`;
     }
 
     const resetTimeout = function () {
+      if (!getToken()) return;
+      writeSessionExpiry(safeMinutes);
       window.clearTimeout(state.sessionTimeoutHandle);
       state.sessionTimeoutHandle = window.setTimeout(function () {
         showFlash("Session timed out. Please sign in again.", true);

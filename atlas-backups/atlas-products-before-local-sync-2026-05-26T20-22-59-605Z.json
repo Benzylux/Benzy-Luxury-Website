@@ -1,0 +1,680 @@
+[
+  {
+    "_id": "6a15bae81cecf8e316113423",
+    "productId": "0",
+    "normalizedName": "benzylux white jersey",
+    "name": "BENZYLUX WHITE JERSEY",
+    "slug": "benzylux-white-jersey",
+    "categoryId": "men",
+    "categoryName": "Men",
+    "price": 35000,
+    "currency": "NGN",
+    "image": "OFF BACK/BENZYLUX_WHITE_JERSEY_FRONT.png",
+    "images": [
+      "OFF BACK/BENZYLUX_WHITE_JERSEY_FRONT.png",
+      "OFF BACK/BENZYLUX_WHITE_JERSEY_BACK.png"
+    ],
+    "stockQuantity": 18,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "0-default",
+        "sku": "BLX-000",
+        "color": "White",
+        "size": "",
+        "stockQuantity": 18,
+        "price": 35000,
+        "image": "OFF BACK/BENZYLUX_WHITE_JERSEY_FRONT.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.462Z",
+    "updatedAt": "2026-05-26T15:23:20.462Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e316113424",
+    "productId": "1",
+    "normalizedName": "benzylux black jersey",
+    "name": "BENZYLUX BLACK JERSEY",
+    "slug": "benzylux-black-jersey",
+    "categoryId": "men",
+    "categoryName": "Men",
+    "price": 35000,
+    "currency": "NGN",
+    "image": "OFF BACK/BENZY LUXURY BLACK FRONT.png",
+    "images": [
+      "OFF BACK/BENZY LUXURY BLACK FRONT.png",
+      "OFF BACK/BENZY LUXURY BLACK BACK.png"
+    ],
+    "stockQuantity": 18,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "1-default",
+        "sku": "BLX-001",
+        "color": "Black",
+        "size": "",
+        "stockQuantity": 18,
+        "price": 35000,
+        "image": "OFF BACK/BENZY LUXURY BLACK FRONT.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.463Z",
+    "updatedAt": "2026-05-26T15:23:20.463Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e316113425",
+    "productId": "2",
+    "normalizedName": "benzylux red jersey",
+    "name": "BENZYLUX RED JERSEY",
+    "slug": "benzylux-red-jersey",
+    "categoryId": "men",
+    "categoryName": "Men",
+    "price": 25000,
+    "currency": "NGN",
+    "image": "OFF BACK/Benzy_Luxury_Jersey_Red_FRONT_with_bgc.png",
+    "images": [
+      "OFF BACK/Benzy_Luxury_Jersey_Red_FRONT_with_bgc.png",
+      "OFF BACK/Benzy_Luxury_Jersey_Red_BACK_with_bgc.png"
+    ],
+    "stockQuantity": 16,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "2-default",
+        "sku": "BLX-002",
+        "color": "Red",
+        "size": "",
+        "stockQuantity": 16,
+        "price": 25000,
+        "image": "OFF BACK/Benzy_Luxury_Jersey_Red_FRONT_with_bgc.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.463Z",
+    "updatedAt": "2026-05-26T15:23:20.463Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e316113426",
+    "productId": "3",
+    "normalizedName": "benzylux in-red jersey",
+    "name": "BENZYLUX IN-RED JERSEY",
+    "slug": "benzylux-in-red-jersey",
+    "categoryId": "men",
+    "categoryName": "Men",
+    "price": 25000,
+    "currency": "NGN",
+    "image": "OFF BACK/Benzy_Luxury_Jersey_Red_Inverted_BACK_with_bgc.png",
+    "images": [
+      "OFF BACK/Benzy_Luxury_Jersey_Red_Inverted_BACK_with_bgc.png",
+      "OFF BACK/Benzy_Luxury_Jersey_Red_Inverted_FRONT_with_bgc.png"
+    ],
+    "stockQuantity": 16,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "3-default",
+        "sku": "BLX-003",
+        "color": "Red Inverted",
+        "size": "",
+        "stockQuantity": 16,
+        "price": 25000,
+        "image": "OFF BACK/Benzy_Luxury_Jersey_Red_Inverted_BACK_with_bgc.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.463Z",
+    "updatedAt": "2026-05-26T15:23:20.463Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e316113427",
+    "productId": "4",
+    "normalizedName": "benzylux blue jersey",
+    "name": "BENZYLUX BLUE JERSEY",
+    "slug": "benzylux-blue-jersey",
+    "categoryId": "men",
+    "categoryName": "Men",
+    "price": 25000,
+    "currency": "NGN",
+    "image": "OFF BACK/Benzy_Luxury_Jersey_Blue_FRONT_with_bgc.png",
+    "images": [
+      "OFF BACK/Benzy_Luxury_Jersey_Blue_FRONT_with_bgc.png",
+      "OFF BACK/Benzy_Luxury_Jersey_Blue_BACK_with_bgc.png"
+    ],
+    "stockQuantity": 16,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "4-default",
+        "sku": "BLX-004",
+        "color": "Blue",
+        "size": "",
+        "stockQuantity": 16,
+        "price": 25000,
+        "image": "OFF BACK/Benzy_Luxury_Jersey_Blue_FRONT_with_bgc.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.464Z",
+    "updatedAt": "2026-05-26T15:23:20.464Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e316113428",
+    "productId": "5",
+    "normalizedName": "benzylux brown jersey",
+    "name": "BENZYLUX BROWN JERSEY",
+    "slug": "benzylux-brown-jersey",
+    "categoryId": "men",
+    "categoryName": "Men",
+    "price": 25000,
+    "currency": "NGN",
+    "image": "OFF BACK/Benzy_Luxury_Jersey_Brown_Front_with_bgc (2).png",
+    "images": [
+      "OFF BACK/Benzy_Luxury_Jersey_Brown_Front_with_bgc (2).png",
+      "OFF BACK/Benzy_Luxury_Jersey_Brown_BACK_with_bgc.png"
+    ],
+    "stockQuantity": 14,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "5-default",
+        "sku": "BLX-005",
+        "color": "Brown",
+        "size": "",
+        "stockQuantity": 14,
+        "price": 25000,
+        "image": "OFF BACK/Benzy_Luxury_Jersey_Brown_Front_with_bgc (2).png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.464Z",
+    "updatedAt": "2026-05-26T15:23:20.464Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e316113429",
+    "productId": "6",
+    "normalizedName": "benzylux lilac jersey",
+    "name": "BENZYLUX LILAC JERSEY",
+    "slug": "benzylux-lilac-jersey",
+    "categoryId": "women",
+    "categoryName": "Women",
+    "price": 25000,
+    "currency": "NGN",
+    "image": "OFF BACK/Benzy_Luxury_Jersey_Lilac_FRONT_with_bgc.png",
+    "images": [
+      "OFF BACK/Benzy_Luxury_Jersey_Lilac_FRONT_with_bgc.png",
+      "OFF BACK/Benzy_Luxury_Jersey_Lilac_BACK_with_bgc (2).png"
+    ],
+    "stockQuantity": 14,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "6-default",
+        "sku": "BLX-006",
+        "color": "Lilac",
+        "size": "",
+        "stockQuantity": 14,
+        "price": 25000,
+        "image": "OFF BACK/Benzy_Luxury_Jersey_Lilac_FRONT_with_bgc.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.464Z",
+    "updatedAt": "2026-05-26T15:23:20.464Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e31611342a",
+    "productId": "7",
+    "normalizedName": "benzylux pink jersey",
+    "name": "BENZYLUX PINK JERSEY",
+    "slug": "benzylux-pink-jersey",
+    "categoryId": "women",
+    "categoryName": "Women",
+    "price": 25000,
+    "currency": "NGN",
+    "image": "OFF BACK/Benzy_Luxury_Jersey_Pink_BACK_with_bgc.png",
+    "images": [
+      "OFF BACK/Benzy_Luxury_Jersey_Pink_BACK_with_bgc.png",
+      "OFF BACK/Benzy_Luxury_Jersey_Pink_FRONT_with_bgc.png"
+    ],
+    "stockQuantity": 14,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "7-default",
+        "sku": "BLX-007",
+        "color": "Pink",
+        "size": "",
+        "stockQuantity": 14,
+        "price": 25000,
+        "image": "OFF BACK/Benzy_Luxury_Jersey_Pink_BACK_with_bgc.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.464Z",
+    "updatedAt": "2026-05-26T15:23:20.464Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e31611342b",
+    "productId": "8",
+    "normalizedName": "benzylux in-pink jersey",
+    "name": "BENZYLUX IN-PINK JERSEY",
+    "slug": "benzylux-in-pink-jersey",
+    "categoryId": "women",
+    "categoryName": "Women",
+    "price": 25000,
+    "currency": "NGN",
+    "image": "OFF BACK/Benzy_Luxury_Jersey_Pink_Inverted_FRONT_with_bgc.png",
+    "images": [
+      "OFF BACK/Benzy_Luxury_Jersey_Pink_Inverted_FRONT_with_bgc.png",
+      "OFF BACK/Benzy_Luxury_Jersey_Pink_Inverted_BACK_with_bgc.png"
+    ],
+    "stockQuantity": 12,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "8-default",
+        "sku": "BLX-008",
+        "color": "Pink Inverted",
+        "size": "",
+        "stockQuantity": 12,
+        "price": 25000,
+        "image": "OFF BACK/Benzy_Luxury_Jersey_Pink_Inverted_FRONT_with_bgc.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.464Z",
+    "updatedAt": "2026-05-26T15:23:20.464Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e31611342c",
+    "productId": "9",
+    "normalizedName": "benzylux green jersey",
+    "name": "BENZYLUX GREEN JERSEY",
+    "slug": "benzylux-green-jersey",
+    "categoryId": "men",
+    "categoryName": "Men",
+    "price": 25000,
+    "currency": "NGN",
+    "image": "OFF BACK/Benzy Luxury Jersey Green front.png",
+    "images": [
+      "OFF BACK/Benzy Luxury Jersey Green front.png",
+      "OFF BACK/Benzy Luxury Jersey Green Back.png"
+    ],
+    "stockQuantity": 16,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "9-default",
+        "sku": "BLX-009",
+        "color": "Green",
+        "size": "",
+        "stockQuantity": 16,
+        "price": 25000,
+        "image": "OFF BACK/Benzy Luxury Jersey Green front.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.464Z",
+    "updatedAt": "2026-05-26T15:23:20.464Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e31611342d",
+    "productId": "10",
+    "normalizedName": "benzylux in-green jersey",
+    "name": "BENZYLUX IN-GREEN JERSEY",
+    "slug": "benzylux-in-green-jersey",
+    "categoryId": "men",
+    "categoryName": "Men",
+    "price": 25000,
+    "currency": "NGN",
+    "image": "OFF BACK/Benzy Luxury Jersey Inv Green front.png",
+    "images": [
+      "OFF BACK/Benzy Luxury Jersey Inv Green front.png",
+      "OFF BACK/Benzy Luxury Jersey Inv Green Back.png"
+    ],
+    "stockQuantity": 12,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "10-default",
+        "sku": "BLX-010",
+        "color": "Green Inverted",
+        "size": "",
+        "stockQuantity": 12,
+        "price": 25000,
+        "image": "OFF BACK/Benzy Luxury Jersey Inv Green front.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.464Z",
+    "updatedAt": "2026-05-26T15:23:20.464Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e31611342e",
+    "productId": "11",
+    "normalizedName": "benzylux(blx) white basic top",
+    "name": "BENZYLUX(BLX) WHITE BASIC TOP",
+    "slug": "benzylux-blx-white-basic-top",
+    "categoryId": "women",
+    "categoryName": "Women",
+    "price": 10000,
+    "currency": "NGN",
+    "image": "OFF BACK/Benzy Luxury Basic Top main.png",
+    "images": [
+      "OFF BACK/Benzy Luxury Basic Top main.png"
+    ],
+    "stockQuantity": 20,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "11-default",
+        "sku": "BLX-011",
+        "color": "White",
+        "size": "",
+        "stockQuantity": 20,
+        "price": 10000,
+        "image": "OFF BACK/Benzy Luxury Basic Top main.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.464Z",
+    "updatedAt": "2026-05-26T15:23:20.464Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e31611342f",
+    "productId": "12",
+    "normalizedName": "benzylux(blx) black basic top",
+    "name": "BENZYLUX(BLX) BLACK BASIC TOP",
+    "slug": "benzylux-blx-black-basic-top",
+    "categoryId": "women",
+    "categoryName": "Women",
+    "price": 10000,
+    "currency": "NGN",
+    "image": "OFF BACK/Benzy Luxury Basic Top Black.png",
+    "images": [
+      "OFF BACK/Benzy Luxury Basic Top Black.png"
+    ],
+    "stockQuantity": 20,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "12-default",
+        "sku": "BLX-012",
+        "color": "Black",
+        "size": "",
+        "stockQuantity": 20,
+        "price": 10000,
+        "image": "OFF BACK/Benzy Luxury Basic Top Black.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.464Z",
+    "updatedAt": "2026-05-26T15:23:20.464Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e316113430",
+    "productId": "13",
+    "normalizedName": "benzylux(blx) basic tops",
+    "name": "BENZYLUX(BLX) BASIC TOPS",
+    "slug": "benzylux-blx-basic-tops",
+    "categoryId": "women",
+    "categoryName": "Women",
+    "price": 10000,
+    "currency": "NGN",
+    "image": "OFF BACK/Benzy Luxury Basic Tops.png",
+    "images": [
+      "OFF BACK/Benzy Luxury Basic Tops.png"
+    ],
+    "stockQuantity": 18,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "13-default",
+        "sku": "BLX-013",
+        "color": "Mixed",
+        "size": "",
+        "stockQuantity": 18,
+        "price": 10000,
+        "image": "OFF BACK/Benzy Luxury Basic Tops.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.465Z",
+    "updatedAt": "2026-05-26T15:23:20.465Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e316113431",
+    "productId": "14",
+    "normalizedName": "benzylux metropolitan socks",
+    "name": "BENZYLUX METROPOLITAN SOCKS",
+    "slug": "benzylux-metropolitan-socks",
+    "categoryId": "accessories",
+    "categoryName": "Accessories",
+    "price": 4000,
+    "currency": "NGN",
+    "image": "OFF BACK/WhatsApp Image 2025-11-11 at 08.50.33_976d3882.png",
+    "images": [
+      "OFF BACK/WhatsApp Image 2025-11-11 at 08.50.33_976d3882.png"
+    ],
+    "stockQuantity": 24,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "14-default",
+        "sku": "BLX-014",
+        "color": "Multi",
+        "size": "",
+        "stockQuantity": 24,
+        "price": 4000,
+        "image": "OFF BACK/WhatsApp Image 2025-11-11 at 08.50.33_976d3882.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.556Z",
+    "updatedAt": "2026-05-26T15:23:20.556Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e316113432",
+    "productId": "15",
+    "normalizedName": "benzylux(blx) track",
+    "name": "BENZYLUX(BLX) TRACK",
+    "slug": "benzylux-blx-track",
+    "categoryId": "men",
+    "categoryName": "Men",
+    "price": 60000,
+    "currency": "NGN",
+    "image": "OFF BACK/WhatsApp Image 2025-11-11 at 08.42.31_83a04cd4.png",
+    "images": [
+      "OFF BACK/WhatsApp Image 2025-11-11 at 08.42.31_83a04cd4.png",
+      "OFF BACK/WhatsApp Image 2025-11-11 at 08.42.28_f079be7b.png"
+    ],
+    "stockQuantity": 10,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "15-default",
+        "sku": "BLX-015",
+        "color": "Black",
+        "size": "",
+        "stockQuantity": 10,
+        "price": 60000,
+        "image": "OFF BACK/WhatsApp Image 2025-11-11 at 08.42.31_83a04cd4.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.556Z",
+    "updatedAt": "2026-05-26T15:23:20.556Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e316113433",
+    "productId": "16",
+    "normalizedName": "benzylux camo trunkers",
+    "name": "BENZYLUX CAMO TRUNKERS",
+    "slug": "benzylux-camo-trunkers",
+    "categoryId": "accessories",
+    "categoryName": "Accessories",
+    "price": 10000,
+    "currency": "NGN",
+    "image": "OFF BACK/WhatsApp Image 2025-11-11 at 08.53.09_a611d1ed.png",
+    "images": [
+      "OFF BACK/WhatsApp Image 2025-11-11 at 08.53.09_a611d1ed.png"
+    ],
+    "stockQuantity": 18,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "16-default",
+        "sku": "BLX-016",
+        "color": "Camo",
+        "size": "",
+        "stockQuantity": 18,
+        "price": 10000,
+        "image": "OFF BACK/WhatsApp Image 2025-11-11 at 08.53.09_a611d1ed.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.556Z",
+    "updatedAt": "2026-05-26T15:23:20.556Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e316113434",
+    "productId": "17",
+    "normalizedName": "benzylux beanie",
+    "name": "BENZYLUX BEANIE",
+    "slug": "benzylux-beanie",
+    "categoryId": "accessories",
+    "categoryName": "Accessories",
+    "price": 15000,
+    "currency": "NGN",
+    "image": "OFF BACK/WhatsApp Image 2025-11-11 at 08.53.08_11fe630f.png",
+    "images": [
+      "OFF BACK/WhatsApp Image 2025-11-11 at 08.53.08_11fe630f.png",
+      "OFF BACK/WhatsApp Image 2025-11-11 at 08.53.08_4333b0d7.png"
+    ],
+    "stockQuantity": 18,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "17-default",
+        "sku": "BLX-017",
+        "color": "Black",
+        "size": "",
+        "stockQuantity": 18,
+        "price": 15000,
+        "image": "OFF BACK/WhatsApp Image 2025-11-11 at 08.53.08_11fe630f.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.557Z",
+    "updatedAt": "2026-05-26T15:23:20.557Z"
+  },
+  {
+    "_id": "6a15bae81cecf8e316113435",
+    "productId": "18",
+    "normalizedName": "benzylux jacket",
+    "name": "BENZYLUX JACKET",
+    "slug": "benzylux-jacket",
+    "categoryId": "men",
+    "categoryName": "Men",
+    "price": 20000,
+    "currency": "NGN",
+    "image": "OFF BACK/WhatsApp Image 2025-11-11 at 08.53.09_1aedccce.png",
+    "images": [
+      "OFF BACK/WhatsApp Image 2025-11-11 at 08.53.09_1aedccce.png"
+    ],
+    "stockQuantity": 12,
+    "isActive": true,
+    "variants": [
+      {
+        "variantId": "18-default",
+        "sku": "BLX-018",
+        "color": "Black",
+        "size": "",
+        "stockQuantity": 12,
+        "price": 20000,
+        "image": "OFF BACK/WhatsApp Image 2025-11-11 at 08.53.09_1aedccce.png",
+        "isDefault": true
+      }
+    ],
+    "metadata": {
+      "source": "seed"
+    },
+    "__v": 0,
+    "createdAt": "2026-05-26T15:23:20.557Z",
+    "updatedAt": "2026-05-26T15:23:20.557Z"
+  }
+]
