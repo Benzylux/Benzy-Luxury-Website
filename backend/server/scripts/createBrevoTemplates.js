@@ -8,7 +8,7 @@ loadEnvironment();
 
 const BREVO_HOSTNAME = 'api.brevo.com';
 const OUTPUT_FILE = path.resolve(__dirname, '..', 'brevo-templates.json');
-const DEFAULT_LOGO_URL = 'https://benzyluxury.com.ng/OFF%20BACK/BLX.png';
+const DEFAULT_LOGO_URL = 'https://raw.githubusercontent.com/Benzylux/Benzy-Luxury-Website/main/frontend/OFF%20BACK/BLX.png';
 
 function env(name, fallback = '') {
   return String(process.env[name] || fallback).trim();
