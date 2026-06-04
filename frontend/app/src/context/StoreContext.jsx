@@ -2,6 +2,7 @@ import React from 'react';
 import { createContext, useContext, useEffect, useMemo, useReducer, useState } from 'react';
 import { api } from '../lib/api.js';
 import { fallbackProducts } from '../data/fallbackProducts.js';
+import { getProductDisplayPrice, getProductRegularPrice, getProductSalePrice } from '../lib/productPricing.js';
 
 const StoreContext = createContext(null);
 const CART_KEY = 'blx-cart';
@@ -99,7 +100,9 @@ export function StoreProvider({ children }) {
           name: product.name,
           slug: product.slug,
           image: product.image,
-          price: Number(product.price || 0),
+          price: getProductDisplayPrice(product),
+          regularPrice: getProductRegularPrice(product),
+          discountPrice: getProductSalePrice(product),
           quantity: Number(options.quantity || 1),
           size: options.size || 'M',
           color: options.color || product.variants?.[0]?.color || ''

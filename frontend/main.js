@@ -2840,6 +2840,14 @@ function normalizeLiveProduct(raw, index) {
     .filter((color, colorIndex, list) => list.findIndex((entry) => entry.toLowerCase() === color.toLowerCase()) === colorIndex);
   const variantSku = variants.find((variant) => String(variant?.sku || "").trim())?.sku || "";
   const priceNgn = Number(raw?.priceNgn ?? raw?.price ?? 0);
+  const discountPriceNgn = Number(
+    raw?.discountPrice
+    ?? raw?.salePrice
+    ?? raw?.discountedPrice
+    ?? metadata?.discountPrice
+    ?? metadata?.salePrice
+    ?? 0
+  );
   const stockQuantity = Number.parseInt(String(raw?.stockQuantity ?? 0), 10);
 
   return {
@@ -2847,6 +2855,7 @@ function normalizeLiveProduct(raw, index) {
     productId: productId || `live-${index}`,
     name: String(raw?.name || "Product").trim(),
     priceNgn: Number.isFinite(priceNgn) ? priceNgn : 0,
+    discountPriceNgn: Number.isFinite(discountPriceNgn) ? discountPriceNgn : 0,
     category: String(raw?.category || raw?.categoryId || "all").trim().toLowerCase() || "all",
     categoryName: String(raw?.categoryName || "").trim(),
     inStock: raw?.inStock !== false && (!Number.isFinite(stockQuantity) || stockQuantity > 0),
@@ -2949,6 +2958,37 @@ function formatProductPrice(ngnAmount) {
     currency: cfg.currency,
     maximumFractionDigits: 2
   }).format(converted);
+}
+
+function getProductSalePriceNgn(product) {
+  const regularPrice = Number(product?.priceNgn ?? product?.price ?? 0);
+  const discountPrice = Number(
+    product?.discountPriceNgn
+    ?? product?.discountPrice
+    ?? product?.salePrice
+    ?? product?.discountedPrice
+    ?? product?.metadata?.discountPrice
+    ?? 0
+  );
+
+  return Number.isFinite(discountPrice) && discountPrice > 0 && discountPrice < regularPrice
+    ? discountPrice
+    : 0;
+}
+
+function getProductDisplayPriceNgn(product) {
+  return getProductSalePriceNgn(product) || Number(product?.priceNgn ?? product?.price ?? 0);
+}
+
+function formatProductPriceHtml(product) {
+  const salePrice = getProductSalePriceNgn(product);
+  const regularPrice = Number(product?.priceNgn ?? product?.price ?? 0);
+  if (!salePrice) return escapeProductHtml(formatProductPrice(regularPrice));
+
+  return `
+    <span class="product-price-sale">${escapeProductHtml(formatProductPrice(salePrice))}</span>
+    <span class="product-price-compare">${escapeProductHtml(formatProductPrice(regularPrice))}</span>
+  `;
 }
 
 function formatCurrencyByCode(amount, code) {
@@ -3120,7 +3160,8 @@ function toCartItemFromProduct(product, qty, options) {
   const selectedSizeLabel = normalizeCartOptionLabel(options?.size, "Size", "M");
   const selectedColor = formatCartOptionLabel(selectedColorLabel, "Color", "Standard");
   const selectedSize = formatCartOptionLabel(selectedSizeLabel, "Size", "M");
-  const priceNgn = Number(product.priceNgn || 0);
+  const priceNgn = Number(getProductDisplayPriceNgn(product) || 0);
+  const regularPriceNgn = Number(product.priceNgn || 0);
   const item = {
     id: String(product.id ?? ""),
     productId: String(product.id ?? ""),
@@ -3137,7 +3178,9 @@ function toCartItemFromProduct(product, qty, options) {
     qty: safeQty,
     quantity: safeQty,
     price: priceNgn,
-    priceNgn
+    priceNgn,
+    regularPriceNgn,
+    discountPriceNgn: getProductSalePriceNgn(product)
   };
 
   item.variantId = options?.variantId
@@ -3398,7 +3441,8 @@ function productToCardHtml(product, cardClass) {
   const primaryImage = images[0] || "/OFF BACK/BLX.png";
   const secondaryImage = images[1] || "";
   const hasSecondaryImage = Boolean(secondaryImage && secondaryImage !== primaryImage);
-  const priceUsd = convertPriceFromNgn(Number(product.priceNgn || 0), "USD");
+  const displayPriceNgn = getProductDisplayPriceNgn(product);
+  const priceUsd = convertPriceFromNgn(Number(displayPriceNgn || 0), "USD");
   const categoryTags = productCategoryTags(product);
   const imagesEncoded = encodeURIComponent(JSON.stringify(images));
   const safeId = escapeProductHtml(product.id);
@@ -3412,7 +3456,7 @@ function productToCardHtml(product, cardClass) {
   const stockClass = isProductInStock(product) ? "stock-in" : "stock-out";
 
   return `
-    <article class="${cardClass}" data-id="${safeId}" data-sku="${safeSku}" data-name="${safeName}" data-category="${safeCategoryTags}" data-price-usd="${priceUsd.toFixed(2)}" data-images="${imagesEncoded}">
+    <article class="${cardClass}" data-id="${safeId}" data-sku="${safeSku}" data-name="${safeName}" data-category="${safeCategoryTags}" data-price-ngn="${Number(displayPriceNgn || 0)}" data-price-usd="${priceUsd.toFixed(2)}" data-images="${imagesEncoded}">
       <div class="product-card-media${hasSecondaryImage ? " has-secondary-image" : ""}">
         <button class="product-quick-view" type="button">Quick View</button>
         <img class="product-card-image main-img" src="${safePrimaryImage}" alt="${safeName}" loading="lazy" decoding="async" />
@@ -3421,7 +3465,7 @@ function productToCardHtml(product, cardClass) {
           : ""}
       </div>
       <h3>${safeName}</h3>
-      <p class="product-price">${formatProductPrice(product.priceNgn)}</p>
+      <p class="product-price${getProductSalePriceNgn(product) ? " is-sale" : ""}">${formatProductPriceHtml(product)}</p>
       <p class="product-stock ${stockClass}">${stockText}</p>
     </article>
   `;
@@ -4133,7 +4177,7 @@ function productToCardHtml(product, cardClass) {
     const toDisplay = (value) => normalize(value).toFixed(2);
 
     const inCategoryItems = BENZY_PRODUCTS.filter((product) => productMatchesCategory(product, cat));
-    const highestNgn = inCategoryItems.reduce((max, p) => Math.max(max, Number(p.priceNgn || 0)), 0);
+    const highestNgn = inCategoryItems.reduce((max, p) => Math.max(max, Number(getProductDisplayPriceNgn(p) || 0)), 0);
     const minBoundNgn = 0;
     const maxBoundNgn = Number.isFinite(highestNgn) ? highestNgn : 0;
     const minBoundActive = normalize(toActive(minBoundNgn));
@@ -4207,23 +4251,24 @@ function productToCardHtml(product, cardClass) {
     const items = BENZY_PRODUCTS.filter((product) => {
       if (!productMatchesCategory(product, cat)) return false;
       if (inStockOnly && !isProductInStock(product)) return false;
-      if (product.priceNgn < minSelectedNgn) return false;
-      if (product.priceNgn > maxSelectedNgn) return false;
+      const productPriceNgn = getProductDisplayPriceNgn(product);
+      if (productPriceNgn < minSelectedNgn) return false;
+      if (productPriceNgn > maxSelectedNgn) return false;
       return true;
     });
 
     const sortedItems = [...items];
     const sortMode = sortSelect instanceof HTMLSelectElement ? sortSelect.value : "featured";
     if (sortMode === "best-selling") {
-      sortedItems.sort((a, b) => (b.priceNgn || 0) - (a.priceNgn || 0));
+      sortedItems.sort((a, b) => getProductDisplayPriceNgn(b) - getProductDisplayPriceNgn(a));
     } else if (sortMode === "az") {
       sortedItems.sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
     } else if (sortMode === "za") {
       sortedItems.sort((a, b) => String(b.name || "").localeCompare(String(a.name || "")));
     } else if (sortMode === "price-asc") {
-      sortedItems.sort((a, b) => (a.priceNgn || 0) - (b.priceNgn || 0));
+      sortedItems.sort((a, b) => getProductDisplayPriceNgn(a) - getProductDisplayPriceNgn(b));
     } else if (sortMode === "price-desc") {
-      sortedItems.sort((a, b) => (b.priceNgn || 0) - (a.priceNgn || 0));
+      sortedItems.sort((a, b) => getProductDisplayPriceNgn(b) - getProductDisplayPriceNgn(a));
     } else if (sortMode === "date-old-new") {
       sortedItems.sort((a, b) => (a.id || 0) - (b.id || 0));
     } else if (sortMode === "date-new-old") {
@@ -4573,7 +4618,10 @@ function productToCardHtml(product, cardClass) {
     const sizeOptions = getProductSizeOptions(product);
 
     if (titleEl) titleEl.textContent = product.name;
-    if (priceEl) priceEl.textContent = formatProductPrice(product.priceNgn);
+    if (priceEl) {
+      priceEl.classList.toggle("is-sale", Boolean(getProductSalePriceNgn(product)));
+      priceEl.innerHTML = formatProductPriceHtml(product);
+    }
     if (stockEl) {
       stockEl.textContent = inStock ? "In stock" : "Out of stock";
       stockEl.className = inStock ? "product-detail-stock stock-in" : "product-detail-stock stock-out";
@@ -4656,7 +4704,7 @@ function productToCardHtml(product, cardClass) {
           <a href="Product.html?id=${item.id}">
             <img src="${item.images?.[0] || ""}" alt="${item.name}">
             <h4>${item.name}</h4>
-            <p>${formatProductPrice(item.priceNgn)}</p>
+            <p class="${getProductSalePriceNgn(item) ? "is-sale" : ""}">${formatProductPriceHtml(item)}</p>
           </a>
         </article>
       `)
@@ -4908,7 +4956,10 @@ function productToCardHtml(product, cardClass) {
     if (collection) collection.textContent = `${categoryText} / Quick view`;
     if (meta) meta.textContent = `${categoryText} collection`;
     if (sku) sku.textContent = getProductSku(quickProduct);
-    if (price) price.textContent = formatProductPrice(quickProduct.priceNgn);
+    if (price) {
+      price.classList.toggle("is-sale", Boolean(getProductSalePriceNgn(quickProduct)));
+      price.innerHTML = formatProductPriceHtml(quickProduct);
+    }
     if (copy) copy.textContent = getQuickViewCopy(quickProduct, selectedColorInfo);
     if (link instanceof HTMLAnchorElement) link.href = `Product.html?id=${quickProduct.id}`;
     if (stock) {

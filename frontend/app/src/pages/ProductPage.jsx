@@ -5,6 +5,7 @@ import { ChevronLeft, ShoppingBag } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import { useStore } from '../context/StoreContext.jsx';
 import { assetUrl } from '../lib/api.js';
+import { getProductDisplayPrice, getProductRegularPrice, getProductSalePrice } from '../lib/productPricing.js';
 
 const money = new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 });
 const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
@@ -26,6 +27,9 @@ export default function ProductPage() {
   }
 
   const activeImage = image || product.images?.[0] || product.image;
+  const salePrice = getProductSalePrice(product);
+  const displayPrice = getProductDisplayPrice(product);
+  const regularPrice = getProductRegularPrice(product);
 
   return (
     <main>
@@ -45,7 +49,10 @@ export default function ProductPage() {
           <Link className="back-link" to="/"><ChevronLeft size={16} /> Back to shop</Link>
           <p className="eyebrow">{product.categoryName || 'Collection'}</p>
           <h1>{product.name}</h1>
-          <p className="price">{money.format(product.price || 0)}</p>
+          <p className={`price${salePrice ? ' is-sale' : ''}`}>
+            <span>{money.format(displayPrice)}</span>
+            {salePrice ? <span className="compare-price">{money.format(regularPrice)}</span> : null}
+          </p>
           <div className="option-group">
             <span>Size</span>
             <div className="segmented">

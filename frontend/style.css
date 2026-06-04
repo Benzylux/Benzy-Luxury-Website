@@ -1493,6 +1493,29 @@ body > .currency-inline select {
   margin-top: 6px;
 }
 
+.product-price.is-sale,
+.product-detail-price.is-sale,
+.quick-v.is-sale,
+.product-related-card p.is-sale {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.product-price-sale {
+  color: #111;
+  font-weight: 900;
+}
+
+.product-price-compare {
+  color: #8a8177;
+  font-size: 0.82em;
+  font-weight: 700;
+  text-decoration: line-through;
+}
+
 .product-quick-view {
   position: absolute;
   top: auto;
@@ -3911,6 +3934,10 @@ body.quick-view-open {
   font-size: clamp(1.5rem, 2.4vw, 2.2rem);
   color: #17110c;
   font-weight: 700;
+}
+
+.product-detail-price.is-sale {
+  justify-content: flex-start;
 }
 
 .product-detail-stock {

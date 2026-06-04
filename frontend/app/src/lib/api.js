@@ -66,6 +66,7 @@ export function assetUrl(path) {
   const safe = String(path || '').trim();
   if (!safe) return '/products/img-0026-webp-mon42n2c-520893bfe4.webp';
   if (/^https?:\/\//i.test(safe) || safe.startsWith('/products/')) return safe;
+  if (safe.startsWith('/uploads/')) return `${API_BASE_URL}${safe}`;
   if (safe.includes('/')) {
     return `${API_BASE_URL}/${safe.split('/').map(encodeURIComponent).join('/')}`;
   }
