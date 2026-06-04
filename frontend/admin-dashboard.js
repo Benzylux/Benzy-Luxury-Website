@@ -154,6 +154,22 @@
     return localStorage.getItem(ADMIN_TOKEN_KEY) || "";
   }
 
+  function readStoredApiBase() {
+    const stored = String(localStorage.getItem(API_BASE_STORAGE_KEY) || "").trim();
+    if (!stored) return "";
+    try {
+      const hostname = new URL(stored).hostname;
+      if (["localhost", "127.0.0.1", "::1"].includes(hostname)) {
+        localStorage.removeItem(API_BASE_STORAGE_KEY);
+        return "";
+      }
+    } catch {
+      localStorage.removeItem(API_BASE_STORAGE_KEY);
+      return "";
+    }
+    return stored;
+  }
+
   function setToken(value) {
     localStorage.setItem(ADMIN_TOKEN_KEY, value || "");
   }
@@ -170,7 +186,7 @@
 
   function getApiBases() {
     const bases = [];
-    const stored = localStorage.getItem(API_BASE_STORAGE_KEY);
+    const stored = readStoredApiBase();
     const origin = window.location.origin;
     bases.push("https://benzy-luxury-website.onrender.com");
     if (stored && stored !== origin) bases.push(stored);

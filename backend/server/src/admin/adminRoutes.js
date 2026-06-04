@@ -1,7 +1,5 @@
 const crypto = require('crypto');
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
 const bcrypt = require('bcryptjs');
 
 const { getCollection } = require('../../mongo');
@@ -26,7 +24,6 @@ const DEFAULT_NOTIFICATION_SETTINGS = Object.freeze({
   marketing: false,
   sms: true
 });
-const PRODUCT_UPLOAD_DIR = path.resolve(__dirname, '..', '..', '..', '..', 'frontend', 'uploads', 'products');
 const PRODUCT_UPLOAD_PUBLIC_PATH = '/uploads/products';
 const PRODUCT_UPLOAD_TYPES = new Map([
   ['image/jpeg', 'jpg'],
@@ -198,6 +195,7 @@ function createAdminRouter(dependencies) {
     toPublicUser,
     updateOrderRecord,
     buildNewsletterUnsubscribeUrl,
+    saveProductUploadAsset,
     writeSettings,
     writeUsers
   } = dependencies;
@@ -1267,6 +1265,7 @@ function createAdminRouter(dependencies) {
 
     return {
       buffer,
+      mimeType,
       fileName: `${originalName}-${uniqueSuffix}.${extension}`
     };
   }
@@ -1288,8 +1287,6 @@ function createAdminRouter(dependencies) {
     const saved = [];
 
     if (!entries.length) return saved;
-    await fs.promises.mkdir(PRODUCT_UPLOAD_DIR, { recursive: true });
-
     for (const entry of entries) {
       const parsed = parseProductUpload(entry);
       if (parsed.error) {
@@ -1298,8 +1295,11 @@ function createAdminRouter(dependencies) {
         throw error;
       }
 
-      const filePath = path.join(PRODUCT_UPLOAD_DIR, parsed.fileName);
-      await fs.promises.writeFile(filePath, parsed.buffer, { flag: 'wx' });
+      await saveProductUploadAsset({
+        buffer: parsed.buffer,
+        contentType: parsed.mimeType,
+        fileName: parsed.fileName
+      });
       saved.push(`${PRODUCT_UPLOAD_PUBLIC_PATH}/${parsed.fileName}`);
     }
 
@@ -1325,9 +1325,11 @@ function createAdminRouter(dependencies) {
       throw error;
     }
 
-    await fs.promises.mkdir(PRODUCT_UPLOAD_DIR, { recursive: true });
-    const filePath = path.join(PRODUCT_UPLOAD_DIR, fileName);
-    await fs.promises.writeFile(filePath, buffer, { flag: 'wx' });
+    await saveProductUploadAsset({
+      buffer,
+      contentType: String(options.mimeType || '').trim().toLowerCase(),
+      fileName
+    });
     return `${PRODUCT_UPLOAD_PUBLIC_PATH}/${fileName}`;
   }
 

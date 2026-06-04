@@ -617,11 +617,14 @@ async function sendTransactionalEmail({
   htmlContent,
   textContent,
   attachments,
-  tags
+  tags,
+  templateId,
+  params
 }) {
   const config = requireBrevoConfig(['apiKey', 'senderEmail', 'senderName']);
+  const resolvedTemplateId = toPositiveInteger(templateId);
 
-  if (!sanitizePlainText(subject, 160)) {
+  if (!resolvedTemplateId && !sanitizePlainText(subject, 160)) {
     throw new BrevoError('A transactional email subject is required.', {
       statusCode: 400
     });
@@ -632,11 +635,19 @@ async function sendTransactionalEmail({
       email: config.senderEmail,
       name: config.senderName
     },
-    to: [buildRecipient(toEmail, toName)],
-    subject: sanitizePlainText(subject, 160),
-    htmlContent: String(htmlContent || '').trim(),
-    textContent: String(textContent || '').trim()
+    to: [buildRecipient(toEmail, toName)]
   };
+
+  if (resolvedTemplateId) {
+    payload.templateId = resolvedTemplateId;
+    if (params && typeof params === 'object' && !Array.isArray(params)) {
+      payload.params = params;
+    }
+  } else {
+    payload.subject = sanitizePlainText(subject, 160);
+    payload.htmlContent = String(htmlContent || '').trim();
+    payload.textContent = String(textContent || '').trim();
+  }
 
   if (Array.isArray(tags) && tags.length) {
     payload.tags = tags

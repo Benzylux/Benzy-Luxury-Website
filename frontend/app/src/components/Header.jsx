@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Moon, ShoppingBag, Sun, UserRound } from 'lucide-react';
+import { LogOut, Moon, ShoppingBag, Sun, UserRound } from 'lucide-react';
 import { useStore } from '../context/StoreContext.jsx';
 
 export default function Header() {
@@ -13,6 +13,7 @@ export default function Header() {
       <nav className="desktop-nav">
         <NavLink to="/">Shop</NavLink>
         <NavLink to="/orders">Track</NavLink>
+        <NavLink to="/account">Account</NavLink>
         <NavLink to="/admin">Admin</NavLink>
       </nav>
       <div className="header-actions">
@@ -25,16 +26,17 @@ export default function Header() {
           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
         </button>
         {user ? (
-          <button className="profile-chip" type="button" onClick={logout} title="Sign out">
+          <Link className="profile-chip" to="/account" title="Open account">
             <UserRound size={16} />
             <span>{user.name?.split(' ')[0] || 'Account'}</span>
-          </button>
+          </Link>
         ) : (
-          <Link to="/checkout" className="profile-chip">
+          <Link to="/account" className="profile-chip">
             <UserRound size={16} />
             <span>Sign in</span>
           </Link>
         )}
+        {user && <button className="icon-button" type="button" onClick={logout} title="Sign out"><LogOut size={18} /></button>}
         <Link to="/cart" className="cart-link" title="Open cart">
           <ShoppingBag size={18} />
           <span>{itemCount}</span>

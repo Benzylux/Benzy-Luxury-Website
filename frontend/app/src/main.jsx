@@ -12,6 +12,7 @@ const CartPage = lazy(() => import('./pages/CartPage.jsx'));
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage.jsx'));
 const AdminPage = lazy(() => import('./pages/AdminPage.jsx'));
 const OrdersPage = lazy(() => import('./pages/OrdersPage.jsx'));
+const AccountPage = lazy(() => import('./pages/AccountPage.jsx'));
 
 inject();
 injectSpeedInsights();
@@ -27,6 +28,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/account" element={<AccountPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/admin/dashboard" element={<AdminPage />} />
           </Routes>

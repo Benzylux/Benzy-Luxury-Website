@@ -33,6 +33,8 @@ const {
   addWalletTopUpContact,
   addVipContact,
   sendOrderConfirmation,
+  sendOrderStatusUpdateEmail,
+  sendPasswordResetEmail,
   sendTransactionalEmail,
   sendWalletTopUpReceiptEmail,
   sendWelcomeEmail
@@ -210,6 +212,25 @@ app.get('/.well-known/:fileName', (req, res, next) => {
   res.setHeader('Content-Type', 'application/text');
   res.sendFile(resolvedPath);
 });
+app.get('/uploads/products/:fileName', asyncHandler(async (req, res, next) => {
+  const fileName = path.basename(String(req.params.fileName || '').trim());
+  if (!fileName) {
+    next();
+    return;
+  }
+
+  const uploads = await getCollection('product_uploads');
+  const asset = await uploads.findOne({ fileName });
+  if (!asset?.data) {
+    next();
+    return;
+  }
+
+  const buffer = Buffer.isBuffer(asset.data) ? asset.data : Buffer.from(asset.data.buffer || asset.data);
+  res.setHeader('Content-Type', asset.contentType || 'application/octet-stream');
+  res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  res.send(buffer);
+}));
 app.use(express.static(FRONTEND_DIR));
 
 function asyncHandler(handler) {
@@ -2171,6 +2192,10 @@ async function readUsers() {
     const isBanned = Boolean(user?.isBanned);
     const banReason = isBanned ? String(user?.banReason || '').trim() : '';
     const notifications = normalizeNotificationSettings(user?.notifications);
+    const wishlist = Array.isArray(user?.wishlist) ? user.wishlist : [];
+    const customerSegment = String(user?.customerSegment || user?.segment || (role === 'host' ? 'staff' : 'customers')).trim();
+    const profilePicture = String(user?.profilePicture || user?.avatar || '').trim();
+    const emailVerified = Boolean(user?.emailVerified);
     if (role !== user?.role) changed = true;
     if (!Array.isArray(user?.addresses)) changed = true;
     if (JSON.stringify(wallet) !== JSON.stringify(user?.wallet || {})) changed = true;
@@ -2178,7 +2203,8 @@ async function readUsers() {
     if (isBanned !== Boolean(user?.isBanned)) changed = true;
     if (banReason !== String(user?.banReason || '')) changed = true;
     if (JSON.stringify(notifications) !== JSON.stringify(user?.notifications || {})) changed = true;
-    return { ...user, role, adminRole, isBanned, banReason, addresses, wallet, notifications };
+    if (!Array.isArray(user?.wishlist)) changed = true;
+    return { ...user, role, adminRole, isBanned, banReason, addresses, wallet, notifications, wishlist, customerSegment, profilePicture, emailVerified };
   });
 
   if (changed) await writeUsers(normalized);
@@ -2194,7 +2220,11 @@ async function writeUsers(users) {
     const isBanned = Boolean(user?.isBanned);
     const banReason = isBanned ? String(user?.banReason || '').trim() : '';
     const notifications = normalizeNotificationSettings(user?.notifications);
-    return { ...user, role, adminRole, isBanned, banReason, addresses, wallet, notifications };
+    const wishlist = Array.isArray(user?.wishlist) ? user.wishlist : [];
+    const customerSegment = String(user?.customerSegment || user?.segment || (role === 'host' ? 'staff' : 'customers')).trim();
+    const profilePicture = String(user?.profilePicture || user?.avatar || '').trim();
+    const emailVerified = Boolean(user?.emailVerified);
+    return { ...user, role, adminRole, isBanned, banReason, addresses, wallet, notifications, wishlist, customerSegment, profilePicture, emailVerified };
   });
 
   await replaceCollectionRecords(
@@ -2233,6 +2263,11 @@ function toPublicUser(user) {
     role: user.role === 'host' ? 'host' : 'resident',
     adminRole: normalizeAdminRoleValue(user?.adminRole, user),
     isBanned: Boolean(user?.isBanned),
+    emailVerified: Boolean(user?.emailVerified),
+    profilePicture: String(user?.profilePicture || ''),
+    customerSegment: String(user?.customerSegment || 'customers'),
+    addresses: Array.isArray(user?.addresses) ? user.addresses : [],
+    wishlist: Array.isArray(user?.wishlist) ? user.wishlist : [],
     notifications: normalizeNotificationSettings(user?.notifications),
     walletBalance: wallet.balance,
     walletCurrency: wallet.currency
@@ -2277,6 +2312,170 @@ function getAuthenticatedUser(req) {
   }
 }
 
+async function findCurrentUser(req) {
+  const users = await readUsers();
+  const idx = findUserIndexById(users, req.user?.id);
+  return { users, idx, user: idx >= 0 ? users[idx] : null };
+}
+
+async function recordEmailLog(entry) {
+  const record = {
+    id: crypto.randomUUID(),
+    provider: 'brevo',
+    channel: 'transactional',
+    status: entry?.status || 'queued',
+    type: String(entry?.type || 'account').trim(),
+    toEmail: normalizeEmail(entry?.toEmail || ''),
+    subject: String(entry?.subject || '').trim(),
+    messageId: String(entry?.messageId || '').trim(),
+    error: String(entry?.error || '').trim(),
+    metadata: entry?.metadata && typeof entry.metadata === 'object' ? entry.metadata : {},
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    const collection = await getCollection('email_logs');
+    await collection.insertOne({ _id: record.id, ...record });
+  } catch (error) {
+    console.error('Email log write failed:', error?.message || error);
+  }
+
+  return record;
+}
+
+async function sendAccountTransactionalEmail(type, user, details = {}) {
+  const email = normalizeEmail(user?.email || details.email || '');
+  const name = String(user?.name || details.name || '').trim();
+  const subject = String(details.subject || '').trim();
+  if (!email || !subject) return { skipped: true };
+
+  try {
+    let result;
+    if (type === 'password_reset') {
+      result = await sendPasswordResetEmail(email, name, details);
+    } else {
+      result = await sendTransactionalEmail({
+        toEmail: email,
+        toName: name,
+        subject,
+        htmlContent: details.htmlContent,
+        textContent: details.textContent,
+        tags: ['account', type]
+      });
+    }
+    await recordEmailLog({
+      type,
+      toEmail: email,
+      subject,
+      status: 'sent',
+      messageId: result?.messageId || '',
+      metadata: details.metadata || {}
+    });
+    return result;
+  } catch (error) {
+    await recordEmailLog({
+      type,
+      toEmail: email,
+      subject,
+      status: 'failed',
+      error: error?.message || 'Email failed.',
+      metadata: details.metadata || {}
+    });
+    console.error(`Brevo ${type} email failed for ${email}:`, error?.message || error);
+    return { error: error?.message || 'Email failed.' };
+  }
+}
+
+function buildCodeEmailHtml(title, message, code) {
+  const safeTitle = sanitizePlainText(title, 120);
+  const safeMessage = sanitizePlainText(message, 260);
+  const safeCode = sanitizePlainText(code, 20);
+  return `
+    <div style="margin:0;padding:32px 16px;background:#f6f0ea;font-family:Arial,sans-serif;color:#231711;">
+      <div style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #eadfd3;border-radius:16px;overflow:hidden;">
+        <div style="padding:24px 28px;background:#111111;color:#ffffff;">
+          <div style="font-size:12px;letter-spacing:.22em;text-transform:uppercase;">Benzy Luxury</div>
+          <h1 style="margin:10px 0 0;font-size:28px;line-height:1.2;">${safeTitle}</h1>
+        </div>
+        <div style="padding:28px;">
+          <p style="margin:0 0 18px;font-size:16px;line-height:1.65;">${safeMessage}</p>
+          <div style="margin:24px 0;padding:18px 20px;border:1px dashed #7a5c43;border-radius:12px;background:#f8f1eb;text-align:center;">
+            <div style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#7a5c43;">Secure code</div>
+            <div style="margin-top:10px;font-size:32px;font-weight:800;letter-spacing:.1em;">${safeCode}</div>
+          </div>
+          <p style="margin:0;color:#6b5a4d;font-size:14px;line-height:1.6;">This code expires shortly. If you did not request it, you can ignore this email.</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function escapePdfText(value) {
+  return String(value || '')
+    .replace(/\\/g, '\\\\')
+    .replace(/\(/g, '\\(')
+    .replace(/\)/g, '\\)')
+    .replace(/[^\x09\x0A\x0D\x20-\x7E]/g, '');
+}
+
+function buildSimplePdfBuffer(title, lines) {
+  const pageLines = [
+    title,
+    '',
+    ...(Array.isArray(lines) ? lines : [])
+  ].slice(0, 42);
+  const textOps = pageLines.map((line, index) => {
+    const y = 760 - (index * 17);
+    const size = index === 0 ? 18 : 11;
+    return `BT /F1 ${size} Tf 54 ${y} Td (${escapePdfText(line)}) Tj ET`;
+  }).join('\n');
+  const objects = [
+    '1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj',
+    '2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj',
+    '3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj',
+    '4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj',
+    `5 0 obj << /Length ${Buffer.byteLength(textOps)} >> stream\n${textOps}\nendstream endobj`
+  ];
+  let pdf = '%PDF-1.4\n';
+  const offsets = [0];
+  for (const object of objects) {
+    offsets.push(Buffer.byteLength(pdf));
+    pdf += `${object}\n`;
+  }
+  const xref = Buffer.byteLength(pdf);
+  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  for (let i = 1; i < offsets.length; i += 1) {
+    pdf += `${String(offsets[i]).padStart(10, '0')} 00000 n \n`;
+  }
+  pdf += `trailer << /Root 1 0 R /Size ${objects.length + 1} >>\nstartxref\n${xref}\n%%EOF`;
+  return Buffer.from(pdf, 'ascii');
+}
+
+function buildOrderDocumentLines(order, type) {
+  const items = Array.isArray(order?.items) ? order.items : [];
+  return [
+    `Document: ${type.toUpperCase()}`,
+    `Order ID: ${order?.orderId || ''}`,
+    `Invoice ID: ${order?.invoiceId || ''}`,
+    `Receipt ID: ${order?.receiptId || ''}`,
+    `Tracking ID: ${order?.trackingId || ''}`,
+    `Customer: ${order?.customerName || order?.customer?.name || ''}`,
+    `Email: ${order?.customerEmail || order?.customer?.email || ''}`,
+    `Status: ${order?.orderStatus || order?.status || 'pending'}`,
+    `Payment: ${order?.paymentStatus || 'pending'}`,
+    `Total: NGN ${Number(order?.total || order?.totalNgn || 0).toLocaleString('en-NG')}`,
+    '',
+    'Items:',
+    ...items.map((item) => {
+      const quantity = Number(item?.quantity || item?.qty || 1);
+      const price = Number(item?.price || item?.priceNgn || 0);
+      return `${item?.name || item?.title || 'Item'} x${quantity} - NGN ${(price * quantity).toLocaleString('en-NG')}`;
+    }),
+    '',
+    `Generated: ${new Date().toISOString()}`
+  ];
+}
+
 // ============ CART API ============
 
 app.use('/api', createCartRouter());
@@ -2293,9 +2492,27 @@ app.use('/api/admin', createAdminRouter({
   toPublicUser,
   updateOrderRecord,
   buildNewsletterUnsubscribeUrl,
+  saveProductUploadAsset,
   writeSettings,
   writeUsers
 }));
+
+async function saveProductUploadAsset(asset) {
+  const fileName = path.basename(String(asset?.fileName || '').trim());
+  const buffer = Buffer.isBuffer(asset?.buffer) ? asset.buffer : null;
+  const contentType = String(asset?.contentType || '').trim().toLowerCase() || 'application/octet-stream';
+  if (!fileName || !buffer?.length) throw httpError(400, 'Uploaded image is empty.');
+
+  const uploads = await getCollection('product_uploads');
+  await uploads.insertOne({
+    fileName,
+    contentType,
+    size: buffer.length,
+    data: buffer,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  });
+}
 
 function normalizeProductSlug(value) {
   return String(value || '')
@@ -2665,7 +2882,8 @@ function normalizeOrderStatus(status) {
   if (['pending', 'pending verification', 'pending_verification', 'awaiting_confirmation'].includes(value)) return 'pending';
   if (value === 'placed') return 'placed';
   if (value === 'confirmed') return 'confirmed';
-  if (['processing', 'shipped', 'delivered', 'cancelled', 'failed'].includes(value)) return value;
+  if (['processing', 'shipped', 'delivered', 'cancelled', 'failed', 'return_requested'].includes(value)) return value;
+  if (value === 'return requested') return 'return_requested';
   return 'pending';
 }
 
@@ -2783,6 +3001,31 @@ function generateOrderId() {
   const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
   const rand = Math.floor(Math.random() * 90000) + 10000;
   return `BLX-${stamp}-${rand}`;
+}
+
+function generateDocumentId(prefix) {
+  const now = new Date();
+  const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+  return `${prefix}-${stamp}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
+}
+
+function generateTrackingId() {
+  return generateDocumentId('TRK');
+}
+
+function generateNumericCode(length = 6) {
+  const digits = Math.max(4, Math.min(8, Number(length) || 6));
+  const max = 10 ** digits;
+  return String(crypto.randomInt(0, max)).padStart(digits, '0');
+}
+
+function hashToken(value) {
+  return crypto.createHash('sha256').update(String(value || '')).digest('hex');
+}
+
+function isFutureIso(value) {
+  const date = value ? new Date(value) : null;
+  return Boolean(date && !Number.isNaN(date.getTime()) && date.getTime() > Date.now());
 }
 
 function buildTracking(status, orderDate) {
@@ -3186,6 +3429,9 @@ function buildOrderFromPayload(payload) {
   }
 
   const orderId = String(payload?.orderId || payload?.id || generateOrderId()).trim();
+  const invoiceId = String(payload?.invoiceId || generateDocumentId('INV')).trim();
+  const receiptId = String(payload?.receiptId || generateDocumentId('RCT')).trim();
+  const trackingId = String(payload?.trackingId || generateTrackingId()).trim();
   const createdAt = String(
     payload?.createdAt
     || (payload?.orderDate ? new Date(String(payload.orderDate)).toISOString() : new Date().toISOString())
@@ -3222,6 +3468,9 @@ function buildOrderFromPayload(payload) {
 
   return {
     orderId,
+    invoiceId,
+    receiptId,
+    trackingId,
     customerId: payload?.customerId || '',
     customerEmail,
     customer,
@@ -4410,6 +4659,65 @@ app.post('/api/profile/wallet/topup/paystack/verify', asyncHandler(async (req, r
   });
 }));
 
+app.get('/api/orders/my/history', authMiddleware, asyncHandler(async (req, res) => {
+  const email = normalizeEmail(req.user?.email || '');
+  const orders = await readOrders();
+  const customerOrders = orders.filter((order) => normalizeEmail(order.customerEmail) === email);
+  res.json({ success: true, orders: customerOrders, count: customerOrders.length });
+}));
+
+async function requireOrderAccess(req, orderId) {
+  const order = await getOrderRecordByOrderId(orderId);
+  if (!order) return { status: 404, message: 'Order not found.' };
+  const requesterEmail = normalizeEmail(req.user?.email || '');
+  const ownsOrder = requesterEmail && requesterEmail === normalizeEmail(order.customerEmail);
+  const hostUser = isHostUser(req.user || {});
+  if (!ownsOrder && !hostUser) return { status: 403, message: 'You can only access your own order records.' };
+  return { order };
+}
+
+app.get('/api/orders/:orderId/invoice.pdf', authMiddleware, asyncHandler(async (req, res) => {
+  const access = await requireOrderAccess(req, req.params.orderId);
+  if (!access.order) return res.status(access.status).json({ success: false, message: access.message });
+  const pdf = buildSimplePdfBuffer('Benzy Luxury Invoice', buildOrderDocumentLines(access.order, 'invoice'));
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="${access.order.invoiceId || access.order.orderId}-invoice.pdf"`);
+  res.send(pdf);
+}));
+
+app.get('/api/orders/:orderId/receipt.pdf', authMiddleware, asyncHandler(async (req, res) => {
+  const access = await requireOrderAccess(req, req.params.orderId);
+  if (!access.order) return res.status(access.status).json({ success: false, message: access.message });
+  const pdf = buildSimplePdfBuffer('Benzy Luxury Receipt', buildOrderDocumentLines(access.order, 'receipt'));
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="${access.order.receiptId || access.order.orderId}-receipt.pdf"`);
+  res.send(pdf);
+}));
+
+app.post('/api/orders/:orderId/return', authMiddleware, asyncHandler(async (req, res) => {
+  const access = await requireOrderAccess(req, req.params.orderId);
+  if (!access.order) return res.status(access.status).json({ success: false, message: access.message });
+  if (!['delivered', 'shipped'].includes(normalizeOrderStatus(access.order.orderStatus || access.order.status))) {
+    return res.status(409).json({ success: false, message: 'Returns can only be requested after an order has shipped or been delivered.' });
+  }
+  const requestedAt = new Date().toISOString();
+  const reason = sanitizePlainText(req.body?.reason || 'Customer return request', 260);
+  const updatedOrder = await updateOrderRecord(access.order.orderId, {
+    orderStatus: 'return_requested',
+    status: 'return_requested',
+    metadata: {
+      ...(access.order.metadata || {}),
+      returnRequestedAt: requestedAt,
+      returnReason: reason,
+      returnRequestedBy: normalizeEmail(req.user?.email || '')
+    }
+  });
+  await sendOrderStatusUpdateEmail(updatedOrder.customerEmail, updatedOrder, {
+    previousStatus: access.order.orderStatus || access.order.status
+  }).catch((error) => console.error(`Brevo return request email failed for ${updatedOrder.orderId}:`, error?.message || error));
+  res.json({ success: true, order: updatedOrder });
+}));
+
 // Get all orders for a customer (by email)
 app.get('/api/orders/:email', asyncHandler(async (req, res) => {
   const { email } = req.params;
@@ -4705,6 +5013,7 @@ app.post('/api/auth/signup', asyncHandler(async (req, res) => {
 
   const passwordHash = await bcrypt.hash(password, 10);
   const role = inferRoleByEmail(email);
+  const verificationCode = generateNumericCode();
   const user = {
     id: Date.now(),
     name,
@@ -4714,6 +5023,17 @@ app.post('/api/auth/signup', asyncHandler(async (req, res) => {
     isBanned: false,
     banReason: '',
     addresses: [],
+    wishlist: [],
+    profilePicture: '',
+    customerSegment: role === 'host' ? 'staff' : 'customers',
+    emailVerified: false,
+    emailVerification: {
+      codeHash: hashToken(verificationCode),
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+      requestedAt: new Date().toISOString()
+    },
+    passwordReset: null,
+    loginOtp: null,
     notifications: normalizeNotificationSettings(),
     passwordHash,
     createdAt: new Date().toISOString()
@@ -4724,9 +5044,41 @@ app.post('/api/auth/signup', asyncHandler(async (req, res) => {
   await sendAdminCustomerActivityEmail(user, 'created an account', {
     role: user.role || 'resident'
   });
+  await addCustomerContact(email, {
+    attributes: buildBrevoContactAttributes({
+      source: 'account-signup',
+      customer_status: 'new',
+      customer_segment: user.customerSegment
+    }),
+    tags: ['customer', 'account']
+  }).catch((error) => console.error(`Brevo customer sync failed for signup ${email}:`, error?.message || error));
+  await sendAccountTransactionalEmail('email_verification', user, {
+    subject: 'Verify your Benzy Luxury email',
+    htmlContent: buildCodeEmailHtml('Verify your email', 'Use this code to verify your Benzy Luxury account.', verificationCode),
+    textContent: `Your Benzy Luxury verification code is ${verificationCode}. It expires in 15 minutes.`,
+    metadata: { userId: user.id }
+  });
+  await sendWelcomeEmail(email, name, {
+    source: 'account-signup',
+    tags: ['welcome', 'account']
+  }).then((result) => recordEmailLog({
+    type: 'welcome',
+    toEmail: email,
+    subject: 'Welcome to Benzy Luxury',
+    status: 'sent',
+    messageId: result?.messageId || '',
+    metadata: { userId: user.id }
+  })).catch((error) => recordEmailLog({
+    type: 'welcome',
+    toEmail: email,
+    subject: 'Welcome to Benzy Luxury',
+    status: 'failed',
+    error: error?.message || 'Welcome email failed.',
+    metadata: { userId: user.id }
+  }));
 
   const token = signToken(user);
-  res.status(201).json({ token, user: toPublicUser(user) });
+  res.status(201).json({ token, user: toPublicUser(user), verificationRequired: true });
 }));
 
 app.post('/api/auth/login', asyncHandler(async (req, res) => {
@@ -4753,6 +5105,128 @@ app.post('/api/auth/login', asyncHandler(async (req, res) => {
   res.json({ token, user: toPublicUser(user) });
 }));
 
+app.post('/api/auth/verify-email', authMiddleware, asyncHandler(async (req, res) => {
+  const code = String(req.body?.code || '').trim();
+  const { users, idx, user } = await findCurrentUser(req);
+  if (!user) return res.status(404).json({ error: 'User not found.' });
+  if (user.emailVerified) return res.json({ success: true, user: toPublicUser(user) });
+
+  const verification = user.emailVerification || {};
+  if (!code || hashToken(code) !== verification.codeHash || !isFutureIso(verification.expiresAt)) {
+    return res.status(400).json({ error: 'Invalid or expired verification code.' });
+  }
+
+  users[idx].emailVerified = true;
+  users[idx].emailVerification = null;
+  users[idx].verifiedAt = new Date().toISOString();
+  await writeUsers(users);
+  res.json({ success: true, user: toPublicUser(users[idx]) });
+}));
+
+app.post('/api/auth/resend-verification', authMiddleware, asyncHandler(async (req, res) => {
+  const { users, idx, user } = await findCurrentUser(req);
+  if (!user) return res.status(404).json({ error: 'User not found.' });
+  if (user.emailVerified) return res.json({ success: true, alreadyVerified: true });
+
+  const code = generateNumericCode();
+  users[idx].emailVerification = {
+    codeHash: hashToken(code),
+    expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+    requestedAt: new Date().toISOString()
+  };
+  await writeUsers(users);
+  await sendAccountTransactionalEmail('email_verification', users[idx], {
+    subject: 'Verify your Benzy Luxury email',
+    htmlContent: buildCodeEmailHtml('Verify your email', 'Use this code to verify your Benzy Luxury account.', code),
+    textContent: `Your Benzy Luxury verification code is ${code}. It expires in 15 minutes.`,
+    metadata: { userId: user.id }
+  });
+  res.json({ success: true });
+}));
+
+app.post('/api/auth/otp/request', asyncHandler(async (req, res) => {
+  const email = normalizeEmail(req.body?.email || '');
+  const users = await readUsers();
+  const idx = users.findIndex((u) => normalizeEmail(u.email) === email);
+  if (idx < 0) return res.status(404).json({ error: 'Account not found.' });
+  if (users[idx].isBanned) return res.status(403).json({ error: 'This account has been restricted. Please contact support.' });
+
+  const code = generateNumericCode();
+  users[idx].loginOtp = {
+    codeHash: hashToken(code),
+    expiresAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+    requestedAt: new Date().toISOString()
+  };
+  await writeUsers(users);
+  await sendAccountTransactionalEmail('otp_login', users[idx], {
+    subject: 'Your Benzy Luxury login code',
+    htmlContent: buildCodeEmailHtml('Your login code', 'Use this one-time code to sign in to your Benzy Luxury account.', code),
+    textContent: `Your Benzy Luxury login code is ${code}. It expires in 10 minutes.`,
+    metadata: { userId: users[idx].id }
+  });
+  res.json({ success: true });
+}));
+
+app.post('/api/auth/otp/verify', asyncHandler(async (req, res) => {
+  const email = normalizeEmail(req.body?.email || '');
+  const code = String(req.body?.code || '').trim();
+  const users = await readUsers();
+  const idx = users.findIndex((u) => normalizeEmail(u.email) === email);
+  if (idx < 0) return res.status(404).json({ error: 'Account not found.' });
+  const otp = users[idx].loginOtp || {};
+  if (!code || hashToken(code) !== otp.codeHash || !isFutureIso(otp.expiresAt)) {
+    return res.status(400).json({ error: 'Invalid or expired OTP code.' });
+  }
+
+  users[idx].loginOtp = null;
+  users[idx].lastLoginAt = new Date().toISOString();
+  await writeUsers(users);
+  res.json({ token: signToken(users[idx]), user: toPublicUser(users[idx]) });
+}));
+
+app.post('/api/auth/forgot-password', asyncHandler(async (req, res) => {
+  const email = normalizeEmail(req.body?.email || '');
+  const users = await readUsers();
+  const idx = users.findIndex((u) => normalizeEmail(u.email) === email);
+  if (idx >= 0) {
+    const code = generateNumericCode();
+    users[idx].passwordReset = {
+      codeHash: hashToken(code),
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+      requestedAt: new Date().toISOString()
+    };
+    await writeUsers(users);
+    await sendAccountTransactionalEmail('password_reset', users[idx], {
+      subject: 'Reset your Benzy Luxury password',
+      resetCode: code,
+      expiresIn: '15 minutes',
+      metadata: { userId: users[idx].id }
+    });
+  }
+  res.json({ success: true, message: 'If the account exists, a reset email has been sent.' });
+}));
+
+app.post('/api/auth/reset-password', asyncHandler(async (req, res) => {
+  const email = normalizeEmail(req.body?.email || '');
+  const code = String(req.body?.code || '').trim();
+  const password = String(req.body?.password || '');
+  if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters.' });
+
+  const users = await readUsers();
+  const idx = users.findIndex((u) => normalizeEmail(u.email) === email);
+  if (idx < 0) return res.status(400).json({ error: 'Invalid or expired reset code.' });
+  const reset = users[idx].passwordReset || {};
+  if (!code || hashToken(code) !== reset.codeHash || !isFutureIso(reset.expiresAt)) {
+    return res.status(400).json({ error: 'Invalid or expired reset code.' });
+  }
+
+  users[idx].passwordHash = await bcrypt.hash(password, 10);
+  users[idx].passwordReset = null;
+  users[idx].passwordChangedAt = new Date().toISOString();
+  await writeUsers(users);
+  res.json({ token: signToken(users[idx]), user: toPublicUser(users[idx]) });
+}));
+
 app.get('/api/auth/me', authMiddleware, asyncHandler(async (req, res) => {
   const users = await readUsers();
   const user = users.find((u) => String(u.id) === String(req.user.id));
@@ -4777,6 +5251,7 @@ app.patch('/api/auth/profile', authMiddleware, asyncHandler(async (req, res) => 
   const nextEmail = normalizeEmail(req.body?.email || '');
   const nextPhone = String(req.body?.phone || '').trim();
   const nextPassword = String(req.body?.password || '');
+  const nextProfilePicture = String(req.body?.profilePicture || current.profilePicture || '').trim();
 
   if (nextName.length < 2) return res.status(400).json({ error: 'Name is too short.' });
   if (!nextEmail.includes('@')) return res.status(400).json({ error: 'Invalid email.' });
@@ -4789,9 +5264,22 @@ app.patch('/api/auth/profile', authMiddleware, asyncHandler(async (req, res) => 
     return res.status(409).json({ error: 'Email already registered.' });
   }
 
+  let profileVerificationCode = '';
   current.name = nextName;
+  if (current.email !== nextEmail) {
+    profileVerificationCode = generateNumericCode();
+    current.emailVerified = false;
+    current.emailVerification = {
+      codeHash: hashToken(profileVerificationCode),
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+      requestedAt: new Date().toISOString()
+    };
+  }
   current.email = nextEmail;
   current.phone = nextPhone;
+  if (nextProfilePicture && nextProfilePicture.length <= 1500000) {
+    current.profilePicture = nextProfilePicture;
+  }
   current.adminRole = normalizeAdminRoleValue(current.adminRole, current);
   if (nextPassword) {
     current.passwordHash = await bcrypt.hash(nextPassword, 10);
@@ -4810,6 +5298,14 @@ app.patch('/api/auth/profile', authMiddleware, asyncHandler(async (req, res) => 
     changedFields: changedFields.length ? changedFields : ['profile saved'],
     previousEmail: normalizeEmail(before.email) !== normalizeEmail(current.email) ? before.email : ''
   });
+  if (profileVerificationCode) {
+    await sendAccountTransactionalEmail('email_verification', current, {
+      subject: 'Verify your Benzy Luxury email',
+      htmlContent: buildCodeEmailHtml('Verify your new email', 'Use this code to verify your updated Benzy Luxury email address.', profileVerificationCode),
+      textContent: `Your Benzy Luxury verification code is ${profileVerificationCode}. It expires in 15 minutes.`,
+      metadata: { userId: current.id, reason: 'profile-email-change' }
+    });
+  }
 
   const token = signToken(current);
   res.json({ token, user: toPublicUser(current) });
@@ -4940,6 +5436,83 @@ app.put('/api/profile/addresses', authMiddleware, asyncHandler(async (req, res) 
   res.json({ addresses });
 }));
 
+app.get('/api/profile/dashboard', authMiddleware, asyncHandler(async (req, res) => {
+  const { user } = await findCurrentUser(req);
+  if (!user) return res.status(404).json({ error: 'User not found.' });
+  const orders = await readOrders();
+  const email = normalizeEmail(user.email);
+  const customerOrders = orders.filter((order) => normalizeEmail(order.customerEmail || order.customer?.email) === email);
+  const buckets = ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'return_requested']
+    .reduce((acc, status) => {
+      acc[status] = customerOrders.filter((order) => normalizeOrderStatus(order.orderStatus || order.status) === status).length;
+      return acc;
+    }, {});
+
+  res.json({
+    success: true,
+    user: toPublicUser(user),
+    orders: customerOrders,
+    orderSummary: {
+      total: customerOrders.length,
+      pending: buckets.pending,
+      processing: buckets.processing,
+      shipped: buckets.shipped,
+      delivered: buckets.delivered,
+      cancelled: buckets.cancelled,
+      returnRequests: buckets.return_requested
+    },
+    notifications: [
+      ...(user.emailVerified ? [] : [{ id: 'verify-email', type: 'account', title: 'Verify your email', body: 'Enter the code sent to your inbox to finish account verification.', createdAt: user.createdAt }]),
+      ...customerOrders.slice(0, 5).map((order) => ({
+        id: `order-${order.orderId}`,
+        type: 'order',
+        title: `Order ${order.orderId}`,
+        body: `Status: ${order.orderStatus || order.status || 'pending'}`,
+        createdAt: order.updatedAt || order.createdAt || order.date
+      }))
+    ]
+  });
+}));
+
+app.get('/api/profile/wishlist', authMiddleware, asyncHandler(async (req, res) => {
+  const { user } = await findCurrentUser(req);
+  if (!user) return res.status(404).json({ error: 'User not found.' });
+  res.json({ wishlist: Array.isArray(user.wishlist) ? user.wishlist : [] });
+}));
+
+app.put('/api/profile/wishlist', authMiddleware, asyncHandler(async (req, res) => {
+  const { users, idx } = await findCurrentUser(req);
+  if (idx < 0) return res.status(404).json({ error: 'User not found.' });
+  const wishlist = Array.isArray(req.body?.wishlist) ? req.body.wishlist : [];
+  users[idx].wishlist = wishlist
+    .map((item) => (typeof item === 'object' ? item : { productId: item }))
+    .map((item) => ({
+      productId: sanitizePlainText(item.productId || item.id || '', 80),
+      name: sanitizePlainText(item.name || '', 140),
+      image: sanitizePlainText(item.image || '', 260),
+      price: Number(item.price || 0),
+      addedAt: item.addedAt || new Date().toISOString()
+    }))
+    .filter((item) => item.productId);
+  await writeUsers(users);
+  res.json({ wishlist: users[idx].wishlist });
+}));
+
+app.get('/api/profile/export', authMiddleware, asyncHandler(async (req, res) => {
+  const { user } = await findCurrentUser(req);
+  if (!user) return res.status(404).json({ error: 'User not found.' });
+  const orders = await readOrders();
+  const email = normalizeEmail(user.email);
+  const customerOrders = orders.filter((order) => normalizeEmail(order.customerEmail || order.customer?.email) === email);
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Disposition', `attachment; filename="benzy-customer-record-${user.id}.json"`);
+  res.json({
+    exportedAt: new Date().toISOString(),
+    customer: toPublicUser(user),
+    orders: customerOrders
+  });
+}));
+
 app.get('/api/profile/wallet', authMiddleware, asyncHandler(async (req, res) => {
   const users = await readUsers();
   const idx = findUserIndexById(users, req.user?.id);
@@ -5036,6 +5609,190 @@ app.patch('/api/admin/orders/:orderId/confirm-payment', authMiddleware, asyncHan
     success: true,
     order: confirmedOrder
   });
+}));
+
+app.get('/api/admin/email-logs', authMiddleware, asyncHandler(async (req, res) => {
+  const ctx = await requireHost(req, res);
+  if (!ctx) return;
+  const collection = await getCollection('email_logs');
+  const logs = await collection.find({}, { projection: { _id: 0 } })
+    .sort({ createdAt: -1 })
+    .limit(200)
+    .toArray();
+  res.json({ success: true, logs });
+}));
+
+app.get('/api/admin/customer-segments', authMiddleware, asyncHandler(async (req, res) => {
+  const ctx = await requireHost(req, res);
+  if (!ctx) return;
+  const users = await readUsers();
+  const subscribers = await readSubscribers();
+  const segments = {
+    newsletterSubscribers: subscribers.length,
+    customers: users.filter((user) => String(user.customerSegment || 'customers') === 'customers').length,
+    vipCustomers: users.filter((user) => String(user.customerSegment || '').includes('vip') || user.notifications?.marketing).length,
+    leads: subscribers.filter((subscriber) => !users.some((user) => normalizeEmail(user.email) === normalizeEmail(subscriber.email))).length,
+    influencers: subscribers.filter((subscriber) => String(subscriber.source || '').toLowerCase().includes('influencer')).length,
+    brandAmbassadors: subscribers.filter((subscriber) => String(subscriber.source || '').toLowerCase().includes('ambassador')).length,
+    wholesaleCustomers: users.filter((user) => String(user.customerSegment || '').toLowerCase().includes('wholesale')).length
+  };
+  res.json({ success: true, segments });
+}));
+
+function buildSegmentRecipients(segment, users = [], subscribers = []) {
+  const normalizedSegment = String(segment || 'customers')
+    .trim()
+    .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
+    .toLowerCase()
+    .replace(/[\s-]+/g, '_');
+  const recipients = new Map();
+  const addRecipient = (email, name = '', source = '') => {
+    const safeEmail = normalizeEmail(email);
+    if (!isValidEmail(safeEmail) || recipients.has(safeEmail)) return;
+    recipients.set(safeEmail, {
+      email: safeEmail,
+      name: sanitizePlainText(name || safeEmail.split('@')[0], 80),
+      source: sanitizePlainText(source || normalizedSegment, 80)
+    });
+  };
+
+  if (['newsletter', 'newsletter_subscribers', 'leads', 'influencers', 'brand_ambassadors'].includes(normalizedSegment)) {
+    subscribers.forEach((subscriber) => {
+      const source = String(subscriber?.source || subscriber?.tags || '').toLowerCase();
+      if (normalizedSegment === 'leads' && users.some((user) => normalizeEmail(user.email) === normalizeEmail(subscriber.email))) return;
+      if (normalizedSegment === 'influencers' && !source.includes('influencer')) return;
+      if (normalizedSegment === 'brand_ambassadors' && !source.includes('ambassador')) return;
+      addRecipient(subscriber.email, subscriber.name, subscriber.source || 'newsletter');
+    });
+    return Array.from(recipients.values());
+  }
+
+  users.forEach((user) => {
+    const segmentValue = String(user?.customerSegment || 'customers').toLowerCase();
+    const marketing = Boolean(user?.notifications?.marketing);
+    const isVip = segmentValue.includes('vip') || marketing;
+    const isWholesale = segmentValue.includes('wholesale');
+    if (normalizedSegment === 'vip_customers' && !isVip) return;
+    if (normalizedSegment === 'wholesale_customers' && !isWholesale) return;
+    if (!['customers', 'vip_customers', 'wholesale_customers'].includes(normalizedSegment)) return;
+    if (normalizedSegment === 'customers' && String(user?.role || '') === 'host') return;
+    addRecipient(user.email, user.name, segmentValue || 'customers');
+  });
+
+  return Array.from(recipients.values());
+}
+
+app.post('/api/admin/email-campaigns', authMiddleware, asyncHandler(async (req, res) => {
+  const ctx = await requireHost(req, res);
+  if (!ctx) return;
+
+  const segment = sanitizePlainText(req.body?.segment || 'customers', 80);
+  const subject = sanitizePlainText(req.body?.subject || '', 160);
+  const message = sanitizeMultilineText(req.body?.message || '', 2400);
+  const ctaUrl = String(req.body?.ctaUrl || buildPublicUrl('/Shop.html') || buildPublicUrl('/')).trim();
+  const ctaLabel = sanitizePlainText(req.body?.ctaLabel || 'Shop Benzy Luxury', 60);
+  const campaignName = sanitizePlainText(req.body?.campaignName || `${segment}-campaign`, 120);
+
+  if (subject.length < 4) return res.status(400).json({ success: false, message: 'Campaign subject is required.' });
+  if (message.length < 10) return res.status(400).json({ success: false, message: 'Campaign message is too short.' });
+
+  const users = await readUsers();
+  const subscribers = await readSubscribers();
+  const recipients = buildSegmentRecipients(segment, users, subscribers).slice(0, 500);
+  const sent = [];
+  const failed = [];
+
+  for (const recipient of recipients) {
+    const htmlContent = `
+      <div style="margin:0;padding:32px 16px;background:#f6f0ea;font-family:Arial,Helvetica,sans-serif;color:#231711;">
+        <div style="max-width:680px;margin:0 auto;background:#ffffff;border:1px solid #eadfd3;border-radius:16px;overflow:hidden;">
+          <div style="padding:28px 32px;background:#111111;color:#ffffff;">
+            <div style="font-size:12px;letter-spacing:.24em;text-transform:uppercase;">BENZY LUXURY</div>
+            <h1 style="margin:12px 0 0;font-size:30px;line-height:1.2;">${escapeHtml(subject)}</h1>
+          </div>
+          <div style="padding:32px;">
+            <p style="margin:0 0 18px;font-size:16px;line-height:1.7;">Hi ${escapeHtml(recipient.name || 'there')},</p>
+            <p style="margin:0 0 22px;font-size:16px;line-height:1.7;white-space:pre-line;">${escapeHtml(message)}</p>
+            ${ctaUrl ? `<p style="margin:0 0 18px;"><a href="${escapeHtml(ctaUrl)}" style="display:inline-block;padding:14px 22px;border-radius:8px;background:#111111;color:#ffffff;text-decoration:none;font-weight:700;">${escapeHtml(ctaLabel)}</a></p>` : ''}
+            <p style="margin:28px 0 0;font-size:14px;line-height:1.7;color:#6b5a4d;">Benzy Luxury</p>
+          </div>
+        </div>
+      </div>
+    `;
+
+    try {
+      const result = await sendTransactionalEmail({
+        toEmail: recipient.email,
+        toName: recipient.name,
+        subject,
+        htmlContent,
+        textContent: `${message}\n\n${ctaUrl}`,
+        tags: ['campaign', campaignName, segment]
+      });
+      sent.push(recipient.email);
+      await recordEmailLog({
+        type: 'promotional_campaign',
+        toEmail: recipient.email,
+        subject,
+        status: 'sent',
+        messageId: result?.messageId || '',
+        metadata: { campaignName, segment, sentBy: normalizeEmail(ctx.current?.email || '') }
+      });
+    } catch (error) {
+      failed.push({ email: recipient.email, error: error?.message || 'Send failed.' });
+      await recordEmailLog({
+        type: 'promotional_campaign',
+        toEmail: recipient.email,
+        subject,
+        status: 'failed',
+        error: error?.message || 'Send failed.',
+        metadata: { campaignName, segment, sentBy: normalizeEmail(ctx.current?.email || '') }
+      });
+    }
+  }
+
+  res.status(202).json({
+    success: true,
+    campaign: { name: campaignName, segment, recipients: recipients.length, sent: sent.length, failed: failed.length },
+    sent,
+    failed
+  });
+}));
+
+app.get('/api/admin/support-messages', authMiddleware, asyncHandler(async (req, res) => {
+  const ctx = await requireHost(req, res);
+  if (!ctx) return;
+  const collection = await getCollection('contact_messages');
+  const messages = await collection.find({}, { projection: { _id: 0 } })
+    .sort({ createdAt: -1 })
+    .limit(100)
+    .toArray();
+  res.json({ success: true, messages });
+}));
+
+app.patch('/api/admin/support-messages/:messageId', authMiddleware, asyncHandler(async (req, res) => {
+  const ctx = await requireHost(req, res);
+  if (!ctx) return;
+  const messageId = sanitizePlainText(req.params.messageId || '', 120);
+  const status = sanitizePlainText(req.body?.status || 'in_progress', 40);
+  const internalNote = sanitizeMultilineText(req.body?.internalNote || '', 1200);
+  const updatedAt = new Date().toISOString();
+  const collection = await getCollection('contact_messages');
+  const result = await collection.findOneAndUpdate(
+    { _id: messageId },
+    {
+      $set: {
+        status,
+        internalNote,
+        updatedAt,
+        handledBy: normalizeEmail(ctx.current?.email || '')
+      }
+    },
+    { returnDocument: 'after', projection: { _id: 0 } }
+  );
+  const message = result?.value || result;
+  if (!message) return res.status(404).json({ success: false, message: 'Support message not found.' });
+  res.json({ success: true, message });
 }));
 
 // ============ ADMIN USERS API ============

@@ -10,6 +10,22 @@ window.addEventListener("load", function () {
   }, 3000);
 });
 
+function readBenzyStoredApiBase() {
+  const stored = String(localStorage.getItem("benzy_api_base") || "").trim();
+  if (!stored) return "";
+  try {
+    const hostname = new URL(stored).hostname;
+    if (["localhost", "127.0.0.1", "::1"].includes(hostname)) {
+      localStorage.removeItem("benzy_api_base");
+      return "";
+    }
+  } catch {
+    localStorage.removeItem("benzy_api_base");
+    return "";
+  }
+  return stored;
+}
+
 (function () {
   const root = document.documentElement;
 
@@ -127,7 +143,7 @@ window.addEventListener("load", function () {
   const API_BASES = (() => {
     const bases = [];
     const origin = window.location.origin;
-    const stored = localStorage.getItem("benzy_api_base");
+    const stored = readBenzyStoredApiBase();
     bases.push("https://benzy-luxury-website.onrender.com");
     if (stored && stored !== origin) bases.push(stored);
     return Array.from(new Set(bases));
@@ -265,7 +281,7 @@ window.addEventListener("load", function () {
   const API_BASES = (() => {
     const bases = [];
     const origin = window.location.origin;
-    const stored = localStorage.getItem("benzy_api_base");
+    const stored = readBenzyStoredApiBase();
     bases.push("https://benzy-luxury-website.onrender.com");
     if (stored && stored !== origin) bases.push(stored);
     return Array.from(new Set(bases));
@@ -1179,7 +1195,7 @@ window.addEventListener("load", function () {
   if (!page || !list) return;
   const TOKEN_KEY = "benzy_admin_auth_token";
   const LOGIN_INTENT_KEY = "benzy_login_intent";
-  const storedApiBase = localStorage.getItem("benzy_api_base");
+  const storedApiBase = readBenzyStoredApiBase();
   const API_BASE = storedApiBase && storedApiBase !== window.location.origin
     ? storedApiBase
     : "https://benzy-luxury-website.onrender.com";
@@ -1764,7 +1780,7 @@ window.addEventListener("load", function () {
   const RESIDENT_TOKEN_KEY = "benzy_auth_token";
   const ADMIN_TOKEN_KEY = "benzy_admin_auth_token";
   const LOGIN_INTENT_KEY = "benzy_login_intent";
-  const storedApiBase = localStorage.getItem("benzy_api_base");
+  const storedApiBase = readBenzyStoredApiBase();
   const API_BASE = storedApiBase && storedApiBase !== window.location.origin
     ? storedApiBase
     : "https://benzy-luxury-website.onrender.com";
@@ -2020,7 +2036,7 @@ window.addEventListener("load", function () {
 
   const TOKEN_KEY = "benzy_auth_token";
   const LOGIN_INTENT_KEY = "benzy_login_intent";
-  const storedApiBase = localStorage.getItem("benzy_api_base");
+  const storedApiBase = readBenzyStoredApiBase();
   const API_BASE = storedApiBase && storedApiBase !== window.location.origin
     ? storedApiBase
     : "https://benzy-luxury-website.onrender.com";
@@ -2793,7 +2809,7 @@ const CART_STORAGE_KEY = "benzy_cart_items";
 function getProductApiBases() {
   const bases = [];
   const origin = window.location.origin;
-  const stored = localStorage.getItem("benzy_api_base");
+  const stored = readBenzyStoredApiBase();
   bases.push("https://benzy-luxury-website.onrender.com");
   if (stored && stored !== origin) bases.push(stored);
   return Array.from(new Set(bases));
@@ -5129,7 +5145,7 @@ function productToCardHtml(product, cardClass) {
   const API_BASES = (() => {
     const bases = [];
     const origin = window.location.origin;
-    const stored = localStorage.getItem("benzy_api_base");
+    const stored = readBenzyStoredApiBase();
     bases.push("https://benzy-luxury-website.onrender.com");
     if (stored && stored !== origin) bases.push(stored);
     return Array.from(new Set(bases));
@@ -6452,7 +6468,7 @@ function productToCardHtml(product, cardClass) {
   if (!isLocal) return;
   if (localStorage.getItem("benzy_hide_api_banner") === "1") return;
 
-  const apiBase = localStorage.getItem("benzy_api_base") || "https://benzy-luxury-website.onrender.com";
+  const apiBase = readBenzyStoredApiBase() || "https://benzy-luxury-website.onrender.com";
   if (!document.body) return;
 
   const banner = document.createElement("div");
@@ -6481,7 +6497,7 @@ function productToCardHtml(product, cardClass) {
   const API_BASES = (() => {
     const bases = [];
     const origin = window.location.origin;
-    const stored = localStorage.getItem("benzy_api_base");
+    const stored = readBenzyStoredApiBase();
     bases.push("https://benzy-luxury-website.onrender.com");
     if (stored && stored !== origin) bases.push(stored);
     return Array.from(new Set(bases));

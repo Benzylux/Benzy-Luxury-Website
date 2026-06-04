@@ -66,7 +66,8 @@ async function ensureIndexes(database) {
     database.collection('orders').createIndex({ orderId: 1 }, { unique: true, sparse: true }),
     database.collection('orders').createIndex({ customerEmail: 1 }),
     database.collection('subscribers').createIndex({ email: 1 }, { unique: true, sparse: true }),
-    database.collection('subscribers').createIndex({ discountCode: 1 }, { unique: true, sparse: true })
+    database.collection('subscribers').createIndex({ discountCode: 1 }, { unique: true, sparse: true }),
+    database.collection('product_uploads').createIndex({ fileName: 1 }, { unique: true })
   ]);
 }
 

@@ -56,6 +56,22 @@
     return allowed.includes(fallbackCode) ? fallbackCode : "";
   }
 
+  function readStoredApiBase() {
+    const stored = String(localStorage.getItem(API_BASE_STORAGE_KEY) || "").trim();
+    if (!stored) return "";
+    try {
+      const hostname = new URL(stored).hostname;
+      if (["localhost", "127.0.0.1", "::1"].includes(hostname)) {
+        localStorage.removeItem(API_BASE_STORAGE_KEY);
+        return "";
+      }
+    } catch {
+      localStorage.removeItem(API_BASE_STORAGE_KEY);
+      return "";
+    }
+    return stored;
+  }
+
   function normalizeCurrencyList(list, fallbackList, allowedCurrencies = DEFAULT_SUPPORTED_CURRENCIES) {
     const allowed = Array.isArray(allowedCurrencies) && allowedCurrencies.length
       ? allowedCurrencies.map((entry) => String(entry || "").trim().toUpperCase())
@@ -225,7 +241,7 @@
 
   function getApiBases() {
     const bases = [];
-    const storedBase = localStorage.getItem(API_BASE_STORAGE_KEY);
+    const storedBase = readStoredApiBase();
     const origin = window.location.origin;
 
     bases.push(FALLBACK_API_BASE);

@@ -363,7 +363,23 @@
       var bankDetailsEl = document.getElementById('bank-details');
       var paymentOptions = document.querySelectorAll('input[name="payment"]');
       var currencySelect = document.getElementById('currency-select');
-      var storedApiBase = localStorage.getItem('benzy_api_base');
+      function readStoredApiBase() {
+        var stored = String(localStorage.getItem('benzy_api_base') || '').trim();
+        if (!stored) return '';
+        try {
+          var hostname = new URL(stored).hostname;
+          if (['localhost', '127.0.0.1', '::1'].indexOf(hostname) !== -1) {
+            localStorage.removeItem('benzy_api_base');
+            return '';
+          }
+        } catch (error) {
+          localStorage.removeItem('benzy_api_base');
+          return '';
+        }
+        return stored;
+      }
+
+      var storedApiBase = readStoredApiBase();
       var API_BASE = storedApiBase && storedApiBase !== window.location.origin
         ? storedApiBase
         : 'https://benzy-luxury-website.onrender.com';
