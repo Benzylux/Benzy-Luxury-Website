@@ -47,7 +47,7 @@ const DEFAULT_CONTENT = {
   },
   aboutUs: 'Benzy Luxury blends premium streetwear energy with polished tailoring and modern African fashion culture.',
   contactInfo: {
-    email: 'benzyluxury@gmail.com',
+    email: 'admin@benzyluxury.com',
     phone: '+234 701 154 7813',
     address: 'Lagos, Nigeria'
   },
@@ -111,7 +111,7 @@ const DEFAULT_CONTENT = {
 };
 
 const CONTACT_INFO_DEFAULTS = Object.freeze({
-  email: 'benzyluxury@gmail.com',
+  email: 'admin@benzyluxury.com',
   phone: '+234 701 154 7813',
   address: 'Lagos, Nigeria'
 });
@@ -1477,7 +1477,7 @@ function createAdminRouter(dependencies) {
   function buildContactResolvedEmail(messageRecord) {
     const name = safeString(messageRecord?.name || 'there', 80) || 'there';
     const subject = safeString(messageRecord?.subject || 'your message', 120) || 'your message';
-    const supportEmail = safeString(DEFAULT_CONTENT.contactInfo.email || 'benzyluxury@gmail.com', 160);
+    const supportEmail = safeString(DEFAULT_CONTENT.contactInfo.email || 'admin@benzyluxury.com', 160);
     const html = `
       <div style="margin:0;padding:0;background:#f7f1ea;font-family:Arial,sans-serif;color:#231711;">
         <div style="max-width:640px;margin:0 auto;padding:32px 18px;">

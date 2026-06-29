@@ -379,7 +379,7 @@ function readBenzyStoredApiBase() {
   }
 
   const CONTACT_INFO_DEFAULTS = Object.freeze({
-    email: "benzyluxury@gmail.com",
+    email: "admin@benzyluxury.com",
     phone: "+234 701 154 7813",
     address: "Lagos, Nigeria"
   });
@@ -1199,7 +1199,7 @@ function readBenzyStoredApiBase() {
   const API_BASE = storedApiBase && storedApiBase !== window.location.origin
     ? storedApiBase
     : "https://benzy-luxury-website.onrender.com";
-  const LEGACY_ADMIN_EMAILS = ["benzyluxury@gmail.com"];
+  const LEGACY_ADMIN_EMAILS = ["admin@benzyluxury.com"];
   const ACCOUNT_KEY_PREFIX = "benzy_account_";
   const ACCOUNT_ORDERS_SUFFIX = "_orders";
   const ORDER_STATUSES = ["Placed", "Confirmed", "Processing", "Shipped", "Delivered", "Cancelled"];
@@ -1788,7 +1788,7 @@ function readBenzyStoredApiBase() {
   const LOGIN_PAGE_URL = "Profile.html";
   const RESIDENT_HOME_URL = "Profile.html";
   const ADMIN_PAGE_URL = "AdminDashboard.html";
-  const LEGACY_ADMIN_EMAILS = ["benzyluxury@gmail.com"];
+  const LEGACY_ADMIN_EMAILS = ["admin@benzyluxury.com"];
 
   function getResidentToken() {
     return localStorage.getItem(RESIDENT_TOKEN_KEY) || "";

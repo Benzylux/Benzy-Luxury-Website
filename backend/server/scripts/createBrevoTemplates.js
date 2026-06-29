@@ -94,7 +94,7 @@ function baseHtml(title, body, content) {
           <p style="margin:0 0 18px;font-size:16px;line-height:1.7;">Hi {{ params.firstName | default:'there' }},</p>
           <p style="margin:0 0 22px;font-size:16px;line-height:1.7;">${body}</p>
           ${content || ''}
-          <p style="margin:28px 0 0;font-size:14px;line-height:1.7;color:#6b5a4d;">Benzy Luxury<br>{{ params.supportEmail | default:'benzyluxury@gmail.com' }}</p>
+          <p style="margin:28px 0 0;font-size:14px;line-height:1.7;color:#6b5a4d;">Benzy Luxury<br>{{ params.supportEmail | default:'admin@benzyluxury.com' }}</p>
         </div>
       </div>
     </div>
@@ -187,7 +187,7 @@ async function getExistingTemplates() {
 }
 
 async function upsertTemplate(template, existingTemplates) {
-  const senderEmail = env('BREVO_SENDER_EMAIL', 'benzyluxury@gmail.com');
+  const senderEmail = env('BREVO_SENDER_EMAIL', 'admin@benzyluxury.com');
   const senderName = env('BREVO_SENDER_NAME', 'Benzy Luxury');
   const found = existingTemplates.find((entry) => String(entry.name || '').trim() === template.templateName);
   const payload = {

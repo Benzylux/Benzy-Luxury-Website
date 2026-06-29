@@ -94,7 +94,7 @@ const ADMIN_EMAILS = String(process.env.ADMIN_EMAILS || 'admin@benzyluxury.com')
   .map((email) => String(email || '').trim().toLowerCase())
   .filter(Boolean);
 const CONTACT_INFO_DEFAULTS = Object.freeze({
-  email: 'benzyluxury@gmail.com',
+  email: 'admin@benzyluxury.com',
   phone: '+234 701 154 7813',
   address: 'Lagos, Nigeria'
 });

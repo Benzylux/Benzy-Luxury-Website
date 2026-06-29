@@ -927,7 +927,7 @@ function buildInvoiceReceiptPdf(orderData = {}, currency = 'NGN') {
   text(48, 730, 14, 'LUX', 'F2');
   text(108, 756, 20, 'BENZY LUXURY', 'F2');
   text(108, 737, 10, 'benzyluxury.com');
-  text(108, 721, 10, 'benzyluxury@gmail.com');
+  text(108, 721, 10, 'admin@benzyluxury.com');
   text(108, 705, 10, '+2347011547813');
 
   textRight(576, 756, 18, 'Receipt', 'F2');
