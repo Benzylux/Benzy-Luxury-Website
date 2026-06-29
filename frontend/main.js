@@ -73,7 +73,7 @@ function readBenzyStoredApiBase() {
           <h3 class="bl-site-footer__headline" data-site-footer-headline>Benzy Luxury</h3>
           <p class="bl-site-footer__summary" data-site-footer-summary>At Benzy Luxury, we believe that fashion is an expression of individuality and artistry.</p>
           <div class="bl-site-footer__socials" aria-label="Social links">
-            <a href="https://x.com/benzylux" aria-label="X" target="_blank" rel="noopener noreferrer">
+            <a href="https://x.com/benzyluxury" aria-label="X" target="_blank" rel="noopener noreferrer">
               <img src="OFF BACK/icons8-x-50.png" alt="X">
             </a>
             <a href="https://www.instagram.com/benzyluxury_" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
@@ -3803,6 +3803,10 @@ function productToCardHtml(product, cardClass) {
     "Model shoot/IMG_0024.JPG",
     "Model shoot/IMG_9997.JPG"
   ];
+  homeHeroImages.forEach((src) => {
+    const image = new Image();
+    image.src = src;
+  });
   if (!grid) return;
   await BENZY_PRODUCTS_READY;
 
@@ -4046,7 +4050,7 @@ function productToCardHtml(product, cardClass) {
     const curatedNewIn = byNewest.filter(isNewCollectionProduct);
     const newInPool = curatedNewIn.length >= 4 ? curatedNewIn : byNewest.slice(0, Math.max(4, Math.min(8, byNewest.length)));
     const newIn = shuffleProducts(newInPool).slice(0, 4);
-    const allProducts = shuffleProducts(BENZY_PRODUCTS).slice(0, 12);
+    const allProducts = shuffleProducts(BENZY_PRODUCTS);
 
     if (shopHomeNewInGrid) {
       shopHomeNewInGrid.innerHTML = newIn.map((product) => productToCardHtml(product, "shop-card")).join("");
@@ -4066,10 +4070,15 @@ function productToCardHtml(product, cardClass) {
     if (!nextSrc) return;
     homeHeroIndex = safeIndex;
     shopHomeHeroImage.style.opacity = "0.55";
-    window.setTimeout(function () {
+    const nextImage = new Image();
+    nextImage.onload = function () {
       shopHomeHeroImage.src = nextSrc;
       shopHomeHeroImage.style.opacity = "1";
-    }, 140);
+    };
+    nextImage.onerror = function () {
+      shopHomeHeroImage.style.opacity = "1";
+    };
+    nextImage.src = nextSrc;
     syncHomeHeroDots();
     syncHomeHeroCta();
   }

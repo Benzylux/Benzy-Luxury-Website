@@ -196,7 +196,7 @@ nav ul li p{
 }
 
 .nav-links a::after {
-  content: ;
+  content: "";
   position: absolute;
   left: 0;
   bottom: 0;
@@ -843,7 +843,7 @@ body > .currency-inline select {
 }
 
 .chat-widget-subhead::after {
-  content: ;
+  content: "";
   position: absolute;
   left: -12%;
   right: -12%;
@@ -1827,7 +1827,7 @@ body.shop-home-mode .logo-blx {
 }
 
 .shop-home-hero-dot.is-active::before {
-  content: ;
+  content: "";
   position: absolute;
   left: 50%;
   top: 50%;
@@ -1839,7 +1839,7 @@ body.shop-home-mode .logo-blx {
 }
 
 .shop-home-hero-dot.is-active::after {
-  content: ;
+  content: "";
   position: absolute;
   inset: -2px;
   border-radius: 50%;
@@ -1994,7 +1994,7 @@ body.shop-home-mode .logo-blx {
 }
 
 .shop-home-split-card::before {
-  content: ;
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.58));
@@ -13168,7 +13168,7 @@ body.profile-body {
 
 .toggle-switch .slider::before {
   position: absolute;
-  content: ;
+  content: "";
   height: 22px;
   width: 22px;
   left: 3px;

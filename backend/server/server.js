@@ -111,6 +111,8 @@ const DEFAULT_CORS_ORIGINS = [
   'http://localhost:4173',
   'http://localhost:4174',
   'https://benzy-luxury-website.onrender.com',
+  'https://benzyluxury.com',
+  'https://www.benzyluxury.com',
   'https://benzyluxury.com.ng',
   'https://www.benzyluxury.com.ng'
 ];
@@ -671,7 +673,7 @@ function buildAdminNotificationHtml(title, intro, rows = []) {
             <tbody>${safeRows}</tbody>
           </table>
           <div style="margin-top:28px;text-align:center;">
-            <a href="https://benzyluxury.com.ng/AdminDashboard.html" style="display:block;padding:14px 18px;border:1px solid #009e49;color:#009e49;text-decoration:none;font-size:16px;font-weight:700;">Open Admin Dashboard</a>
+            <a href="https://benzyluxury.com/AdminDashboard.html" style="display:block;padding:14px 18px;border:1px solid #009e49;color:#009e49;text-decoration:none;font-size:16px;font-weight:700;">Open Admin Dashboard</a>
           </div>
         </div>
       </div>

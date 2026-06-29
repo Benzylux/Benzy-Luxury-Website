@@ -926,7 +926,7 @@ function buildInvoiceReceiptPdf(orderData = {}, currency = 'NGN') {
   text(44, 747, 14, 'BENZY', 'F2');
   text(48, 730, 14, 'LUX', 'F2');
   text(108, 756, 20, 'BENZY LUXURY', 'F2');
-  text(108, 737, 10, 'benzyluxury.com.ng');
+  text(108, 737, 10, 'benzyluxury.com');
   text(108, 721, 10, 'benzyluxury@gmail.com');
   text(108, 705, 10, '+2347011547813');
 
@@ -1018,7 +1018,7 @@ function buildInvoiceReceiptPdf(orderData = {}, currency = 'NGN') {
 
   line(36, 74, 576, 74);
   textCenter(306, 58, 10, 'Thank you for doing business with us', 'F2');
-  textCenter(306, 44, 8, 'Powered by Benzy Luxury | benzyluxury.com.ng');
+  textCenter(306, 44, 8, 'Powered by Benzy Luxury | benzyluxury.com');
   textCenter(306, 28, 8, 'Page 1', 'F2');
 
   return buildPdfFromContent(commands.join('\n'), pageWidth, pageHeight);
@@ -1186,7 +1186,7 @@ async function sendOrderConfirmation(email, orderData = {}) {
             </td>
             <td align="right" style="vertical-align:middle;">
               <div style="font-family:Georgia,serif;font-size:28px;font-weight:700;font-style:italic;letter-spacing:0.04em;">Benzy Luxury</div>
-              <a href="${escapeHtml(buildPublicUrl('/') || 'https://benzyluxury.com.ng')}" style="font-size:15px;color:#2b7de9;text-decoration:underline;">benzyluxury.com.ng</a>
+              <a href="${escapeHtml(buildPublicUrl('/') || 'https://benzyluxury.com')}" style="font-size:15px;color:#2b7de9;text-decoration:underline;">benzyluxury.com</a>
             </td>
           </tr>
         </table>
@@ -1243,7 +1243,7 @@ async function sendOrderConfirmation(email, orderData = {}) {
           ` : ''}
           <div style="padding:28px 20px;background:#f7f7f7;text-align:center;color:#999999;">
             <div style="font-family:Georgia,serif;font-size:18px;font-style:italic;">Benzy Luxury</div>
-            <a href="${escapeHtml(buildPublicUrl('/') || 'https://benzyluxury.com.ng')}" style="display:inline-block;margin-top:10px;color:#2b7de9;text-decoration:underline;">benzyluxury.com.ng</a>
+            <a href="${escapeHtml(buildPublicUrl('/') || 'https://benzyluxury.com')}" style="display:inline-block;margin-top:10px;color:#2b7de9;text-decoration:underline;">benzyluxury.com</a>
           </div>
       </div>
     </div>
