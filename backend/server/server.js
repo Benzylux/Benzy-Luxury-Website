@@ -93,6 +93,11 @@ const ADMIN_EMAILS = String(process.env.ADMIN_EMAILS || 'admin@benzyluxury.com')
   .split(',')
   .map((email) => String(email || '').trim().toLowerCase())
   .filter(Boolean);
+const PRIMARY_ADMIN_EMAIL = 'admin@benzyluxury.com';
+const LEGACY_ADMIN_EMAILS = new Set([
+  'benzyluxury@gmail.com',
+  '2347011547813@host.local'
+]);
 const CONTACT_INFO_DEFAULTS = Object.freeze({
   email: 'admin@benzyluxury.com',
   phone: '+234 701 154 7813',
@@ -505,6 +510,22 @@ async function readSingletonDocument(collectionName, id, defaults) {
 
 function normalizeEmail(value) {
   return String(value || '').trim().toLowerCase();
+}
+
+function isPrimaryAdminEmail(email) {
+  return normalizeEmail(email) === PRIMARY_ADMIN_EMAIL;
+}
+
+function isLegacyAdminEmail(email) {
+  return LEGACY_ADMIN_EMAILS.has(normalizeEmail(email));
+}
+
+function findLoginUserByEmail(users, email) {
+  const normalizedEmail = normalizeEmail(email);
+  const exactUser = users.find((user) => normalizeEmail(user?.email) === normalizedEmail);
+  if (exactUser || !isPrimaryAdminEmail(normalizedEmail)) return exactUser || null;
+
+  return users.find((user) => isLegacyAdminEmail(user?.email) && isHostUser(user)) || null;
 }
 
 const DEFAULT_NOTIFICATION_SETTINGS = Object.freeze({
@@ -5088,7 +5109,7 @@ app.post('/api/auth/login', asyncHandler(async (req, res) => {
   const password = String(req.body?.password || '');
 
   const users = await readUsers();
-  const user = users.find((u) => u.email === email);
+  const user = findLoginUserByEmail(users, email);
   if (!user) return res.status(401).json({ error: 'Invalid email or password.' });
   if (user.isBanned) {
     return res.status(403).json({ error: 'This account has been restricted. Please contact support.' });
@@ -5097,6 +5118,11 @@ app.post('/api/auth/login', asyncHandler(async (req, res) => {
   const valid = await bcrypt.compare(password, user.passwordHash || '');
   if (!valid) return res.status(401).json({ error: 'Invalid email or password.' });
 
+  if (isPrimaryAdminEmail(email) && isLegacyAdminEmail(user.email)) {
+    user.email = PRIMARY_ADMIN_EMAIL;
+    user.role = 'host';
+    user.adminRole = normalizeAdminRoleValue(user.adminRole, user);
+  }
   user.lastLoginAt = new Date().toISOString();
   await writeUsers(users);
   await sendAdminCustomerActivityEmail(user, 'logged in', {
