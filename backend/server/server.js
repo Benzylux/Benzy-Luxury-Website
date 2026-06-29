@@ -89,7 +89,7 @@ const COUNTRY_HEADER_KEYS = [
   'x-appengine-country',
   'fastly-client-country-code'
 ];
-const ADMIN_EMAILS = String(process.env.ADMIN_EMAILS || '2347011547813@host.local,benzyluxury@gmail.com')
+const ADMIN_EMAILS = String(process.env.ADMIN_EMAILS || 'admin@benzyluxury.com')
   .split(',')
   .map((email) => String(email || '').trim().toLowerCase())
   .filter(Boolean);
