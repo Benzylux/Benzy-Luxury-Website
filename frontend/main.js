@@ -2815,6 +2815,37 @@ function getProductApiBases() {
   return Array.from(new Set(bases));
 }
 
+function getProductCategoryTokens(product) {
+  const rawValues = [
+    ...(Array.isArray(product?.categoryIds) ? product.categoryIds : []),
+    ...(Array.isArray(product?.categories) ? product.categories : []),
+    product?.category,
+    product?.categoryId,
+    product?.categoryName
+  ];
+  const knownCategories = ["men", "women", "accessories"];
+  const tokens = [];
+
+  rawValues.forEach((entry) => {
+    const raw = String(entry || "").trim();
+    if (!raw) return;
+    const normalized = raw.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    knownCategories.forEach((category) => {
+      const matcher = new RegExp(`(^|-)${category}(-|$)`, "i");
+      if (matcher.test(normalized) && !tokens.includes(category)) tokens.push(category);
+    });
+    raw
+      .split(/[,/&|]+|\band\b|\s+/i)
+      .map((value) => value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""))
+      .filter(Boolean)
+      .forEach((value) => {
+        if (!tokens.includes(value)) tokens.push(value);
+      });
+  });
+
+  return tokens;
+}
+
 function normalizeLiveProduct(raw, index) {
   const productId = String(raw?.productId || raw?.id || "").trim();
   const metadata = raw?.metadata && typeof raw.metadata === "object" ? raw.metadata : {};
@@ -2850,13 +2881,16 @@ function normalizeLiveProduct(raw, index) {
   );
   const stockQuantity = Number.parseInt(String(raw?.stockQuantity ?? 0), 10);
 
+  const categoryTokens = getProductCategoryTokens(raw);
+
   return {
     id: productId || `live-${index}`,
     productId: productId || `live-${index}`,
     name: String(raw?.name || "Product").trim(),
     priceNgn: Number.isFinite(priceNgn) ? priceNgn : 0,
     discountPriceNgn: Number.isFinite(discountPriceNgn) ? discountPriceNgn : 0,
-    category: String(raw?.category || raw?.categoryId || "all").trim().toLowerCase() || "all",
+    category: categoryTokens[0] || "all",
+    categoryIds: categoryTokens,
     categoryName: String(raw?.categoryName || "").trim(),
     inStock: raw?.inStock !== false && (!Number.isFinite(stockQuantity) || stockQuantity > 0),
     stockQuantity: Number.isFinite(stockQuantity) ? Math.max(0, stockQuantity) : 0,
@@ -3016,14 +3050,14 @@ function isJerseyProduct(product) {
 
 function productCategoryTags(product) {
   if (isJerseyProduct(product)) return "men women";
-  return String(product?.category || "all").toLowerCase();
+  return getProductCategoryTokens(product).join(" ") || "all";
 }
 
 function productMatchesCategory(product, cat) {
   const normalizedCat = String(cat || "all").toLowerCase();
   if (normalizedCat === "all") return true;
   if ((normalizedCat === "men" || normalizedCat === "women") && isJerseyProduct(product)) return true;
-  return String(product?.category || "").toLowerCase() === normalizedCat;
+  return getProductCategoryTokens(product).includes(normalizedCat);
 }
 
 function isProductInStock(product) {

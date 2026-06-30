@@ -17,6 +17,7 @@ const productSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
   slug: { type: String, trim: true, default: '' },
   categoryId: { type: String, trim: true, default: 'all' },
+  categoryIds: { type: [String], default: [] },
   categoryName: { type: String, trim: true, default: 'All' },
   price: { type: Number, min: 0, required: true },
   currency: { type: String, trim: true, default: 'NGN' },

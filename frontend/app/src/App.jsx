@@ -6,18 +6,54 @@ import ProductCard from './components/ProductCard.jsx';
 import { useStore } from './context/StoreContext.jsx';
 import { assetUrl } from './lib/api.js';
 
+function getCategoryTokens(product) {
+  const rawValues = [
+    ...(Array.isArray(product.categoryIds) ? product.categoryIds : []),
+    product.categoryId,
+    product.categoryName
+  ];
+  const knownCategories = ['men', 'women', 'accessories'];
+  const tokens = [];
+
+  rawValues.forEach((entry) => {
+    const raw = String(entry || '').trim();
+    if (!raw) return;
+    const normalized = raw.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    knownCategories.forEach((category) => {
+      const matcher = new RegExp(`(^|-)${category}(-|$)`, 'i');
+      if (matcher.test(normalized) && !tokens.includes(category)) tokens.push(category);
+    });
+    raw
+      .split(/[,/&|]+|\band\b|\s+/i)
+      .map((value) => value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''))
+      .filter(Boolean)
+      .forEach((value) => {
+        if (!tokens.includes(value)) tokens.push(value);
+      });
+  });
+
+  return tokens;
+}
+
 export default function App() {
   const { products } = useStore();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
 
   const categories = useMemo(() => {
-    const names = products.map((product) => product.categoryName || product.categoryId || 'Collection');
+    const names = products.flatMap((product) => getCategoryTokens(product).map((value) => {
+      const lower = value.toLowerCase();
+      if (lower === 'men') return 'Men';
+      if (lower === 'women') return 'Women';
+      if (lower === 'accessories') return 'Accessories';
+      return value;
+    }));
     return ['all', ...Array.from(new Set(names))];
   }, [products]);
 
   const filteredProducts = products.filter((product) => {
-    const matchesCategory = category === 'all' || product.categoryName === category || product.categoryId === category;
+    const productCategories = getCategoryTokens(product).map((value) => value.toLowerCase());
+    const matchesCategory = category === 'all' || productCategories.includes(category.toLowerCase());
     const matchesSearch = product.name.toLowerCase().includes(query.toLowerCase());
     return matchesCategory && matchesSearch;
   });

@@ -696,6 +696,32 @@ function createAdminRouter(dependencies) {
       .replace(/^-+|-+$/g, '');
   }
 
+  const productCategoryAliases = ['men', 'women', 'accessories'];
+
+  function extractProductCategoryIds(value) {
+    const rawValues = Array.isArray(value) ? value : [value];
+    const ids = [];
+
+    rawValues.forEach((entry) => {
+      const raw = String(entry || '').trim();
+      if (!raw) return;
+      const normalized = slugify(raw);
+      productCategoryAliases.forEach((alias) => {
+        const matcher = new RegExp(`(^|-)${alias}(-|$)`, 'i');
+        if (matcher.test(normalized) && !ids.includes(alias)) ids.push(alias);
+      });
+      raw
+        .split(/[,/&|]+|\band\b|\s+/i)
+        .map((part) => slugify(part))
+        .filter(Boolean)
+        .forEach((part) => {
+          if (!ids.includes(part)) ids.push(part);
+        });
+    });
+
+    return ids;
+  }
+
   function capitalizeWords(value) {
     return String(value || '')
       .split(/[\s_-]+/)
@@ -1147,6 +1173,7 @@ function createAdminRouter(dependencies) {
       name: safeString(product?.name || '', 120),
       slug: safeString(product?.slug || '', 160),
       categoryId: safeString(product?.categoryId || 'all', 80).toLowerCase(),
+      categoryIds: Array.isArray(product?.categoryIds) ? product.categoryIds.filter(Boolean) : [safeString(product?.categoryId || 'all', 80).toLowerCase()],
       categoryName: safeString(product?.categoryName || 'All', 80),
       price: toPositiveNumber(product?.price, 0),
       discountPrice: metadata.discountPrice == null ? null : toPositiveNumber(metadata.discountPrice, 0),
@@ -1191,8 +1218,24 @@ function createAdminRouter(dependencies) {
     );
     const sizes = parseArrayInput(body?.sizes || existing?.metadata?.availableSizes || []);
     const colors = parseArrayInput(body?.colors || existing?.metadata?.availableColors || []);
-    const categoryId = slugify(body?.categoryId || body?.categoryName || existing?.categoryId || 'all') || 'all';
-    const categoryName = safeString(body?.categoryName || capitalizeWords(categoryId) || existing?.categoryName || 'All', 80);
+    const categorySource = body?.categoryIds
+      || body?.categories
+      || body?.categoryName
+      || body?.categoryId
+      || existing?.categoryIds
+      || existing?.categoryName
+      || existing?.categoryId
+      || 'all';
+    const categoryIds = extractProductCategoryIds(categorySource);
+    const safeCategoryIds = categoryIds.length ? categoryIds : ['all'];
+    const categoryId = safeCategoryIds[0];
+    const categoryName = safeString(
+      body?.categoryName
+      || existing?.categoryName
+      || safeCategoryIds.map((id) => capitalizeWords(id)).join(', ')
+      || 'All',
+      120
+    );
     const sku = safeString(body?.sku || existing?.metadata?.sku || `BLX-${productId.slice(-6).toUpperCase()}`, 80);
     const isActive = toBoolean(body?.isActive ?? body?.published, existing?.isActive !== false);
     const featured = toBoolean(body?.featured ?? body?.isFeatured, toBoolean(existing?.metadata?.featured, false));
@@ -1208,6 +1251,7 @@ function createAdminRouter(dependencies) {
       name,
       slug: slugify(body?.slug || name),
       categoryId,
+      categoryIds: safeCategoryIds,
       categoryName,
       price,
       currency: safeString(body?.currency || existing?.currency || 'NGN', 10).toUpperCase(),

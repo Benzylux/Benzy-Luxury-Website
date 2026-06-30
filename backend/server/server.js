@@ -2545,13 +2545,65 @@ function normalizeProductSlug(value) {
     .replace(/^-+|-+$/g, '');
 }
 
+const PRODUCT_CATEGORY_ALIASES = Object.freeze(['men', 'women', 'accessories']);
+
+function extractProductCategoryIds(value) {
+  const rawValues = Array.isArray(value) ? value : [value];
+  const ids = [];
+
+  rawValues.forEach((entry) => {
+    const raw = String(entry || '').trim();
+    if (!raw) return;
+    const normalized = normalizeProductSlug(raw);
+    PRODUCT_CATEGORY_ALIASES.forEach((alias) => {
+      const matcher = new RegExp(`(^|-)${alias}(-|$)`, 'i');
+      if (matcher.test(normalized) && !ids.includes(alias)) ids.push(alias);
+    });
+    String(raw)
+      .split(/[,/&|]+|\band\b|\s+/i)
+      .map((part) => normalizeProductSlug(part))
+      .filter(Boolean)
+      .forEach((part) => {
+        if (!ids.includes(part)) ids.push(part);
+      });
+  });
+
+  return ids;
+}
+
+function normalizeProductCategories(payload = {}, existing = {}) {
+  const categorySource = payload?.categoryIds
+    ?? payload?.categories
+    ?? payload?.categoryName
+    ?? payload?.category
+    ?? payload?.categoryId
+    ?? existing.categoryIds
+    ?? existing.categoryName
+    ?? existing.categoryId
+    ?? 'Collection';
+  const categoryIds = extractProductCategoryIds(categorySource);
+  const safeCategoryIds = categoryIds.length ? categoryIds : ['collection'];
+  const categoryName = sanitizePlainText(
+    payload?.categoryName
+    || payload?.category
+    || existing.categoryName
+    || safeCategoryIds.map((id) => id.replace(/-/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())).join(', '),
+    120
+  );
+
+  return {
+    categoryId: safeCategoryIds[0],
+    categoryIds: safeCategoryIds,
+    categoryName
+  };
+}
+
 function normalizeProductPayload(payload, existing = {}) {
   const name = sanitizePlainText(payload?.name || existing.name || '', 140);
   if (!name) throw httpError(400, 'Product name is required.');
 
   const productId = sanitizePlainText(payload?.productId || existing.productId || crypto.randomUUID(), 80);
-  const categoryName = sanitizePlainText(payload?.categoryName || payload?.category || existing.categoryName || 'Collection', 80);
-  const categoryId = normalizeProductSlug(payload?.categoryId || categoryName) || 'collection';
+  const { categoryId, categoryIds, categoryName } = normalizeProductCategories(payload, existing);
   const price = Number(payload?.price ?? existing.price ?? 0);
   const stockQuantity = Number(payload?.stockQuantity ?? existing.stockQuantity ?? 0);
   const images = Array.isArray(payload?.images)
@@ -2565,6 +2617,7 @@ function normalizeProductPayload(payload, existing = {}) {
     name,
     slug: normalizeProductSlug(payload?.slug || existing.slug || name),
     categoryId,
+    categoryIds,
     categoryName,
     price: Number.isFinite(price) && price >= 0 ? price : 0,
     currency: sanitizePlainText(payload?.currency || existing.currency || 'NGN', 12),
@@ -2589,6 +2642,9 @@ function serializeProduct(product) {
     ...rest,
     id: String(_id || rest.productId || ''),
     productId: String(rest.productId || _id || ''),
+    categoryIds: Array.isArray(rest.categoryIds) && rest.categoryIds.length
+      ? rest.categoryIds
+      : [rest.categoryId || 'all'].filter(Boolean),
     slug: rest.slug || normalizeProductSlug(rest.name || rest.productId)
   };
 }
@@ -2602,7 +2658,15 @@ app.get('/api/products', asyncHandler(async (req, res) => {
   const category = String(req.query?.category || '').trim().toLowerCase();
   const search = String(req.query?.q || '').trim();
   const filter = { isActive: true };
-  if (category && category !== 'all') filter.categoryId = category;
+  if (category && category !== 'all') {
+    const escapedCategory = category.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    filter.$or = [
+      { categoryId: category },
+      { categoryIds: category },
+      { categoryId: { $regex: `(^|-)${escapedCategory}(-|$)`, $options: 'i' } },
+      { categoryName: { $regex: `\\b${escapedCategory}\\b`, $options: 'i' } }
+    ];
+  }
   if (search) filter.name = { $regex: search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' };
 
   const products = await Product.find(filter).sort({ categoryName: 1, name: 1 }).lean();
