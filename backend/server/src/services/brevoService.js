@@ -1,8 +1,11 @@
 const crypto = require('crypto');
+const fs = require('fs');
 const https = require('https');
+const path = require('path');
 
 const BREVO_HOSTNAME = 'api.brevo.com';
 const DEFAULT_BREVO_REQUEST_TIMEOUT_MS = 15000;
+const BREVO_TEMPLATES_FILE = path.resolve(__dirname, '..', '..', 'brevo-templates.json');
 
 const BREVO_LIST_ENV_KEYS = Object.freeze({
   newsletter: 'BREVO_LIST_NEWSLETTER',
@@ -147,6 +150,27 @@ function getBrevoConfig() {
     eventsListId: lists.events || null,
     walletTopUpListId: lists.wallet_top_up || null
   };
+}
+
+function readBrevoTemplateSnapshot() {
+  try {
+    if (!fs.existsSync(BREVO_TEMPLATES_FILE)) return {};
+    return JSON.parse(fs.readFileSync(BREVO_TEMPLATES_FILE, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+function getBrevoTemplateId(templateKey) {
+  const safeKey = normalizeListKey(templateKey).toUpperCase();
+  if (!safeKey) return null;
+
+  const envKey = `BREVO_TEMPLATE_${safeKey}`;
+  const fromEnv = toPositiveInteger(process.env[envKey]);
+  if (fromEnv) return fromEnv;
+
+  const snapshot = readBrevoTemplateSnapshot();
+  return toPositiveInteger(snapshot?.env?.[envKey]);
 }
 
 function isBrevoConfigured() {
@@ -718,6 +742,21 @@ async function sendWelcomeEmail(email, name = '', options = {}) {
   const subject = discountCode
     ? 'Welcome to Benzy Luxury | Your 10% code is inside'
     : 'Welcome to Benzy Luxury';
+  const templateId = !discountCode ? getBrevoTemplateId('welcome') : null;
+  if (templateId) {
+    return sendTransactionalEmail({
+      toEmail: email,
+      toName: greetingName,
+      subject,
+      templateId,
+      params: {
+        firstName: greetingName,
+        dashboardUrl: buildPublicUrl('/account') || buildPublicUrl('/Profile.html'),
+        supportEmail
+      },
+      tags: ['newsletter', 'welcome']
+    });
+  }
   const codeBlock = discountCode
     ? `
       <div style="margin:24px 0;padding:18px 20px;border:1px dashed #7a5c43;border-radius:12px;background:#f8f1eb;text-align:center;">
@@ -1157,6 +1196,25 @@ async function sendOrderConfirmation(email, orderData = {}) {
   const tax = formatCurrency(orderData?.tax || 0, currency);
   const shipping = formatCurrency(orderData?.shipping || 0, currency);
   const total = formatCurrency(orderData?.total || 0, currency);
+  const templateId = getBrevoTemplateId('order_confirmation');
+  if (templateId) {
+    return sendTransactionalEmail({
+      toEmail: email,
+      toName: greetingName,
+      subject: `Order confirmed | ${orderId}`,
+      templateId,
+      params: {
+        firstName: greetingName,
+        orderId,
+        total,
+        status: orderStatus,
+        orderUrl: profileUrl || buildPublicUrl('/account'),
+        supportEmail
+      },
+      attachments: [buildOrderReceiptAttachment(orderData, currency)],
+      tags: ['orders', 'confirmation']
+    });
+  }
   const summaryRows = [
     `<tr><td style="padding:7px 0;color:#666666;">Subtotal</td><td align="right" style="padding:7px 0;font-weight:700;color:#111111;">${escapeHtml(subtotal)}</td></tr>`,
     `<tr><td style="padding:7px 0;color:#666666;">Discount</td><td align="right" style="padding:7px 0;font-weight:700;color:#111111;">${escapeHtml(discount)}</td></tr>`,
@@ -1311,6 +1369,30 @@ async function sendOrderStatusUpdateEmail(email, orderData = {}, options = {}) {
   const statusLine = previousStatus
     ? `Your order moved from ${previousStatus} to ${status}.`
     : `Your order is now ${status}.`;
+  const normalizedStatus = String(orderData?.orderStatus || orderData?.status || '').trim().toLowerCase().replace(/[\s-]+/g, '_');
+  const templateKey = normalizedStatus === 'shipped'
+    ? 'shipping'
+    : (normalizedStatus === 'delivered' ? 'delivered' : '');
+  const templateId = templateKey ? getBrevoTemplateId(templateKey) : null;
+  if (templateId) {
+    return sendTransactionalEmail({
+      toEmail: email,
+      toName: greetingName,
+      subject: templateKey === 'shipping' ? `Order shipped | ${orderId}` : `Delivered | ${orderId}`,
+      templateId,
+      params: {
+        firstName: greetingName,
+        orderId,
+        total: formatCurrency(orderData?.total || 0, orderData?.currency || 'NGN'),
+        status,
+        trackingId: sanitizePlainText(orderData?.trackingId || orderData?.trackingNumber || '', 80),
+        trackingUrl: profileUrl || buildPublicUrl('/orders'),
+        receiptUrl: profileUrl || buildPublicUrl('/account'),
+        supportEmail
+      },
+      tags: ['orders', 'status-update', templateKey]
+    });
+  }
 
   const htmlContent = `
     <div style="margin:0;padding:32px 16px;background:#f6f0ea;font-family:Arial,sans-serif;color:#231711;">
@@ -1438,6 +1520,22 @@ async function sendPasswordResetEmail(email, name = '', options = {}) {
   }
 
   const greetingName = getGreetingName(name, email);
+  const templateId = getBrevoTemplateId('password_reset');
+  if (templateId) {
+    return sendTransactionalEmail({
+      toEmail: email,
+      toName: greetingName,
+      subject: 'Reset your Benzy Luxury password',
+      templateId,
+      params: {
+        firstName: greetingName,
+        code: resetCode,
+        resetUrl,
+        supportEmail: getBrevoConfig().senderEmail
+      },
+      tags: ['auth', 'password-reset']
+    });
+  }
   const htmlContent = `
     <div style="margin:0;padding:32px 16px;background:#f6f0ea;font-family:Arial,sans-serif;color:#231711;">
       <div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #eadfd3;">
@@ -1504,6 +1602,7 @@ module.exports = {
   buildOrderReceiptAttachment,
   getBrevoConfig,
   getBrevoListId,
+  getBrevoTemplateId,
   isBrevoConfigured,
   sendOrderConfirmation,
   sendOrderStatusUpdateEmail,

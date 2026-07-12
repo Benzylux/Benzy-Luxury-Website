@@ -61,6 +61,24 @@ services:
         sync: false
       - key: BREVO_WEBHOOK_SECRET
         sync: false
+      - key: BREVO_TEMPLATE_WELCOME
+        value: 1
+      - key: BREVO_TEMPLATE_OTP
+        value: 2
+      - key: BREVO_TEMPLATE_VERIFICATION
+        value: 3
+      - key: BREVO_TEMPLATE_ORDER_CONFIRMATION
+        value: 4
+      - key: BREVO_TEMPLATE_RECEIPT
+        value: 5
+      - key: BREVO_TEMPLATE_INVOICE
+        value: 6
+      - key: BREVO_TEMPLATE_SHIPPING
+        value: 7
+      - key: BREVO_TEMPLATE_DELIVERED
+        value: 8
+      - key: BREVO_TEMPLATE_PASSWORD_RESET
+        value: 9
       - key: WATI_API_ENDPOINT
         sync: false
       - key: WATI_TOKEN

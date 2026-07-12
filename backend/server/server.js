@@ -37,7 +37,8 @@ const {
   sendPasswordResetEmail,
   sendTransactionalEmail,
   sendWalletTopUpReceiptEmail,
-  sendWelcomeEmail
+  sendWelcomeEmail,
+  getBrevoTemplateId
 } = require('./src/services/brevoService');
 const {
   isWatiConfigured,
@@ -2377,12 +2378,29 @@ async function sendAccountTransactionalEmail(type, user, details = {}) {
     if (type === 'password_reset') {
       result = await sendPasswordResetEmail(email, name, details);
     } else {
+      const accountTemplateKey = {
+        email_verification: 'verification',
+        otp_login: 'otp'
+      }[type];
+      const accountCode = sanitizePlainText(details.code || details.verificationCode || details.otpCode || '', 40);
+      const templateId = accountTemplateKey && accountCode ? getBrevoTemplateId(accountTemplateKey) : null;
       result = await sendTransactionalEmail({
         toEmail: email,
         toName: name,
         subject,
-        htmlContent: details.htmlContent,
-        textContent: details.textContent,
+        ...(templateId
+          ? {
+              templateId,
+              params: {
+                firstName: name || 'there',
+                code: accountCode,
+                supportEmail: getBrevoConfig().senderEmail
+              }
+            }
+          : {
+              htmlContent: details.htmlContent,
+              textContent: details.textContent
+            }),
         tags: ['account', type]
       });
     }
@@ -5141,6 +5159,7 @@ app.post('/api/auth/signup', asyncHandler(async (req, res) => {
   }).catch((error) => console.error(`Brevo customer sync failed for signup ${email}:`, error?.message || error));
   await sendAccountTransactionalEmail('email_verification', user, {
     subject: 'Verify your Benzy Luxury email',
+    code: verificationCode,
     htmlContent: buildCodeEmailHtml('Verify your email', 'Use this code to verify your Benzy Luxury account.', verificationCode),
     textContent: `Your Benzy Luxury verification code is ${verificationCode}. It expires in 15 minutes.`,
     metadata: { userId: user.id }
@@ -5229,6 +5248,7 @@ app.post('/api/auth/resend-verification', authMiddleware, asyncHandler(async (re
   await writeUsers(users);
   await sendAccountTransactionalEmail('email_verification', users[idx], {
     subject: 'Verify your Benzy Luxury email',
+    code,
     htmlContent: buildCodeEmailHtml('Verify your email', 'Use this code to verify your Benzy Luxury account.', code),
     textContent: `Your Benzy Luxury verification code is ${code}. It expires in 15 minutes.`,
     metadata: { userId: user.id }
@@ -5252,6 +5272,7 @@ app.post('/api/auth/otp/request', asyncHandler(async (req, res) => {
   await writeUsers(users);
   await sendAccountTransactionalEmail('otp_login', users[idx], {
     subject: 'Your Benzy Luxury login code',
+    code,
     htmlContent: buildCodeEmailHtml('Your login code', 'Use this one-time code to sign in to your Benzy Luxury account.', code),
     textContent: `Your Benzy Luxury login code is ${code}. It expires in 10 minutes.`,
     metadata: { userId: users[idx].id }
@@ -5393,6 +5414,7 @@ app.patch('/api/auth/profile', authMiddleware, asyncHandler(async (req, res) => 
   if (profileVerificationCode) {
     await sendAccountTransactionalEmail('email_verification', current, {
       subject: 'Verify your Benzy Luxury email',
+      code: profileVerificationCode,
       htmlContent: buildCodeEmailHtml('Verify your new email', 'Use this code to verify your updated Benzy Luxury email address.', profileVerificationCode),
       textContent: `Your Benzy Luxury verification code is ${profileVerificationCode}. It expires in 15 minutes.`,
       metadata: { userId: current.id, reason: 'profile-email-change' }
