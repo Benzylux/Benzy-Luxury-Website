@@ -46,6 +46,16 @@ function hasValidObjectId(value) {
   return mongoose.Types.ObjectId.isValid(String(value));
 }
 
+function isRequestedCartItem(item, itemId) {
+  const safeItemId = String(itemId || '').trim();
+  if (!safeItemId) return false;
+  return [
+    item?._id,
+    item?.id,
+    item?.lineKey
+  ].some((value) => String(value || '').trim() === safeItemId);
+}
+
 async function migrateLegacyCartDocument(cart, normalizedUser) {
   const legacyCart = typeof cart?.toObject === 'function' ? cart.toObject() : { ...cart };
   const nextState = await calculateCartState({
@@ -259,14 +269,14 @@ async function updateUserCartItem(user, itemId, quantity) {
   const safeItemId = String(itemId || '').trim();
   const safeQuantity = Math.max(1, parseInt(String(quantity || 1), 10));
   const currentItems = toPlainItems(cart.items);
-  const target = currentItems.find((item) => String(item?._id || '') === safeItemId);
+  const target = currentItems.find((item) => isRequestedCartItem(item, safeItemId));
 
   if (!target) {
     throw new AppError(404, 'Cart item not found.');
   }
 
   const nextItems = currentItems.map((item) => (
-    String(item?._id || '') === safeItemId
+    isRequestedCartItem(item, safeItemId)
       ? { ...item, quantity: safeQuantity }
       : item
   ));
@@ -286,9 +296,10 @@ async function updateUserCartItem(user, itemId, quantity) {
 async function removeUserCartItem(user, itemId) {
   const cart = await getOrCreateUserCart(user);
   const safeItemId = String(itemId || '').trim();
-  const nextItems = toPlainItems(cart.items).filter((item) => String(item?._id || '') !== safeItemId);
+  const currentItems = toPlainItems(cart.items);
+  const nextItems = currentItems.filter((item) => !isRequestedCartItem(item, safeItemId));
 
-  if (nextItems.length === cart.items.length) {
+  if (nextItems.length === currentItems.length) {
     throw new AppError(404, 'Cart item not found.');
   }
 

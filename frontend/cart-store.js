@@ -174,10 +174,13 @@
     const size = formatOptionLabel(sizeLabel, "Size", "M");
     const color = formatOptionLabel(colorLabel, "Color", "Standard");
     const variantId = buildVariantId({ ...raw, productId, size, color, sizeLabel, colorLabel, name });
-    const id = buildCartItemId({ ...raw, productId, variantId, name });
+    const rawId = normalizeText(raw?.id || raw?._id || "");
+    const lineKey = normalizeText(raw?.lineKey || "");
+    const id = lineKey && rawId ? rawId : buildCartItemId({ ...raw, productId, variantId, name });
 
     return {
       id,
+      lineKey,
       productId,
       name,
       title: name,
