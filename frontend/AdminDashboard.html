@@ -190,6 +190,16 @@
               <div class="admin-card admin-span-2">
                 <div class="admin-card-head">
                   <div>
+                    <p class="admin-card-kicker">Recent orders</p>
+                    <h3>Latest fulfilment queue</h3>
+                  </div>
+                </div>
+                <div id="dashboard-recent-orders" class="admin-transaction-list"></div>
+              </div>
+
+              <div class="admin-card admin-span-2">
+                <div class="admin-card-head">
+                  <div>
                     <p class="admin-card-kicker">Recent transactions</p>
                     <h3>Latest money movement</h3>
                   </div>
@@ -202,6 +212,10 @@
                   <div>
                     <p class="admin-card-kicker">Sales trend</p>
                     <h3>Daily sales</h3>
+                  </div>
+                  <div class="admin-card-actions">
+                    <button class="admin-inline-btn" type="button" data-report-export="sales" data-report-period="daily" data-report-format="csv">CSV</button>
+                    <button class="admin-inline-btn" type="button" data-report-export="sales" data-report-period="daily" data-report-format="pdf">PDF</button>
                   </div>
                 </div>
                 <div id="dashboard-daily-sales" class="admin-chart-list"></div>
@@ -226,6 +240,17 @@
                 </div>
                 <div id="dashboard-top-customers" class="admin-stack-list"></div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section" data-section="access-denied">
+          <div class="admin-access-denied">
+            <div class="admin-card admin-access-card">
+              <p class="admin-card-kicker">Access denied</p>
+              <h3>This area is restricted</h3>
+              <p class="admin-section-copy">Your current role cannot open this part of the BLX Admin Portal. Use the visible menu items or contact the Super Admin if your access needs to change.</p>
+              <button class="admin-primary-btn" type="button" data-section-jump="dashboard">Back to dashboard</button>
             </div>
           </div>
         </section>

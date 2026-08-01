@@ -345,7 +345,7 @@ function createAdminRouter(dependencies) {
   function normalizeOrderStatus(status) {
     const value = String(status || '').trim().toLowerCase();
     if (['pending', 'pending verification', 'pending_verification', 'awaiting_confirmation'].includes(value)) return 'pending';
-    if (['placed', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'failed'].includes(value)) return value;
+    if (['placed', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'failed', 'returned', 'exchanged'].includes(value)) return value;
     return 'pending';
   }
 
@@ -555,7 +555,7 @@ function createAdminRouter(dependencies) {
       if (normalizedPaymentStatus !== 'paid') {
         return { error: 'An order must be paid before it can be marked as shipped.' };
       }
-      if (['cancelled', 'failed', 'delivered'].includes(normalizedStatus)) {
+      if (['cancelled', 'failed', 'delivered', 'returned', 'exchanged'].includes(normalizedStatus)) {
         return { error: 'This order can no longer be marked as shipped.' };
       }
       return { orderStatus: 'shipped' };
@@ -565,20 +565,40 @@ function createAdminRouter(dependencies) {
       if (normalizedPaymentStatus !== 'paid') {
         return { error: 'An order must be paid before it can be marked as delivered.' };
       }
-      if (['cancelled', 'failed', 'delivered'].includes(normalizedStatus)) {
+      if (['cancelled', 'failed', 'delivered', 'returned', 'exchanged'].includes(normalizedStatus)) {
         return { error: 'This order can no longer be marked as delivered.' };
       }
       return { orderStatus: 'delivered' };
     }
 
     if (normalizedAction === 'cancel') {
-      if (normalizedStatus === 'delivered') {
-        return { error: 'A delivered order cannot be cancelled.' };
+      if (['delivered', 'returned', 'exchanged'].includes(normalizedStatus)) {
+        return { error: 'A completed order cannot be cancelled.' };
       }
       if (normalizedStatus === 'cancelled') {
         return { orderStatus: 'cancelled' };
       }
       return { orderStatus: 'cancelled' };
+    }
+
+    if (normalizedAction === 'return') {
+      if (normalizedPaymentStatus !== 'paid') {
+        return { error: 'An order must be paid before a return can be processed.' };
+      }
+      if (!['delivered', 'shipped'].includes(normalizedStatus)) {
+        return { error: 'Only shipped or delivered orders can be returned.' };
+      }
+      return { orderStatus: 'returned' };
+    }
+
+    if (normalizedAction === 'exchange') {
+      if (normalizedPaymentStatus !== 'paid') {
+        return { error: 'An order must be paid before an exchange can be processed.' };
+      }
+      if (!['delivered', 'shipped'].includes(normalizedStatus)) {
+        return { error: 'Only shipped or delivered orders can be exchanged.' };
+      }
+      return { orderStatus: 'exchanged' };
     }
 
     return { error: 'Unsupported order action.' };
@@ -865,6 +885,7 @@ function createAdminRouter(dependencies) {
       content: 'Storefront content',
       newsletter: 'Newsletter and subscribers',
       reviews: 'Reviews and moderation',
+      reports: 'Reports and exports',
       logs: 'Audit exports'
     };
     return map[normalized] || 'General admin activity';
@@ -1144,6 +1165,183 @@ function createAdminRouter(dependencies) {
     const filename = `benzy-admin-statement-${range.label}.csv`;
     const pdfFilename = `benzy-admin-statement-${range.label}.pdf`;
     return { ...statement, csv, pdf, filename, pdfFilename };
+  }
+
+  function getReportLabel(type) {
+    const normalized = safeString(type || 'sales', 30).toLowerCase();
+    const labels = {
+      sales: 'Sales report',
+      inventory: 'Inventory report',
+      orders: 'Order report',
+      customers: 'Customer report'
+    };
+    return labels[normalized] || labels.sales;
+  }
+
+  function normalizeReportType(type) {
+    const normalized = safeString(type || 'sales', 30).toLowerCase();
+    return ['sales', 'inventory', 'orders', 'customers'].includes(normalized) ? normalized : 'sales';
+  }
+
+  function buildOperationsReportCsv(report) {
+    const rows = [
+      ['Benzy Luxury Operations Report'],
+      ['Type', report.label],
+      ['Period', report.range.label],
+      ['From', report.range.start.toISOString()],
+      ['To', report.range.end.toISOString()],
+      [],
+      ['Metric', 'Value'],
+      ...report.summaryRows,
+      []
+    ];
+
+    report.sections.forEach((section) => {
+      rows.push([section.title]);
+      rows.push(section.headers);
+      section.rows.forEach((row) => rows.push(row));
+      rows.push([]);
+    });
+
+    return buildCsv(rows);
+  }
+
+  function buildOperationsReportPdf(report) {
+    const margin = 48;
+    const pages = [];
+    let operations = [];
+    let y = 736;
+
+    const finishPage = () => {
+      pages.push(operations);
+      operations = [];
+      y = 736;
+    };
+
+    const ensureSpace = (height) => {
+      if (y - height >= 64) return;
+      finishPage();
+    };
+
+    operations.push(pdfRect(0, 0, 612, 792, 'fffaf5'));
+    operations.push(pdfText('Benzy Luxury Operations Report', margin, y, { size: 16, font: 'F2' }));
+    y -= 24;
+    operations.push(pdfText(`${report.label} / ${report.range.label}`, margin, y, { size: 10, color: '7b6758' }));
+    y -= 34;
+
+    operations.push(pdfText('Summary', margin, y, { size: 12, font: 'F2' }));
+    y -= 20;
+    report.summaryRows.forEach(([label, value]) => {
+      ensureSpace(18);
+      operations.push(pdfText(`${label}: ${value}`, margin, y, { size: 9 }));
+      y -= 16;
+    });
+    y -= 8;
+
+    report.sections.forEach((section) => {
+      ensureSpace(48);
+      operations.push(pdfText(section.title, margin, y, { size: 12, font: 'F2' }));
+      y -= 20;
+      section.rows.slice(0, 24).forEach((row) => {
+        ensureSpace(20);
+        operations.push(pdfText(row.join(' | ').slice(0, 110), margin, y, { size: 8, color: '4e3a2c' }));
+        y -= 16;
+      });
+      y -= 8;
+    });
+
+    finishPage();
+    return buildSimplePdf(pages);
+  }
+
+  async function buildOperationsReport(type, period) {
+    const reportType = normalizeReportType(type);
+    const range = getLogArchiveRange(period || 'monthly', 365);
+    const [orders, users, products] = await Promise.all([
+      readOrders(),
+      readUsers(),
+      Product.find({}).sort({ updatedAt: -1, createdAt: -1 }).lean()
+    ]);
+    const filteredOrders = orders.filter((order) => {
+      const dateValue = new Date(order?.paidAt || order?.createdAt || order?.orderDate || '');
+      return !Number.isNaN(dateValue.getTime()) && dateValue >= range.start && dateValue <= range.end;
+    });
+    const paidOrders = filteredOrders.filter((order) => normalizePaymentStatus(order?.paymentStatus) === 'paid');
+    const totalSales = paidOrders.reduce((sum, order) => sum + toPositiveNumber(order?.total, 0), 0);
+    const lowStockProducts = products.filter((product) => {
+      const metadata = product?.metadata && typeof product.metadata === 'object' ? product.metadata : {};
+      const threshold = Math.max(1, toInteger(metadata.lowStockThreshold, DEFAULT_LOW_STOCK_THRESHOLD));
+      return toInteger(product?.stockQuantity, 0) <= threshold;
+    });
+    const customerStats = buildCustomerStats(users, orders).filter((customer) => customer.role === 'resident');
+
+    const summaryRows = [
+      ['Total sales', `NGN ${totalSales.toLocaleString('en-NG')}`],
+      ['Orders in range', String(filteredOrders.length)],
+      ['Paid orders', String(paidOrders.length)],
+      ['Total products', String(products.length)],
+      ['Low stock products', String(lowStockProducts.length)],
+      ['Customers', String(customerStats.length)]
+    ];
+
+    const sections = [];
+    if (reportType === 'sales') {
+      sections.push({
+        title: 'Sales by day',
+        headers: ['Period', 'Total'],
+        rows: buildDateBuckets(paidOrders, period === 'weekly' ? 8 : period === 'daily' ? 7 : 6, period === 'weekly' ? 'week' : period === 'daily' ? 'day' : 'month')
+          .map((entry) => [entry.label, `NGN ${Number(entry.total || 0).toLocaleString('en-NG')}`])
+      });
+    } else if (reportType === 'inventory') {
+      sections.push({
+        title: 'Inventory',
+        headers: ['Product', 'SKU', 'Stock', 'Status'],
+        rows: products.map((product) => [
+          product.name || 'Product',
+          product.sku || product.productId || '',
+          String(toInteger(product.stockQuantity, 0)),
+          lowStockProducts.some((entry) => String(entry.productId) === String(product.productId)) ? 'Low stock' : 'Healthy'
+        ])
+      });
+    } else if (reportType === 'orders') {
+      sections.push({
+        title: 'Orders',
+        headers: ['Order ID', 'Customer', 'Status', 'Payment', 'Total'],
+        rows: filteredOrders.map((order) => [
+          order.orderId || '',
+          order.customerName || order.customerEmail || order?.customer?.email || '',
+          normalizeOrderStatus(order.orderStatus || order.status),
+          normalizePaymentStatus(order.paymentStatus),
+          `NGN ${toPositiveNumber(order.total, 0).toLocaleString('en-NG')}`
+        ])
+      });
+    } else {
+      sections.push({
+        title: 'Customers',
+        headers: ['Customer', 'Email', 'Orders', 'Spent'],
+        rows: customerStats.map((customer) => [
+          customer.name || 'Customer',
+          customer.email || '',
+          String(customer.totalOrders || 0),
+          `NGN ${toPositiveNumber(customer.totalSpent, 0).toLocaleString('en-NG')}`
+        ])
+      });
+    }
+
+    const report = {
+      type: reportType,
+      label: getReportLabel(reportType),
+      range,
+      summaryRows,
+      sections
+    };
+    return {
+      ...report,
+      csv: buildOperationsReportCsv(report),
+      pdf: buildOperationsReportPdf(report),
+      filename: `benzy-${reportType}-report-${range.label}.csv`,
+      pdfFilename: `benzy-${reportType}-report-${range.label}.pdf`
+    };
   }
 
   async function getContentDocument() {
@@ -2042,7 +2240,19 @@ function createAdminRouter(dependencies) {
     });
     const paidOrders = orders.filter((order) => normalizePaymentStatus(order?.paymentStatus) === 'paid');
     const totalSales = paidOrders.reduce((sum, order) => sum + toPositiveNumber(order?.total, 0), 0);
-    const pendingOrders = orders.filter((order) => ['pending', 'placed', 'confirmed', 'processing'].includes(normalizeOrderStatus(order?.orderStatus || order?.status))).length;
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const todaysSales = paidOrders
+      .filter((order) => String(order?.paidAt || order?.createdAt || order?.orderDate || '').slice(0, 10) === todayKey)
+      .reduce((sum, order) => sum + toPositiveNumber(order?.total, 0), 0);
+    const ordersByStatus = orders.reduce((summary, order) => {
+      const status = normalizeOrderStatus(order?.orderStatus || order?.status);
+      summary[status] = (summary[status] || 0) + 1;
+      return summary;
+    }, {});
+    const pendingOrders = (ordersByStatus.pending || 0) + (ordersByStatus.placed || 0) + (ordersByStatus.confirmed || 0);
+    const processingOrders = ordersByStatus.processing || 0;
+    const deliveredOrders = ordersByStatus.delivered || 0;
+    const cancelledOrders = ordersByStatus.cancelled || 0;
     const bankTransfersPending = orders.filter((order) => normalizePaymentMethod(order?.paymentMethodCode || order?.paymentMethod) === 'bank_transfer' && normalizePaymentStatus(order?.paymentStatus) !== 'paid').length;
     const refundsCount = payments.reduce((sum, payment) => sum + (Array.isArray(payment.refunds) ? payment.refunds.length : 0), 0);
     const [abandonedCarts, unreadContactMessages] = await Promise.all([
@@ -2071,6 +2281,27 @@ function createAdminRouter(dependencies) {
       .filter((customer) => customer.role === 'resident')
       .sort((left, right) => right.totalSpent - left.totalSpent);
 
+    const recentOrders = sortByDateDesc(orders, (order) => order?.updatedAt || order?.createdAt || order?.orderDate)
+      .slice(0, 8)
+      .map((order) => ({
+        orderId: safeString(order?.orderId || '', 120),
+        customerName: safeString(order?.customerName || order?.customer?.name || 'Customer', 120),
+        customerEmail: normalizeEmail(order?.customerEmail || order?.customer?.email),
+        total: toPositiveNumber(order?.total, 0),
+        currency: safeString(order?.currency || 'NGN', 10).toUpperCase(),
+        orderStatus: normalizeOrderStatus(order?.orderStatus || order?.status),
+        paymentStatus: normalizePaymentStatus(order?.paymentStatus),
+        createdAt: order?.createdAt || order?.orderDate || null,
+        updatedAt: order?.updatedAt || null
+      }));
+    const notifications = [
+      ...(recentOrders.length ? [{ type: 'orders', label: `${recentOrders.length} recent order(s) ready for review` }] : []),
+      ...(lowStockProducts.length ? [{ type: 'inventory', label: `${lowStockProducts.length} low stock product(s)` }] : []),
+      ...(payments.filter((entry) => entry.status === 'failed').length ? [{ type: 'payments', label: `${payments.filter((entry) => entry.status === 'failed').length} failed payment(s)` }] : []),
+      ...(unreadContactMessages ? [{ type: 'customers', label: `${unreadContactMessages} customer complaint/inquiry item(s)` }] : []),
+      ...(refundsCount ? [{ type: 'returns', label: `${refundsCount} refund/return record(s)` }] : [])
+    ];
+
     return {
       currentUser: {
         ...(toPublicUser ? toPublicUser(getAdminContext(req).current || {}) : {}),
@@ -2080,7 +2311,12 @@ function createAdminRouter(dependencies) {
       metrics: {
         totalOrders: orders.length,
         totalSales,
+        todaysSales,
         pendingOrders,
+        processingOrders,
+        deliveredOrders,
+        cancelledOrders,
+        totalProducts: products.length,
         lowStockProducts: lowStockProducts.length,
         newCustomers: newCustomers.length,
         contactMessages: unreadContactMessages,
@@ -2095,6 +2331,8 @@ function createAdminRouter(dependencies) {
         refundRecords: refundsCount
       },
       recentTransactions: payments.slice(0, 8),
+      recentOrders,
+      notifications,
       alerts: [
         ...(lowStockProducts.length ? [{ type: 'inventory', label: `${lowStockProducts.length} low stock product(s)` }] : []),
         ...(bankTransfersPending ? [{ type: 'payments', label: `${bankTransfersPending} bank transfer payment(s) awaiting confirmation` }] : []),
@@ -2134,6 +2372,29 @@ function createAdminRouter(dependencies) {
     if (!requirePermission(req, res, 'dashboard')) return;
     const overview = await buildOverviewPayload(req);
     res.json({ success: true, overview });
+  }));
+
+  router.get('/reports/export', asyncHandler(async (req, res) => {
+    if (!requirePermission(req, res, 'dashboard')) return;
+    const report = await buildOperationsReport(req.query?.type || 'sales', req.query?.period || 'monthly');
+    const format = safeString(req.query?.format || 'csv', 20).toLowerCase() === 'pdf' ? 'pdf' : 'csv';
+    await logAdminActivity(req, {
+      action: 'exported',
+      area: 'reports',
+      entityId: `${report.type}-${report.range.label}`,
+      message: `Exported ${report.label.toLowerCase()} for ${report.range.label}.`
+    });
+
+    if (format === 'pdf') {
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="${report.pdfFilename}"`);
+      res.send(report.pdf);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${report.filename}"`);
+    res.send(report.csv);
   }));
 
   router.get('/products', asyncHandler(async (req, res) => {

@@ -15,7 +15,8 @@
     content: { kicker: "Content", title: "Edit what visitors see across the site", permission: "content" },
     newsletter: { kicker: "Newsletter", title: "Subscribers, exports and announcements", permission: "newsletter" },
     reviews: { kicker: "Reviews", title: "Approve, reject and feature testimonials", permission: "reviews" },
-    team: { kicker: "Admin Users", title: "Roles and back office access control", permission: "users" }
+    team: { kicker: "Admin Users", title: "Roles and back office access control", permission: "users" },
+    "access-denied": { kicker: "Restricted", title: "Access denied", permission: null }
   };
   const PERMISSIONS_BY_ROLE = {
     super_admin: ["dashboard", "products", "orders", "customers", "messages", "payments", "coupons", "settings", "content", "newsletter", "reviews", "users", "logs"],
@@ -63,6 +64,7 @@
     refreshDashboardBtn: document.getElementById("refresh-dashboard-btn"),
     dashboardMetrics: document.getElementById("dashboard-metrics"),
     dashboardAlerts: document.getElementById("dashboard-alerts"),
+    dashboardRecentOrders: document.getElementById("dashboard-recent-orders"),
     dashboardTransactions: document.getElementById("dashboard-transactions"),
     dashboardDailySales: document.getElementById("dashboard-daily-sales"),
     dashboardBestSellers: document.getElementById("dashboard-best-sellers"),
@@ -420,7 +422,7 @@
   function normalizeOrderStatusValue(value) {
     const raw = String(value || "").trim().toLowerCase();
     if (["pending", "pending verification", "pending_verification", "awaiting_confirmation"].includes(raw)) return "pending";
-    if (["placed", "confirmed", "processing", "shipped", "delivered", "cancelled", "failed"].includes(raw)) return raw;
+    if (["placed", "confirmed", "processing", "shipped", "delivered", "cancelled", "failed", "returned", "exchanged"].includes(raw)) return raw;
     return "pending";
   }
 
@@ -557,13 +559,21 @@
       mode = "closed";
     } else if (orderStatus === "delivered") {
       title = "Delivered";
-      body = "The order lifecycle is complete. Payment and fulfilment are now locked.";
+      body = "The order lifecycle is complete. Returns and exchanges can be processed if customer care approves them.";
       mode = "completed";
+      actions.push({ action: "return-order", label: "Process return" });
+      actions.push({ action: "exchange-order", label: "Process exchange" });
     } else if (orderStatus === "shipped") {
       title = "In transit";
       body = "The parcel is already out. Your next fulfilment action is to mark it delivered.";
       mode = "active";
       actions.push({ action: "deliver-order", label: "Mark delivered" });
+      actions.push({ action: "return-order", label: "Process return" });
+      actions.push({ action: "exchange-order", label: "Process exchange" });
+    } else if (["returned", "exchanged"].includes(orderStatus)) {
+      title = orderStatus === "returned" ? "Return processed" : "Exchange processed";
+      body = "This customer-care resolution is recorded and the fulfilment state is now closed.";
+      mode = "closed";
     } else if (paymentStatus === "paid") {
       title = "Ready for dispatch";
       body = "Payment has already cleared, so the system keeps the order in processing until you mark it shipped.";
@@ -898,21 +908,45 @@
     const overview = state.overview;
     if (!overview) return;
     renderMetricCards(nodes.dashboardMetrics, [
-      { label: "Total orders", value: String(overview.metrics?.totalOrders || 0), note: "All recorded orders" },
       { label: "Total sales", value: formatCurrency(overview.metrics?.totalSales || 0, "NGN"), note: "Paid order revenue" },
+      { label: "Today's sales", value: formatCurrency(overview.metrics?.todaysSales || 0, "NGN"), note: "Paid today" },
       { label: "Pending orders", value: String(overview.metrics?.pendingOrders || 0), note: "Needs follow-up" },
+      { label: "Processing orders", value: String(overview.metrics?.processingOrders || 0), note: "Being prepared" },
+      { label: "Delivered orders", value: String(overview.metrics?.deliveredOrders || 0), note: "Completed fulfilment" },
+      { label: "Cancelled orders", value: String(overview.metrics?.cancelledOrders || 0), note: "Stopped orders" },
+      { label: "Total products", value: String(overview.metrics?.totalProducts || 0), note: "Catalog count" },
       { label: "Low stock products", value: String(overview.metrics?.lowStockProducts || 0), note: "Restock soon" },
       { label: "New customers", value: String(overview.metrics?.newCustomers || 0), note: "Last 30 days" },
-      { label: "Contact messages", value: String(overview.metrics?.contactMessages || 0), note: "Awaiting follow-up" }
+      { label: "Notifications", value: String((overview.notifications || overview.alerts || []).length), note: "Items to review" }
     ]);
 
     if (nodes.dashboardAlerts) {
-      const alerts = Array.isArray(overview.alerts) ? overview.alerts : [];
+      const alerts = Array.isArray(overview.notifications) ? overview.notifications : (Array.isArray(overview.alerts) ? overview.alerts : []);
       nodes.dashboardAlerts.innerHTML = alerts.length
         ? alerts.map(function (alert) {
             return `<div class="admin-stack-item"><h4>${escapeHtml(titleCase(alert.type))}</h4><p class="admin-meta">${escapeHtml(alert.label)}</p></div>`;
           }).join("")
         : emptyState("No alerts right now.");
+    }
+
+    if (nodes.dashboardRecentOrders) {
+      const orders = Array.isArray(overview.recentOrders) ? overview.recentOrders : [];
+      nodes.dashboardRecentOrders.innerHTML = orders.length
+        ? orders.map(function (order) {
+            return `
+              <article class="admin-transaction-item">
+                <div class="admin-meta-row">
+                  <span class="admin-tag ${order.orderStatus === "cancelled" ? "is-danger" : order.orderStatus === "delivered" ? "is-success" : ""}">${escapeHtml(titleCase(order.orderStatus || "pending"))}</span>
+                  <span class="admin-chip">${escapeHtml(titleCase(order.paymentStatus || "pending"))}</span>
+                </div>
+                <h4>${escapeHtml(order.orderId || "Order")}</h4>
+                <p class="admin-meta">${escapeHtml(order.customerName || order.customerEmail || "Customer")}</p>
+                <p class="admin-meta">${escapeHtml(formatDate(order.updatedAt || order.createdAt))}</p>
+                <strong>${escapeHtml(formatCurrency(order.total || 0, order.currency || "NGN"))}</strong>
+              </article>
+            `;
+          }).join("")
+        : emptyState("No recent orders yet.");
     }
 
     if (nodes.dashboardTransactions) {
@@ -1252,7 +1286,7 @@
               <label class="admin-inline-field admin-order-manual-field">
                 <span class="admin-field-label">Override status</span>
                 <select data-field="manualOrderStatus">
-                  ${["pending", "placed", "confirmed", "processing", "shipped", "delivered", "cancelled"].map(function (status) {
+                  ${["pending", "placed", "confirmed", "processing", "shipped", "delivered", "returned", "exchanged", "cancelled"].map(function (status) {
                     return `<option value="${status}" ${status === orderStatus ? "selected" : ""}>${titleCase(status)}</option>`;
                   }).join("")}
                 </select>
@@ -2179,12 +2213,12 @@
     navLinks.forEach(function (button) {
       const section = button.getAttribute("data-section") || "dashboard";
       const permission = SECTION_TITLES[section]?.permission;
-      const visible = !permission || hasPermission(permission);
-      button.hidden = !visible;
+      const navVisible = section !== "access-denied" && (!permission || hasPermission(permission));
+      button.hidden = !navVisible;
       const sectionNode = nodes.sections.find(function (entry) {
         return entry.getAttribute("data-section") === section;
       });
-      if (sectionNode) sectionNode.hidden = !visible;
+      if (sectionNode) sectionNode.hidden = section === "access-denied" ? false : !navVisible;
     });
   }
 
@@ -2326,6 +2360,7 @@
       case "newsletter": return loadNewsletter(force);
       case "reviews": return loadReviews(force);
       case "team": return loadTeam(force);
+      case "access-denied": return Promise.resolve();
       default: return loadOverview(force);
     }
   }
@@ -2334,7 +2369,7 @@
     const resolved = SECTION_TITLES[section] ? section : "dashboard";
     const permission = SECTION_TITLES[resolved].permission;
     if (permission && !hasPermission(permission)) {
-      return setSection("dashboard", false);
+      return setSection("access-denied", false);
     }
 
     state.activeSection = resolved;
@@ -2613,14 +2648,22 @@
           return;
         }
 
-        if (["ship-order", "deliver-order", "cancel-order"].includes(button.dataset.action || "")) {
+        if (["ship-order", "deliver-order", "cancel-order", "return-order", "exchange-order"].includes(button.dataset.action || "")) {
           if (button.dataset.action === "cancel-order" && !window.confirm(`Cancel order ${orderId}?`)) {
+            return;
+          }
+          if (button.dataset.action === "return-order" && !window.confirm(`Process a return for ${orderId}?`)) {
+            return;
+          }
+          if (button.dataset.action === "exchange-order" && !window.confirm(`Process an exchange for ${orderId}?`)) {
             return;
           }
           const actionMap = {
             "ship-order": "ship",
             "deliver-order": "deliver",
-            "cancel-order": "cancel"
+            "cancel-order": "cancel",
+            "return-order": "return",
+            "exchange-order": "exchange"
           };
           await api(`/api/admin/orders/${encodeURIComponent(orderId)}`, {
             method: "PATCH",
@@ -2639,7 +2682,11 @@
               ? `Order ${orderId} marked as shipped.`
               : button.dataset.action === "deliver-order"
                 ? `Order ${orderId} marked as delivered.`
-                : `Order ${orderId} cancelled.`,
+                : button.dataset.action === "return-order"
+                  ? `Return processed for ${orderId}.`
+                  : button.dataset.action === "exchange-order"
+                    ? `Exchange processed for ${orderId}.`
+                    : `Order ${orderId} cancelled.`,
             false
           );
           return;
@@ -2860,6 +2907,26 @@
           showFlash(error.message || "Unable to download activity statement.", true);
         } finally {
           exportButton.disabled = false;
+        }
+        return;
+      }
+
+      const reportButton = event.target.closest("[data-report-export]");
+      if (reportButton instanceof HTMLButtonElement) {
+        const type = reportButton.getAttribute("data-report-export") || "sales";
+        const period = reportButton.getAttribute("data-report-period") || "daily";
+        const format = reportButton.getAttribute("data-report-format") || "csv";
+        reportButton.disabled = true;
+        try {
+          await downloadAdminFile(
+            `/api/admin/reports/export?type=${encodeURIComponent(type)}&period=${encodeURIComponent(period)}&format=${encodeURIComponent(format)}`,
+            `benzy-${type}-report-${period}.${format}`
+          );
+          showFlash(`${titleCase(type)} report downloaded.`, false);
+        } catch (error) {
+          showFlash(error.message || "Unable to download report.", true);
+        } finally {
+          reportButton.disabled = false;
         }
         return;
       }
@@ -3085,6 +3152,14 @@
         showFlash("Admin account created.", false);
       });
     }
+
+    document.addEventListener("click", function (event) {
+      const button = event.target.closest("[data-section-jump]");
+      if (!(button instanceof HTMLElement)) return;
+      setSection(button.getAttribute("data-section-jump") || "dashboard", false).catch(function (error) {
+        showFlash(error.message || "Unable to switch section.", true);
+      });
+    });
 
     if (nodes.teamList) {
       nodes.teamList.addEventListener("click", async function (event) {

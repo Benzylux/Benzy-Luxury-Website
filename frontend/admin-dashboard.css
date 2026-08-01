@@ -751,6 +751,29 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
   white-space: nowrap;
 }
 
+.admin-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.admin-access-denied {
+  min-height: min(560px, 70vh);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.admin-access-card {
+  max-width: 560px;
+  text-align: center;
+}
+
+.admin-access-card .admin-primary-btn {
+  margin: 14px auto 0;
+}
+
 .admin-stack-item,
 .admin-transaction-item,
 .admin-order-card,
