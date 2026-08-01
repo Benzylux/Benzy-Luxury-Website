@@ -521,6 +521,16 @@ function isLegacyAdminEmail(email) {
   return LEGACY_ADMIN_EMAILS.has(normalizeEmail(email));
 }
 
+const ADMIN_ROLES = Object.freeze([
+  'super_admin',
+  'operations_manager',
+  'product_manager',
+  'order_manager',
+  'customer_support_admin'
+]);
+const LOGIN_LOCKOUT_MAX_ATTEMPTS = 5;
+const LOGIN_LOCKOUT_WINDOW_MS = 15 * 60 * 1000;
+
 function findLoginUserByEmail(users, email) {
   const normalizedEmail = normalizeEmail(email);
   const exactUser = users.find((user) => normalizeEmail(user?.email) === normalizedEmail);
@@ -1176,17 +1186,16 @@ function normalizeAdminRoleValue(role, user) {
   const isHost = (user?.role || inferRoleByEmail(user?.email)) === 'host';
   if (!isHost) return '';
   const normalized = String(role || '').trim().toLowerCase();
-  const allowedRoles = ['super_admin', 'product_manager', 'order_manager', 'customer_support_admin'];
-  return allowedRoles.includes(normalized) ? normalized : 'super_admin';
+  return ADMIN_ROLES.includes(normalized) ? normalized : 'super_admin';
 }
 
 const DEFAULT_SETTINGS = {
   shippingFeeNgn: 0,
   shipping: {
     defaultDomesticFeeNgn: 0,
-    lagosFeeNgn: 3000,
-    otherStatesFeeNgn: 4500,
-    internationalFeeNgn: 15000,
+    lagosFeeNgn: 0,
+    otherStatesFeeNgn: 0,
+    internationalFeeNgn: 0,
     freeShippingThresholdNgn: 150000,
     deliveryTimes: {
       lagos: '1-2 business days',
@@ -1262,20 +1271,31 @@ function resolveShippingQuote(settings, options = {}) {
   const freeShippingThresholdNgn = Number(shipping.freeShippingThresholdNgn) || 0;
 
   let zone = 'domestic';
-  let feeNgn = Number(shipping.defaultDomesticFeeNgn) || DEFAULT_SETTINGS.shipping.defaultDomesticFeeNgn;
+  const resolveFee = (...values) => {
+    for (const value of values) {
+      const amount = Number(value);
+      if (Number.isFinite(amount) && amount >= 0) return amount;
+    }
+    return 0;
+  };
+  let feeNgn = resolveFee(shipping.defaultDomesticFeeNgn, DEFAULT_SETTINGS.shipping.defaultDomesticFeeNgn);
   let deliveryTime = String(shipping.deliveryTimes?.otherStates || DEFAULT_SETTINGS.shipping.deliveryTimes.otherStates).trim();
 
   if (countryCode && countryCode !== 'NG') {
     zone = 'international';
-    feeNgn = Number(shipping.internationalFeeNgn) || DEFAULT_SETTINGS.shipping.internationalFeeNgn;
+    feeNgn = resolveFee(shipping.internationalFeeNgn, DEFAULT_SETTINGS.shipping.internationalFeeNgn);
     deliveryTime = String(shipping.deliveryTimes?.international || DEFAULT_SETTINGS.shipping.deliveryTimes.international).trim();
   } else if (normalizedState.includes('lagos')) {
     zone = 'lagos';
-    feeNgn = Number(shipping.lagosFeeNgn) || DEFAULT_SETTINGS.shipping.lagosFeeNgn;
+    feeNgn = resolveFee(shipping.lagosFeeNgn, DEFAULT_SETTINGS.shipping.lagosFeeNgn);
     deliveryTime = String(shipping.deliveryTimes?.lagos || DEFAULT_SETTINGS.shipping.deliveryTimes.lagos).trim();
   } else if (normalizedState) {
     zone = 'other_states';
-    feeNgn = Number(shipping.otherStatesFeeNgn) || Number(shipping.defaultDomesticFeeNgn) || DEFAULT_SETTINGS.shipping.otherStatesFeeNgn;
+    feeNgn = resolveFee(
+      shipping.otherStatesFeeNgn,
+      shipping.defaultDomesticFeeNgn,
+      DEFAULT_SETTINGS.shipping.otherStatesFeeNgn
+    );
     deliveryTime = String(shipping.deliveryTimes?.otherStates || DEFAULT_SETTINGS.shipping.deliveryTimes.otherStates).trim();
   }
 
@@ -1283,8 +1303,8 @@ function resolveShippingQuote(settings, options = {}) {
 
   return {
     zone,
-    feeNgn: isFree ? 0 : Math.max(0, Number.isFinite(feeNgn) ? feeNgn : DEFAULT_SETTINGS.shipping.defaultDomesticFeeNgn),
-    baseFeeNgn: Math.max(0, Number.isFinite(feeNgn) ? feeNgn : DEFAULT_SETTINGS.shipping.defaultDomesticFeeNgn),
+    feeNgn: isFree ? 0 : Math.max(0, Number.isFinite(feeNgn) ? feeNgn : 0),
+    baseFeeNgn: Math.max(0, Number.isFinite(feeNgn) ? feeNgn : 0),
     deliveryTime,
     isFree,
     freeShippingThresholdNgn,
@@ -2374,6 +2394,57 @@ function getRequestIpAddress(req) {
 
 function getRequestUserAgent(req) {
   return sanitizePlainText(req?.headers?.['user-agent'] || 'Unknown device', 220);
+}
+
+function getActiveLoginLockout(user) {
+  const lockout = user?.loginLockout || {};
+  const lockedUntil = lockout.lockedUntil ? new Date(lockout.lockedUntil) : null;
+  if (lockedUntil && !Number.isNaN(lockedUntil.getTime()) && lockedUntil.getTime() > Date.now()) {
+    return lockout;
+  }
+  return null;
+}
+
+function clearLoginLockout(user) {
+  user.failedLoginAttempts = 0;
+  user.loginLockout = null;
+}
+
+function recordLoginHistory(user, req, status, details = {}) {
+  const history = Array.isArray(user.loginHistory) ? user.loginHistory : [];
+  user.loginHistory = [
+    {
+      status,
+      at: new Date().toISOString(),
+      ipAddress: getRequestIpAddress(req),
+      device: getRequestUserAgent(req),
+      ...details
+    },
+    ...history
+  ].slice(0, 25);
+}
+
+function recordFailedLoginAttempt(user, req) {
+  const lockout = getActiveLoginLockout(user);
+  if (lockout) {
+    recordLoginHistory(user, req, 'blocked', { reason: 'account_lockout' });
+    return lockout;
+  }
+
+  const attempts = Math.max(0, Number(user.failedLoginAttempts || 0)) + 1;
+  user.failedLoginAttempts = attempts;
+  user.lastFailedLoginAt = new Date().toISOString();
+  recordLoginHistory(user, req, 'failed', { failedAttempts: attempts });
+
+  if (attempts >= LOGIN_LOCKOUT_MAX_ATTEMPTS) {
+    user.loginLockout = {
+      lockedUntil: new Date(Date.now() + LOGIN_LOCKOUT_WINDOW_MS).toISOString(),
+      failedAttempts: attempts,
+      lockedAt: new Date().toISOString()
+    };
+  }
+
+  return user.loginLockout || null;
 }
 
 function formatLoginEmailTime(value) {
@@ -5274,19 +5345,36 @@ app.post('/api/auth/login', asyncHandler(async (req, res) => {
   const users = await readUsers();
   const user = findLoginUserByEmail(users, email);
   if (!user) return res.status(401).json({ error: 'Invalid email or password.' });
+  const userIndex = users.findIndex((entry) => String(entry?.id) === String(user.id));
   if (user.isBanned) {
     return res.status(403).json({ error: 'This account has been restricted. Please contact support.' });
   }
+  const activeLockout = getActiveLoginLockout(user);
+  if (activeLockout) {
+    recordLoginHistory(user, req, 'blocked', { reason: 'account_lockout' });
+    await writeUsers(users);
+    return res.status(423).json({ error: 'Too many failed login attempts. Please try again later or reset your password.' });
+  }
 
   const valid = await bcrypt.compare(password, user.passwordHash || '');
-  if (!valid) return res.status(401).json({ error: 'Invalid email or password.' });
+  if (!valid) {
+    const lockout = recordFailedLoginAttempt(user, req);
+    await writeUsers(users);
+    if (lockout) {
+      return res.status(423).json({ error: 'Too many failed login attempts. Please try again later or reset your password.' });
+    }
+    return res.status(401).json({ error: 'Invalid email or password.' });
+  }
 
   if (isPrimaryAdminEmail(email) && isLegacyAdminEmail(user.email)) {
     user.email = PRIMARY_ADMIN_EMAIL;
     user.role = 'host';
     user.adminRole = normalizeAdminRoleValue(user.adminRole, user);
   }
+  clearLoginLockout(user);
   user.lastLoginAt = new Date().toISOString();
+  recordLoginHistory(user, req, 'success');
+  if (userIndex >= 0) users[userIndex] = user;
   await writeUsers(users);
   await sendAdminCustomerActivityEmail(user, 'logged in', {
     lastLoginAt: user.lastLoginAt
@@ -5418,6 +5506,7 @@ app.post('/api/auth/reset-password', asyncHandler(async (req, res) => {
   users[idx].passwordHash = await bcrypt.hash(password, 10);
   users[idx].passwordReset = null;
   users[idx].passwordChangedAt = new Date().toISOString();
+  clearLoginLockout(users[idx]);
   await writeUsers(users);
   res.json({ token: signToken(users[idx]), user: toPublicUser(users[idx]) });
 }));

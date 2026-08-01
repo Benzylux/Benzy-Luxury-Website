@@ -19,6 +19,7 @@
   };
   const PERMISSIONS_BY_ROLE = {
     super_admin: ["dashboard", "products", "orders", "customers", "messages", "payments", "coupons", "settings", "content", "newsletter", "reviews", "users", "logs"],
+    operations_manager: ["dashboard", "products", "orders", "customers", "messages", "payments", "coupons", "settings", "content", "newsletter", "reviews", "logs"],
     product_manager: ["dashboard", "products", "coupons", "content"],
     order_manager: ["dashboard", "orders", "payments", "settings"],
     customer_support_admin: ["dashboard", "orders", "customers", "messages", "newsletter", "reviews"]
@@ -98,6 +99,7 @@
     subscribersList: document.getElementById("subscribers-list"),
     reviewForm: document.getElementById("review-form"),
     reviewsList: document.getElementById("reviews-list"),
+    teamCreateForm: document.getElementById("team-create-form"),
     teamList: document.getElementById("team-list")
   };
 
@@ -700,6 +702,10 @@
 
   function hasPermission(permission) {
     return state.permissions.has(permission);
+  }
+
+  function isSuperAdmin() {
+    return String(state.user?.adminRole || "").trim().toLowerCase() === "super_admin";
   }
 
   function showFlash(message, isError) {
@@ -1872,8 +1878,8 @@
     }
     nodes.teamList.innerHTML = state.users.map(function (user) {
       const displayName = user.name || "User profile";
-      const adminRoles = ["super_admin", "product_manager", "order_manager", "customer_support_admin"];
-      const selectedAdminRole = adminRoles.includes(user.adminRole) ? user.adminRole : "customer_support_admin";
+      const adminRoles = ["super_admin", "operations_manager", "product_manager", "order_manager", "customer_support_admin"];
+      const selectedAdminRole = adminRoles.includes(user.adminRole) ? user.adminRole : "operations_manager";
       const initials = String(displayName)
         .split(/\s+/)
         .filter(Boolean)
@@ -1925,6 +1931,10 @@
             <label class="admin-inline-field">Change password
               <input data-field="password" type="password" minlength="8" autocomplete="new-password" placeholder="Leave blank to keep current" />
             </label>
+            <label class="admin-switch-field">
+              <input data-field="isBanned" type="checkbox" ${user.isBanned ? "checked" : ""} />
+              <span>Deactivate account</span>
+            </label>
           </div>
         </article>
       `;
@@ -1946,6 +1956,10 @@
     getField(nodes.settingsForm, "adminSessionTimeoutMinutes").value = security.adminSessionTimeoutMinutes ?? 30;
     getField(nodes.settingsForm, "activityLogsRetentionDays").value = security.activityLogsRetentionDays ?? 30;
     getField(nodes.settingsForm, "twoFactorEnabled").checked = security.twoFactorEnabled === true;
+    ["adminSessionTimeoutMinutes", "activityLogsRetentionDays", "twoFactorEnabled"].forEach(function (name) {
+      const field = getField(nodes.settingsForm, name);
+      if (field) field.disabled = !isSuperAdmin();
+    });
   }
 
   function fillContentForm() {
@@ -2810,13 +2824,15 @@
               otherStates: getFieldValue(nodes.settingsForm, "otherStatesDelivery").trim(),
               international: getFieldValue(nodes.settingsForm, "internationalDelivery").trim()
             }
-          },
-          security: {
+          }
+        };
+        if (isSuperAdmin()) {
+          payload.security = {
             adminSessionTimeoutMinutes: Number(getFieldValue(nodes.settingsForm, "adminSessionTimeoutMinutes") || 30),
             activityLogsRetentionDays: Number(getFieldValue(nodes.settingsForm, "activityLogsRetentionDays") || 30),
             twoFactorEnabled: getFieldChecked(nodes.settingsForm, "twoFactorEnabled")
-          }
-        };
+          };
+        }
         const result = await api("/api/admin/settings", {
           method: "PATCH",
           body: JSON.stringify(payload)
@@ -3047,13 +3063,36 @@
       });
     }
 
+    if (nodes.teamCreateForm instanceof HTMLFormElement) {
+      nodes.teamCreateForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const formData = new FormData(nodes.teamCreateForm);
+        await api("/api/admin/users", {
+          method: "POST",
+          body: JSON.stringify({
+            name: formData.get("name") || "",
+            email: formData.get("email") || "",
+            phone: formData.get("phone") || "",
+            adminRole: formData.get("adminRole") || "operations_manager",
+            password: formData.get("password") || ""
+          })
+        });
+        nodes.teamCreateForm.reset();
+        const roleField = nodes.teamCreateForm.querySelector('[name="adminRole"]');
+        if (roleField instanceof HTMLSelectElement) roleField.value = "operations_manager";
+        state.loaded.team = false;
+        await loadTeam(true);
+        showFlash("Admin account created.", false);
+      });
+    }
+
     if (nodes.teamList) {
       nodes.teamList.addEventListener("click", async function (event) {
         const roleOption = event.target.closest("button[data-admin-role-option]");
         if (roleOption instanceof HTMLButtonElement) {
           const card = roleOption.closest("[data-user-id]");
           if (!(card instanceof HTMLElement)) return;
-          const nextRole = roleOption.getAttribute("data-admin-role-option") || "customer_support_admin";
+          const nextRole = roleOption.getAttribute("data-admin-role-option") || "operations_manager";
           const hiddenField = card.querySelector('[data-field="adminRole"]');
           const picker = roleOption.closest(".admin-role-picker");
           const summaryLabel = picker?.querySelector("summary span");
@@ -3089,7 +3128,8 @@
               name: card.querySelector('[data-field="name"]')?.value || "",
               phone: card.querySelector('[data-field="phone"]')?.value || "",
               role: card.querySelector('[data-field="role"]')?.value || "resident",
-              adminRole: card.querySelector('[data-field="adminRole"]')?.value || "customer_support_admin",
+              adminRole: card.querySelector('[data-field="adminRole"]')?.value || "operations_manager",
+              isBanned: card.querySelector('[data-field="isBanned"]')?.checked === true,
               password: card.querySelector('[data-field="password"]')?.value || ""
             })
           });

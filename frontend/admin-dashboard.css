@@ -734,6 +734,23 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
   gap: 12px;
 }
 
+.admin-team-create-form {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+  gap: 10px;
+  align-items: end;
+  margin: 0 0 14px;
+  padding: 12px;
+  border: 1px solid rgba(99, 70, 48, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 250, 245, 0.72);
+}
+
+.admin-team-create-form .admin-primary-btn {
+  min-height: 44px;
+  white-space: nowrap;
+}
+
 .admin-stack-item,
 .admin-transaction-item,
 .admin-order-card,
@@ -2261,6 +2278,7 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
   .admin-payment-grid,
   .admin-customer-grid,
   .admin-message-grid,
+  .admin-team-create-form,
   .admin-team-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -2464,6 +2482,7 @@ body.admin-shell-body[data-admin-section="products"] .admin-topbar-text {
   .admin-payment-grid,
   .admin-customer-grid,
   .admin-message-grid,
+  .admin-team-create-form,
   .admin-team-grid,
   .admin-chart-row {
     grid-template-columns: 1fr;

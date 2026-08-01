@@ -997,10 +997,34 @@
               <div class="admin-card-head">
                 <div>
                   <p class="admin-card-kicker">Admin users and roles</p>
-                  <h3>Super admin, product, order and support access</h3>
+                  <h3>Super admin, operations, product, order and support access</h3>
                   <p class="admin-card-copy">Open a user card, type a new password only when you want to change it, then save.</p>
                 </div>
               </div>
+              <form id="team-create-form" class="admin-team-create-form">
+                <label class="admin-inline-field">Name
+                  <input name="name" type="text" autocomplete="name" required />
+                </label>
+                <label class="admin-inline-field">Email
+                  <input name="email" type="email" autocomplete="email" required />
+                </label>
+                <label class="admin-inline-field">Phone
+                  <input name="phone" type="text" autocomplete="tel" />
+                </label>
+                <label class="admin-inline-field">Admin role
+                  <select name="adminRole">
+                    <option value="operations_manager" selected>Operations Manager</option>
+                    <option value="product_manager">Product Manager</option>
+                    <option value="order_manager">Order Manager</option>
+                    <option value="customer_support_admin">Customer Support Admin</option>
+                    <option value="super_admin">Super Admin</option>
+                  </select>
+                </label>
+                <label class="admin-inline-field">Temporary password
+                  <input name="password" type="password" minlength="8" autocomplete="new-password" required />
+                </label>
+                <button class="admin-primary-btn" type="submit">Create admin</button>
+              </form>
               <div id="team-list" class="admin-team-list"></div>
             </div>
           </div>

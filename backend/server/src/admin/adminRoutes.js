@@ -17,7 +17,7 @@ const {
   sendWatiSessionMessage
 } = require('../services/watiService');
 
-const ADMIN_ROLES = ['super_admin', 'product_manager', 'order_manager', 'customer_support_admin'];
+const ADMIN_ROLES = ['super_admin', 'operations_manager', 'product_manager', 'order_manager', 'customer_support_admin'];
 const DEFAULT_LOW_STOCK_THRESHOLD = 5;
 const DEFAULT_NOTIFICATION_SETTINGS = Object.freeze({
   email: true,
@@ -177,6 +177,7 @@ const ADMIN_PERMISSION_MAP = {
     'logs'
   ],
   product_manager: ['dashboard', 'products', 'coupons', 'content'],
+  operations_manager: ['dashboard', 'products', 'orders', 'customers', 'messages', 'payments', 'coupons', 'settings', 'content', 'newsletter', 'reviews', 'logs'],
   order_manager: ['dashboard', 'orders', 'payments', 'settings'],
   customer_support_admin: ['dashboard', 'orders', 'customers', 'messages', 'newsletter', 'reviews']
 };
@@ -326,6 +327,19 @@ function createAdminRouter(dependencies) {
     if (hasPermission(currentUser, permission)) return true;
     res.status(403).json({ error: `You do not have permission to manage ${permission}.` });
     return false;
+  }
+
+  function isSuperAdmin(user) {
+    return normalizeAdminRole(user) === 'super_admin';
+  }
+
+  function getRequestIpAddress(req) {
+    const forwardedFor = String(req?.headers?.['x-forwarded-for'] || '').split(',')[0].trim();
+    return safeString(forwardedFor || req?.ip || req?.socket?.remoteAddress || 'Unknown location', 80);
+  }
+
+  function getRequestDevice(req) {
+    return safeString(req?.headers?.['user-agent'] || 'Unknown device', 220);
   }
 
   function normalizeOrderStatus(status) {
@@ -791,6 +805,8 @@ function createAdminRouter(dependencies) {
         area: safeString(activity?.area || 'general', 80),
         entityId: safeString(activity?.entityId || '', 120),
         message: safeString(activity?.message || '', 240),
+        ipAddress: getRequestIpAddress(req),
+        device: getRequestDevice(req),
         metadata: activity?.metadata && typeof activity.metadata === 'object' ? clone(activity.metadata) : {},
         createdAt: new Date().toISOString()
       });
@@ -883,7 +899,7 @@ function createAdminRouter(dependencies) {
 
     Array.from(bySection.entries()).sort(([a], [b]) => a.localeCompare(b)).forEach(([section, entries]) => {
       rows.push([`Section: ${section}`]);
-      rows.push(['Created At', 'Admin Email', 'Admin Name', 'Area', 'Action', 'Entity ID', 'Message']);
+      rows.push(['Created At', 'Admin Email', 'Admin Name', 'Area', 'Action', 'Entity ID', 'IP Address', 'Device', 'Message']);
       entries.forEach((log) => {
         rows.push([
           log.createdAt || '',
@@ -892,6 +908,8 @@ function createAdminRouter(dependencies) {
           log.area || '',
           log.action || '',
           log.entityId || '',
+          log.ipAddress || '',
+          log.device || '',
           log.message || ''
         ]);
       });
@@ -2673,13 +2691,23 @@ function createAdminRouter(dependencies) {
   router.patch('/settings', asyncHandler(async (req, res) => {
     if (!requirePermission(req, res, 'settings')) return;
     const current = await readSettings();
-    const next = deepMerge(current, req.body || {});
+    const requested = req.body && typeof req.body === 'object' ? clone(req.body) : {};
+    if (!isSuperAdmin(getAdminContext(req).current)) {
+      delete requested.security;
+      requested.shipping = requested.shipping && typeof requested.shipping === 'object' ? requested.shipping : {};
+      if (requested.shippingFeeNgn !== undefined) {
+        requested.shipping.defaultDomesticFeeNgn = requested.shippingFeeNgn;
+      }
+    }
+    const next = deepMerge(current, requested);
     await writeSettings(next);
     await logAdminActivity(req, {
       action: 'updated',
       area: 'settings',
       entityId: 'app',
-      message: 'Updated admin settings.'
+      message: isSuperAdmin(getAdminContext(req).current)
+        ? 'Updated admin settings.'
+        : 'Updated shipping operations settings.'
     });
     res.json({ success: true, settings: next });
   }));
@@ -2873,6 +2901,64 @@ function createAdminRouter(dependencies) {
     });
   }));
 
+  router.post('/users', asyncHandler(async (req, res) => {
+    if (!requirePermission(req, res, 'users')) return;
+    const name = safeString(req.body?.name || '', 120);
+    const email = normalizeEmail(req.body?.email || '');
+    const phone = safeString(req.body?.phone || '', 40);
+    const adminRole = String(req.body?.adminRole || 'operations_manager').trim().toLowerCase();
+    const password = String(req.body?.password || '').trim();
+
+    if (!name || name.length < 2) return res.status(400).json({ error: 'Name is required.' });
+    if (!isValidEmail(email)) return res.status(400).json({ error: 'A valid email is required.' });
+    if (!ADMIN_ROLES.includes(adminRole)) return res.status(400).json({ error: 'Invalid admin role.' });
+    if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+
+    const users = await readUsers();
+    if (users.some((user) => normalizeEmail(user?.email) === email)) {
+      return res.status(409).json({ error: 'Email already registered.' });
+    }
+
+    const user = {
+      id: Date.now(),
+      name,
+      email,
+      phone,
+      role: 'host',
+      adminRole,
+      isBanned: false,
+      banReason: '',
+      addresses: [],
+      wishlist: [],
+      profilePicture: '',
+      customerSegment: 'staff',
+      emailVerified: true,
+      emailVerification: null,
+      passwordReset: null,
+      loginOtp: null,
+      loginHistory: [],
+      notifications: normalizeNotificationSettings(),
+      passwordHash: await bcrypt.hash(password, 10),
+      createdAt: new Date().toISOString(),
+      createdBy: normalizeEmail(getAdminContext(req).current?.email)
+    };
+
+    users.push(user);
+    await writeUsers(users);
+    await logAdminActivity(req, {
+      action: 'created',
+      area: 'users',
+      entityId: String(user.id),
+      message: `Created ${adminRole} account for ${email}.`,
+      metadata: { role: user.role, adminRole }
+    });
+
+    res.status(201).json({
+      success: true,
+      user: toPublicUser ? { ...toPublicUser(user), adminRole: normalizeAdminRole(user), isBanned: false } : user
+    });
+  }));
+
   router.patch('/users/:id', asyncHandler(async (req, res) => {
     if (!requirePermission(req, res, 'users')) return;
     const users = await readUsers();
@@ -2945,6 +3031,10 @@ function createAdminRouter(dependencies) {
     }
 
     const users = await readUsers();
+    const targetUser = users.find((user) => String(user?.id) === targetId);
+    if (targetUser && normalizeAdminRole(targetUser) === 'super_admin') {
+      return res.status(403).json({ error: 'CEO and super admin accounts cannot be deleted.' });
+    }
     const nextUsers = users.filter((user) => String(user?.id) !== targetId);
     if (nextUsers.length === users.length) {
       return res.status(404).json({ error: 'User not found.' });
