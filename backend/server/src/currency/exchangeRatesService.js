@@ -452,6 +452,8 @@ function buildPaystackVerificationResult(options = {}) {
   ) || expectedCurrency;
   const expectedAmountSubunit = toSubunit(options.expectedAmountMajor || 0, expectedCurrency);
   const verifiedAmountSubunit = Math.max(0, Math.round(toNumber(options.verifiedAmountSubunit, 0)));
+  const overageSubunit = Math.max(0, verifiedAmountSubunit - expectedAmountSubunit);
+  const shortfallSubunit = Math.max(0, expectedAmountSubunit - verifiedAmountSubunit);
 
   return {
     expectedCurrency,
@@ -460,8 +462,12 @@ function buildPaystackVerificationResult(options = {}) {
     verifiedAmountMajor: fromSubunit(verifiedAmountSubunit, verifiedCurrency),
     expectedAmountSubunit,
     verifiedAmountSubunit,
+    overageSubunit,
+    overageMajor: fromSubunit(overageSubunit, verifiedCurrency),
+    shortfallSubunit,
+    shortfallMajor: fromSubunit(shortfallSubunit, verifiedCurrency),
     matchesCurrency: verifiedCurrency === expectedCurrency,
-    matchesAmount: verifiedAmountSubunit === expectedAmountSubunit
+    matchesAmount: verifiedAmountSubunit >= expectedAmountSubunit
   };
 }
 

@@ -120,7 +120,7 @@ test('checkout pricing utilities convert canonical NGN totals into charge curren
   }
 });
 
-test('paystack verification result compares subunits exactly', () => {
+test('paystack verification accepts gateway overages but rejects underpayments', () => {
   const loaded = loadServiceWithEnv({
     SUPPORTED_DISPLAY_CURRENCIES: 'NGN,USD'
   });
@@ -132,10 +132,16 @@ test('paystack verification result compares subunits exactly', () => {
       verifiedAmountSubunit: 1118,
       verifiedCurrency: 'USD'
     });
-    const mismatched = loaded.service.buildPaystackVerificationResult({
+    const overpaid = loaded.service.buildPaystackVerificationResult({
       expectedAmountMajor: 11.18,
       expectedCurrency: 'USD',
       verifiedAmountSubunit: 1119,
+      verifiedCurrency: 'USD'
+    });
+    const underpaid = loaded.service.buildPaystackVerificationResult({
+      expectedAmountMajor: 11.18,
+      expectedCurrency: 'USD',
+      verifiedAmountSubunit: 1117,
       verifiedCurrency: 'USD'
     });
 
@@ -144,9 +150,17 @@ test('paystack verification result compares subunits exactly', () => {
     assert.equal(matched.expectedAmountSubunit, 1118);
     assert.equal(matched.verifiedAmountMajor, 11.18);
 
-    assert.equal(mismatched.matchesCurrency, true);
-    assert.equal(mismatched.matchesAmount, false);
-    assert.equal(mismatched.verifiedAmountSubunit, 1119);
+    assert.equal(overpaid.matchesCurrency, true);
+    assert.equal(overpaid.matchesAmount, true);
+    assert.equal(overpaid.verifiedAmountSubunit, 1119);
+    assert.equal(overpaid.overageSubunit, 1);
+    assert.equal(overpaid.overageMajor, 0.01);
+
+    assert.equal(underpaid.matchesCurrency, true);
+    assert.equal(underpaid.matchesAmount, false);
+    assert.equal(underpaid.verifiedAmountSubunit, 1117);
+    assert.equal(underpaid.shortfallSubunit, 1);
+    assert.equal(underpaid.shortfallMajor, 0.01);
   } finally {
     loaded.restore();
   }

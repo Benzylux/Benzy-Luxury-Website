@@ -1206,18 +1206,26 @@
 
         if (countryCode && countryCode !== 'NG') {
           zone = 'international';
-          feeNgn = resolveFee(shipping.internationalFeeNgn, DEFAULT_SHIPPING_SETTINGS.shipping.internationalFeeNgn);
+          feeNgn = resolveFee(
+            Number(shipping.internationalFeeNgn) > 0 ? shipping.internationalFeeNgn : null,
+            shipping.defaultDomesticFeeNgn,
+            DEFAULT_SHIPPING_SETTINGS.shipping.internationalFeeNgn
+          );
           deliveryTime = String(shipping.deliveryTimes && shipping.deliveryTimes.international || '').trim()
             || DEFAULT_SHIPPING_SETTINGS.shipping.deliveryTimes.international;
         } else if (state.indexOf('lagos') !== -1) {
           zone = 'lagos';
-          feeNgn = resolveFee(shipping.lagosFeeNgn, DEFAULT_SHIPPING_SETTINGS.shipping.lagosFeeNgn);
+          feeNgn = resolveFee(
+            Number(shipping.lagosFeeNgn) > 0 ? shipping.lagosFeeNgn : null,
+            shipping.defaultDomesticFeeNgn,
+            DEFAULT_SHIPPING_SETTINGS.shipping.lagosFeeNgn
+          );
           deliveryTime = String(shipping.deliveryTimes && shipping.deliveryTimes.lagos || '').trim()
             || DEFAULT_SHIPPING_SETTINGS.shipping.deliveryTimes.lagos;
         } else if (state) {
           zone = 'other_states';
           feeNgn = resolveFee(
-            shipping.otherStatesFeeNgn,
+            Number(shipping.otherStatesFeeNgn) > 0 ? shipping.otherStatesFeeNgn : null,
             shipping.defaultDomesticFeeNgn,
             DEFAULT_SHIPPING_SETTINGS.shipping.otherStatesFeeNgn
           );

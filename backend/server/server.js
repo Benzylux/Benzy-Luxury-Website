@@ -1283,16 +1283,24 @@ function resolveShippingQuote(settings, options = {}) {
 
   if (countryCode && countryCode !== 'NG') {
     zone = 'international';
-    feeNgn = resolveFee(shipping.internationalFeeNgn, DEFAULT_SETTINGS.shipping.internationalFeeNgn);
+    feeNgn = resolveFee(
+      Number(shipping.internationalFeeNgn) > 0 ? shipping.internationalFeeNgn : null,
+      shipping.defaultDomesticFeeNgn,
+      DEFAULT_SETTINGS.shipping.internationalFeeNgn
+    );
     deliveryTime = String(shipping.deliveryTimes?.international || DEFAULT_SETTINGS.shipping.deliveryTimes.international).trim();
   } else if (normalizedState.includes('lagos')) {
     zone = 'lagos';
-    feeNgn = resolveFee(shipping.lagosFeeNgn, DEFAULT_SETTINGS.shipping.lagosFeeNgn);
+    feeNgn = resolveFee(
+      Number(shipping.lagosFeeNgn) > 0 ? shipping.lagosFeeNgn : null,
+      shipping.defaultDomesticFeeNgn,
+      DEFAULT_SETTINGS.shipping.lagosFeeNgn
+    );
     deliveryTime = String(shipping.deliveryTimes?.lagos || DEFAULT_SETTINGS.shipping.deliveryTimes.lagos).trim();
   } else if (normalizedState) {
     zone = 'other_states';
     feeNgn = resolveFee(
-      shipping.otherStatesFeeNgn,
+      Number(shipping.otherStatesFeeNgn) > 0 ? shipping.otherStatesFeeNgn : null,
       shipping.defaultDomesticFeeNgn,
       DEFAULT_SETTINGS.shipping.otherStatesFeeNgn
     );
@@ -3495,7 +3503,8 @@ async function prepareCheckoutOrderDraft(req, payload, requestedMethod, options 
   const subtotal = roundMoney(Number(validatedServerCart.summary?.subtotal || 0) || itemsSubtotal);
   if (!subtotal || subtotal <= 0) throw httpError(400, 'Subtotal must be greater than zero.');
 
-  const shipping = roundMoney(validatedServerCart.summary?.shippingFee || 0);
+  let shipping = roundMoney(validatedServerCart.summary?.shippingFee || 0);
+  let shippingQuote = null;
   const orders = await readOrders();
   const subscribers = await readSubscribers();
   const cartCoupon = validatedServerCart.summary?.appliedCoupon || null;
@@ -3530,6 +3539,15 @@ async function prepareCheckoutOrderDraft(req, payload, requestedMethod, options 
   }
 
   const discountedSubtotal = roundMoney(Math.max(0, subtotal - discountAmount));
+  const settings = await readSettings();
+  shippingQuote = resolveShippingQuote(settings, {
+    subtotalNgn: discountedSubtotal,
+    state: customer.state,
+    country: customer.country
+  });
+  shipping = cartCoupon?.freeShipping
+    ? 0
+    : roundMoney(shippingQuote.feeNgn);
   const tax = roundMoney(discountedSubtotal * ORDER_TAX_RATE);
   const total = roundMoney(discountedSubtotal + tax + shipping);
   const requestCountryCode = getRequestCountryCode(req, customer.country);
@@ -3586,6 +3604,7 @@ async function prepareCheckoutOrderDraft(req, payload, requestedMethod, options 
     discountedSubtotal,
     tax,
     shipping,
+    shippingQuote,
     total,
     displayCurrency: checkoutPricing.displayCurrency,
     requestedCheckoutCurrency: checkoutPricing.requestedCheckoutCurrency,
@@ -4418,7 +4437,9 @@ app.post('/api/checkout/paystack/initialize', asyncHandler(async (req, res) => {
       requestedCheckoutCurrency: draft.requestedCheckoutCurrency,
       chargeCurrency: draft.chargeCurrency,
       chargeCurrencyForced: draft.chargeCurrencyForced,
-      chargeCurrencyMessage: draft.chargeCurrencyMessage
+      chargeCurrencyMessage: draft.chargeCurrencyMessage,
+      shippingQuote: draft.shippingQuote || null,
+      shippingZone: draft.shippingQuote?.zone || ''
     }
   };
   const order = canReuseOrder
@@ -4730,14 +4751,6 @@ app.post('/api/payments/paystack/verify', asyncHandler(async (req, res) => {
     });
   }
 
-  if (!paystackVerification.matchesAmount) {
-    return res.status(409).json({
-      success: false,
-      verified: false,
-      message: 'Verified amount does not match the order total.'
-    });
-  }
-
   const paidAt = new Date().toISOString();
   const chargedAmount = paystackVerification.verifiedAmountMajor;
   const verificationCurrency = paystackVerification.verifiedCurrency;
@@ -4764,7 +4777,12 @@ app.post('/api/payments/paystack/verify', asyncHandler(async (req, res) => {
         currency: verificationCurrency,
         amount: chargedAmount,
         amountSubunit: paystackVerification.verifiedAmountSubunit,
-        expectedAmountSubunit: paystackVerification.expectedAmountSubunit
+        expectedAmountSubunit: paystackVerification.expectedAmountSubunit,
+        matchesAmount: paystackVerification.matchesAmount,
+        overageAmount: paystackVerification.overageMajor,
+        overageSubunit: paystackVerification.overageSubunit,
+        shortfallAmount: paystackVerification.shortfallMajor,
+        shortfallSubunit: paystackVerification.shortfallSubunit
       }
     }
   });
