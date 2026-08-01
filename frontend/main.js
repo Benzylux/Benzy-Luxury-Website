@@ -1600,7 +1600,7 @@ function readBenzyStoredApiBase() {
       resetBtn.addEventListener("click", function () {
         saveProductOverrides({});
         localStorage.removeItem(SHIPPING_FEE_KEY);
-        saveShippingFeeToApi(3000).catch(() => {});
+        saveShippingFeeToApi(0).catch(() => {});
         renderAdmin();
       });
     }

@@ -68,7 +68,7 @@ export function StoreProvider({ children }) {
   }, []);
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = subtotal > 150000 || subtotal === 0 ? 0 : 3000;
+  const shipping = 0;
   const tax = Math.round(subtotal * 0.075);
   const total = subtotal + shipping + tax;
 

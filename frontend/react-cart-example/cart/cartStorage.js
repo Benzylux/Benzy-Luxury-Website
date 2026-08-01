@@ -1,5 +1,5 @@
 const GUEST_CART_STORAGE_KEY = 'benzy_react_guest_cart';
-const DEFAULT_GUEST_SHIPPING_FEE = 3000;
+const DEFAULT_GUEST_SHIPPING_FEE = 0;
 
 function safeJsonParse(value, fallback) {
   try {
@@ -114,7 +114,7 @@ export function calculateGuestCartSummary(state) {
   const subtotal = normalized.items.reduce((sum, item) => sum + (Number(item.price || 0) * Number(item.quantity || 0)), 0);
   const coupon = normalizeAppliedCoupon(normalized.appliedCoupon);
   let discount = 0;
-  let shippingFee = normalized.items.length ? Number(normalized.shippingFee || DEFAULT_GUEST_SHIPPING_FEE) : 0;
+  let shippingFee = normalized.items.length ? Number(normalized.shippingFee ?? DEFAULT_GUEST_SHIPPING_FEE) : 0;
 
   if (coupon && subtotal >= Number(coupon.minimumOrderAmount || 0)) {
     const eligibleSubtotal = normalized.items
@@ -173,7 +173,7 @@ export function writeGuestCartFromServerCart(cart) {
     items: Array.isArray(cart?.items) ? cart.items : [],
     couponCode: cart?.summary?.appliedCoupon?.code || '',
     appliedCoupon: cart?.summary?.appliedCoupon || null,
-    shippingFee: Number(cart?.summary?.shippingFee || DEFAULT_GUEST_SHIPPING_FEE),
+    shippingFee: Number(cart?.summary?.shippingFee ?? DEFAULT_GUEST_SHIPPING_FEE),
     couponMessage: cart?.summary?.couponMessage || '',
     updatedAt: cart?.updatedAt
   });

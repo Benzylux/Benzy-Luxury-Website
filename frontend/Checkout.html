@@ -308,8 +308,8 @@
         shipping: {
           defaultDomesticFeeNgn: DEFAULT_SHIPPING_NGN,
           lagosFeeNgn: DEFAULT_SHIPPING_NGN,
-          otherStatesFeeNgn: 4500,
-          internationalFeeNgn: 15000,
+          otherStatesFeeNgn: DEFAULT_SHIPPING_NGN,
+          internationalFeeNgn: DEFAULT_SHIPPING_NGN,
           freeShippingThresholdNgn: 150000,
           deliveryTimes: {
             lagos: '1-2 business days',
@@ -1193,23 +1193,34 @@
         var countryCode = normalizeCountryValue(selectedDelivery && selectedDelivery.country);
         var thresholdNgn = Number(shipping.freeShippingThresholdNgn || 0);
         var zone = 'domestic';
-        var feeNgn = Number(shipping.defaultDomesticFeeNgn || settings.shippingFeeNgn || DEFAULT_SHIPPING_NGN);
+        function resolveFee() {
+          for (var i = 0; i < arguments.length; i += 1) {
+            var amount = Number(arguments[i]);
+            if (Number.isFinite(amount) && amount >= 0) return amount;
+          }
+          return DEFAULT_SHIPPING_NGN;
+        }
+        var feeNgn = resolveFee(shipping.defaultDomesticFeeNgn, settings.shippingFeeNgn, DEFAULT_SHIPPING_NGN);
         var deliveryTime = String(shipping.deliveryTimes && shipping.deliveryTimes.otherStates || '').trim()
           || DEFAULT_SHIPPING_SETTINGS.shipping.deliveryTimes.otherStates;
 
         if (countryCode && countryCode !== 'NG') {
           zone = 'international';
-          feeNgn = Number(shipping.internationalFeeNgn || DEFAULT_SHIPPING_SETTINGS.shipping.internationalFeeNgn);
+          feeNgn = resolveFee(shipping.internationalFeeNgn, DEFAULT_SHIPPING_SETTINGS.shipping.internationalFeeNgn);
           deliveryTime = String(shipping.deliveryTimes && shipping.deliveryTimes.international || '').trim()
             || DEFAULT_SHIPPING_SETTINGS.shipping.deliveryTimes.international;
         } else if (state.indexOf('lagos') !== -1) {
           zone = 'lagos';
-          feeNgn = Number(shipping.lagosFeeNgn || DEFAULT_SHIPPING_SETTINGS.shipping.lagosFeeNgn);
+          feeNgn = resolveFee(shipping.lagosFeeNgn, DEFAULT_SHIPPING_SETTINGS.shipping.lagosFeeNgn);
           deliveryTime = String(shipping.deliveryTimes && shipping.deliveryTimes.lagos || '').trim()
             || DEFAULT_SHIPPING_SETTINGS.shipping.deliveryTimes.lagos;
         } else if (state) {
           zone = 'other_states';
-          feeNgn = Number(shipping.otherStatesFeeNgn || shipping.defaultDomesticFeeNgn || DEFAULT_SHIPPING_SETTINGS.shipping.otherStatesFeeNgn);
+          feeNgn = resolveFee(
+            shipping.otherStatesFeeNgn,
+            shipping.defaultDomesticFeeNgn,
+            DEFAULT_SHIPPING_SETTINGS.shipping.otherStatesFeeNgn
+          );
           deliveryTime = String(shipping.deliveryTimes && shipping.deliveryTimes.otherStates || '').trim()
             || DEFAULT_SHIPPING_SETTINGS.shipping.deliveryTimes.otherStates;
         }

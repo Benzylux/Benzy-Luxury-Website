@@ -2,9 +2,9 @@
   "shippingFeeNgn": 0,
   "shipping": {
     "defaultDomesticFeeNgn": 0,
-    "lagosFeeNgn": 3000,
-    "otherStatesFeeNgn": 4500,
-    "internationalFeeNgn": 15000,
+    "lagosFeeNgn": 0,
+    "otherStatesFeeNgn": 0,
+    "internationalFeeNgn": 0,
     "freeShippingThresholdNgn": 150000,
     "deliveryTimes": {
       "lagos": "1-2 business days",

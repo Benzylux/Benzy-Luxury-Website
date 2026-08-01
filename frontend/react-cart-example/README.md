@@ -39,8 +39,8 @@ Example cart response shape:
     "summary": {
       "subtotal": 120000,
       "discount": 12000,
-      "shippingFee": 3000,
-      "total": 111000,
+      "shippingFee": 0,
+      "total": 108000,
       "appliedCoupon": {
         "code": "WELCOME10",
         "discountType": "percent",
