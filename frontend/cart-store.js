@@ -91,6 +91,12 @@
     return parsed;
   }
 
+  function normalizeStock(value) {
+    const parsed = Number.parseInt(String(value ?? 0), 10);
+    if (!Number.isFinite(parsed) || parsed < 0) return 0;
+    return parsed;
+  }
+
   function slugify(value, fallback = "default") {
     const normalized = normalizeText(value, fallback)
       .toLowerCase()
@@ -177,6 +183,7 @@
     const rawId = normalizeText(raw?.id || raw?._id || "");
     const lineKey = normalizeText(raw?.lineKey || "");
     const id = lineKey && rawId ? rawId : buildCartItemId({ ...raw, productId, variantId, name });
+    const availableStock = normalizeStock(raw?.availableStock ?? raw?.stockQuantity);
 
     return {
       id,
@@ -195,7 +202,9 @@
       colorLabel,
       variantId,
       alt: normalizeText(raw?.alt || name, name),
-      category: normalizeText(raw?.category || "all", "all")
+      category: normalizeText(raw?.category || "all", "all"),
+      stockQuantity: availableStock,
+      availableStock
     };
   }
 
@@ -371,8 +380,10 @@
       const existing = findMatchingItem(nextItems, incoming);
       if (existing) {
         const nextQuantity = Number(existing.quantity || existing.qty || 1) + Number(incoming.quantity || incoming.qty || 1);
-        existing.quantity = nextQuantity;
-        existing.qty = nextQuantity;
+        const availableStock = normalizeStock(existing.availableStock || existing.stockQuantity || incoming.availableStock || incoming.stockQuantity);
+        const cappedQuantity = availableStock > 0 ? Math.min(nextQuantity, availableStock) : nextQuantity;
+        existing.quantity = cappedQuantity;
+        existing.qty = cappedQuantity;
         return;
       }
 
@@ -445,11 +456,14 @@
 
   async function updateItem(itemId, payload = {}) {
     const rawQuantity = payload.quantity ?? payload.qty;
-    const quantity = Number.parseInt(String(rawQuantity ?? 1), 10);
+    const requestedQuantity = Number.parseInt(String(rawQuantity ?? 1), 10);
 
-    if (!Number.isFinite(quantity) || quantity < 1) {
+    if (!Number.isFinite(requestedQuantity) || requestedQuantity < 1) {
       throw new Error("Quantity must be at least 1.");
     }
+    const existingItem = getCachedCart().find((item) => String(item.id || "") === String(itemId || ""));
+    const availableStock = normalizeStock(existingItem?.availableStock || existingItem?.stockQuantity);
+    const quantity = availableStock > 0 ? Math.min(requestedQuantity, availableStock) : requestedQuantity;
 
     if (isAuthenticated()) {
       const apiPayload = await ensureApi().updateItem(itemId, { quantity });

@@ -1249,13 +1249,13 @@ function readBenzyStoredApiBase() {
   }
 
   function getShippingFeeNgn() {
-    const raw = parseFloat(localStorage.getItem(SHIPPING_FEE_KEY) || "3000");
-    if (!Number.isFinite(raw) || raw < 0) return 3000;
+    const raw = parseFloat(localStorage.getItem(SHIPPING_FEE_KEY) || "0");
+    if (!Number.isFinite(raw) || raw < 0) return 0;
     return raw;
   }
 
   function saveShippingFeeNgn(value) {
-    const safeValue = Number.isFinite(value) && value >= 0 ? value : 3000;
+    const safeValue = Number.isFinite(value) && value >= 0 ? value : 0;
     localStorage.setItem(SHIPPING_FEE_KEY, String(safeValue));
   }
 
@@ -3066,6 +3066,13 @@ function isProductInStock(product) {
   return product.inStock !== false;
 }
 
+function getProductStockQuantity(product) {
+  const ov = getProductOverride(product?.id) || getProductOverride(product?.productId);
+  const stock = Number.parseInt(String(ov?.stockQuantity ?? product?.stockQuantity ?? 0), 10);
+  if (!Number.isFinite(stock) || stock < 0) return 0;
+  return stock;
+}
+
 function getKnownProductColors() {
   return [
     { key: "WHITE", label: "White", hex: "#f5f5f5", border: "#b8b8b8" },
@@ -3196,6 +3203,7 @@ function toCartItemFromProduct(product, qty, options) {
   const selectedSize = formatCartOptionLabel(selectedSizeLabel, "Size", "M");
   const priceNgn = Number(getProductDisplayPriceNgn(product) || 0);
   const regularPriceNgn = Number(product.priceNgn || 0);
+  const stockQuantity = getProductStockQuantity(product);
   const item = {
     id: String(product.id ?? ""),
     productId: String(product.id ?? ""),
@@ -3214,7 +3222,9 @@ function toCartItemFromProduct(product, qty, options) {
     price: priceNgn,
     priceNgn,
     regularPriceNgn,
-    discountPriceNgn: getProductSalePriceNgn(product)
+    discountPriceNgn: getProductSalePriceNgn(product),
+    stockQuantity,
+    availableStock: stockQuantity
   };
 
   item.variantId = options?.variantId
@@ -3247,6 +3257,19 @@ async function addProductToCart(product, qty, options) {
   if (!product) return false;
   const image = product.images?.[0] || "";
   if (!image) return false;
+  const stockQuantity = getProductStockQuantity(product);
+  const requestedQty = Math.max(1, parseInt(String(qty || 1), 10));
+  if (stockQuantity <= 0) {
+    window.BenzyCartStore?.showToast?.("This product is currently out of stock. Please choose another product.", "error");
+    return false;
+  }
+  if (requestedQty > stockQuantity) {
+    window.BenzyCartStore?.showToast?.(
+      `Only ${stockQuantity} ${stockQuantity === 1 ? "piece is" : "pieces are"} left in stock. Please proceed with ${stockQuantity} or choose another product.`,
+      "error"
+    );
+    qty = stockQuantity;
+  }
 
   const variantOptions = {
     color: formatCartOptionLabel(options?.color, "Color", "Standard"),
@@ -3257,6 +3280,26 @@ async function addProductToCart(product, qty, options) {
 
   if (window.BenzyCartStore?.addItem) {
     try {
+      const currentItems = typeof window.BenzyCartStore.getCachedCart === "function"
+        ? window.BenzyCartStore.getCachedCart()
+        : [];
+      const existing = Array.isArray(currentItems)
+        ? currentItems.find((item) => {
+            if (String(item.productId || "") !== String(nextItem.productId || "")) return false;
+            return normalizeCartVariant(item.variantId) === normalizeCartVariant(nextItem.variantId);
+          })
+        : null;
+      const existingQty = existing ? Math.max(1, parseInt(String(existing.quantity || existing.qty || 1), 10)) : 0;
+      const nextQty = existingQty + Math.max(1, parseInt(String(nextItem.quantity || nextItem.qty || 1), 10));
+      if (stockQuantity > 0 && nextQty > stockQuantity) {
+        window.BenzyCartStore?.showToast?.(
+          `Only ${stockQuantity} ${stockQuantity === 1 ? "piece is" : "pieces are"} left in stock. Please proceed with ${stockQuantity} or choose another product.`,
+          "error"
+        );
+        if (existingQty >= stockQuantity) return false;
+        nextItem.quantity = stockQuantity - existingQty;
+        nextItem.qty = nextItem.quantity;
+      }
       await window.BenzyCartStore.addItem(nextItem);
       return true;
     } catch (error) {
@@ -3284,7 +3327,16 @@ async function addProductToCart(product, qty, options) {
       normalizeCartVariant(item.size) === targetSize
   );
   if (existing) {
-    existing.qty = Math.max(1, parseInt(String(existing.qty || 1), 10)) + safeQty;
+    const nextQty = Math.max(1, parseInt(String(existing.qty || 1), 10)) + safeQty;
+    if (stockQuantity > 0 && nextQty > stockQuantity) {
+      window.BenzyCartStore?.showToast?.(
+        `Only ${stockQuantity} ${stockQuantity === 1 ? "piece is" : "pieces are"} left in stock. Please proceed with ${stockQuantity} or choose another product.`,
+        "error"
+      );
+      existing.qty = stockQuantity;
+    } else {
+      existing.qty = nextQty;
+    }
     existing.quantity = existing.qty;
   } else {
     cart.push(nextItem);
@@ -4510,7 +4562,36 @@ function productToCardHtml(product, cardClass) {
 
   let activeImage = product.images?.[0] || "";
   const inStock = isProductInStock(product);
+  const stockLimit = getProductStockQuantity(product);
   let selectedColorInfo = getProductColorInfo(product);
+
+  function getProductStockLimitMessage() {
+    if (stockLimit <= 0) return "This product is currently out of stock. Please choose another product.";
+    return `Only ${stockLimit} ${stockLimit === 1 ? "piece is" : "pieces are"} left in stock. Please proceed with ${stockLimit} or choose another product.`;
+  }
+
+  function syncProductQtyButtons() {
+    const currentQty = qtyInput instanceof HTMLInputElement ? parseInt(qtyInput.value || "1", 10) : 1;
+    if (qtyPlus instanceof HTMLButtonElement) {
+      qtyPlus.disabled = !inStock || (stockLimit > 0 && currentQty >= stockLimit);
+    }
+    if (qtyMinus instanceof HTMLButtonElement) {
+      qtyMinus.disabled = !inStock || currentQty <= 1;
+    }
+  }
+
+  function clampProductQuantity(value, options = {}) {
+    const requested = Math.max(1, parseInt(String(value || 1), 10) || 1);
+    const capped = stockLimit > 0 ? Math.min(requested, stockLimit) : requested;
+    if (qtyInput instanceof HTMLInputElement) {
+      qtyInput.value = String(capped);
+    }
+    if (options.notify && capped < requested && checkoutNoteEl) {
+      checkoutNoteEl.textContent = getProductStockLimitMessage();
+    }
+    syncProductQtyButtons();
+    return capped;
+  }
 
   function productCategoryLabel(cat) {
     const labels = {
@@ -4700,7 +4781,9 @@ function productToCardHtml(product, cardClass) {
       priceEl.innerHTML = formatProductPriceHtml(product);
     }
     if (stockEl) {
-      stockEl.textContent = inStock ? "In stock" : "Out of stock";
+      stockEl.textContent = inStock && stockLimit > 0
+        ? `${stockLimit} ${stockLimit === 1 ? "piece" : "pieces"} in stock`
+        : "Out of stock";
       stockEl.className = inStock ? "product-detail-stock stock-in" : "product-detail-stock stock-out";
     }
     if (metaEl) metaEl.textContent = `${categoryText} collection | ${sku}`;
@@ -4741,6 +4824,13 @@ function productToCardHtml(product, cardClass) {
         ? "Shipping and taxes are calculated at checkout."
         : "This product is currently unavailable for checkout.";
     }
+    if (qtyInput instanceof HTMLInputElement) {
+      qtyInput.min = "1";
+      if (stockLimit > 0) qtyInput.max = String(stockLimit);
+      else qtyInput.removeAttribute("max");
+      clampProductQuantity(qtyInput.value);
+    }
+    syncProductQtyButtons();
     if (addBtn instanceof HTMLButtonElement) {
       addBtn.disabled = !inStock;
       addBtn.textContent = inStock ? "Add to cart" : "Sold out";
@@ -4790,7 +4880,7 @@ function productToCardHtml(product, cardClass) {
 
   if (addBtn) {
     addBtn.addEventListener("click", async function () {
-      const qty = qtyInput instanceof HTMLInputElement ? Math.max(1, parseInt(qtyInput.value || "1", 10)) : 1;
+      const qty = qtyInput instanceof HTMLInputElement ? clampProductQuantity(qtyInput.value, { notify: true }) : 1;
       const selectedSizeEl = page.querySelector(".product-size.active");
       const selectedSize = selectedSizeEl ? `Size: ${selectedSizeEl.textContent?.trim()}` : "Size: M";
       const ok = await addProductToCart(product, qty, { color: `Color: ${selectedColorInfo.label}`, size: selectedSize });
@@ -4808,7 +4898,7 @@ function productToCardHtml(product, cardClass) {
 
   if (buyBtn) {
     buyBtn.addEventListener("click", async function () {
-      const qty = qtyInput instanceof HTMLInputElement ? Math.max(1, parseInt(qtyInput.value || "1", 10)) : 1;
+      const qty = qtyInput instanceof HTMLInputElement ? clampProductQuantity(qtyInput.value, { notify: true }) : 1;
       const selectedSizeEl = page.querySelector(".product-size.active");
       const selectedSize = selectedSizeEl ? `Size: ${selectedSizeEl.textContent?.trim()}` : "Size: M";
       const ok = await addProductToCart(product, qty, { color: `Color: ${selectedColorInfo.label}`, size: selectedSize });
@@ -4819,22 +4909,21 @@ function productToCardHtml(product, cardClass) {
 
   if (qtyInput instanceof HTMLInputElement) {
     qtyInput.addEventListener("input", function () {
-      const value = parseInt(qtyInput.value || "1", 10);
-      qtyInput.value = String(Number.isNaN(value) || value < 1 ? 1 : value);
+      clampProductQuantity(qtyInput.value, { notify: true });
     });
   }
 
   if (qtyPlus && qtyInput instanceof HTMLInputElement) {
     qtyPlus.addEventListener("click", function () {
       const value = Math.max(1, parseInt(qtyInput.value || "1", 10)) + 1;
-      qtyInput.value = String(value);
+      clampProductQuantity(value, { notify: true });
     });
   }
 
   if (qtyMinus && qtyInput instanceof HTMLInputElement) {
     qtyMinus.addEventListener("click", function () {
       const value = Math.max(1, parseInt(qtyInput.value || "1", 10) - 1);
-      qtyInput.value = String(value);
+      clampProductQuantity(value);
     });
   }
 
@@ -5015,6 +5104,8 @@ function productToCardHtml(product, cardClass) {
     const addBtn = modal.querySelector("#quick-view-add");
     const buyBtn = modal.querySelector("#quick-view-buy");
     const qtyInput = modal.querySelector("#quick-view-qty");
+    const qtyMinus = modal.querySelector("#quick-qty-minus");
+    const qtyPlus = modal.querySelector("#quick-qty-plus");
     const sizeRow = modal.querySelector(".quick-size-row");
     modalProduct = quickProduct;
     const productImages = normalizeProductImages(quickProduct);
@@ -5024,6 +5115,7 @@ function productToCardHtml(product, cardClass) {
     const colorOptions = getProductColorOptions(quickProduct);
     const categoryText = quickProductCategoryLabel(quickProduct.category);
     const inStock = isProductInStock(quickProduct);
+    const stockLimit = getProductStockQuantity(quickProduct);
 
     if (image instanceof HTMLImageElement) {
       image.src = activeImage;
@@ -5040,7 +5132,9 @@ function productToCardHtml(product, cardClass) {
     if (copy) copy.textContent = getQuickViewCopy(quickProduct, selectedColorInfo);
     if (link instanceof HTMLAnchorElement) link.href = `Product.html?id=${quickProduct.id}`;
     if (stock) {
-      stock.textContent = inStock ? "In stock" : "Out of stock";
+      stock.textContent = inStock && stockLimit > 0
+        ? `${stockLimit} ${stockLimit === 1 ? "piece" : "pieces"} in stock`
+        : "Out of stock";
       stock.className = inStock ? "quick-v quick-stock stock-in" : "quick-v quick-stock stock-out";
     }
     if (statusChip) {
@@ -5053,7 +5147,14 @@ function productToCardHtml(product, cardClass) {
       addBtn.disabled = !inStock;
     }
     if (buyBtn instanceof HTMLButtonElement) buyBtn.disabled = !inStock;
-    if (qtyInput instanceof HTMLInputElement) qtyInput.value = "1";
+    if (qtyInput instanceof HTMLInputElement) {
+      qtyInput.value = "1";
+      qtyInput.min = "1";
+      if (stockLimit > 0) qtyInput.max = String(stockLimit);
+      else qtyInput.removeAttribute("max");
+    }
+    if (qtyMinus instanceof HTMLButtonElement) qtyMinus.disabled = !inStock;
+    if (qtyPlus instanceof HTMLButtonElement) qtyPlus.disabled = !inStock || stockLimit <= 1;
     if (colorLabel) colorLabel.textContent = `Color: ${selectedColorInfo.label}`;
 
     if (sizeRow instanceof HTMLElement) {
@@ -5148,7 +5249,10 @@ function productToCardHtml(product, cardClass) {
     if (addBtn instanceof HTMLButtonElement) {
       if (!modalProduct) return;
       const qtyInput = document.getElementById("quick-view-qty");
-      const qty = qtyInput instanceof HTMLInputElement ? Math.max(1, parseInt(qtyInput.value || "1", 10)) : 1;
+      const stockLimit = getProductStockQuantity(modalProduct);
+      const requestedQty = qtyInput instanceof HTMLInputElement ? Math.max(1, parseInt(qtyInput.value || "1", 10)) : 1;
+      const qty = stockLimit > 0 ? Math.min(requestedQty, stockLimit) : requestedQty;
+      if (qtyInput instanceof HTMLInputElement) qtyInput.value = String(qty);
       const selectedSizeEl = document.querySelector(".quick-size.active");
       const selectedSize = selectedSizeEl ? `Size: ${selectedSizeEl.textContent?.trim()}` : "Size: M";
       const colorLabel = document.getElementById("quick-view-color-label");
@@ -5170,8 +5274,17 @@ function productToCardHtml(product, cardClass) {
     if (plusBtn) {
       const qtyInput = document.getElementById("quick-view-qty");
       if (qtyInput instanceof HTMLInputElement) {
-        const qty = Math.max(1, parseInt(qtyInput.value || "1", 10)) + 1;
+        const stockLimit = modalProduct ? getProductStockQuantity(modalProduct) : 0;
+        const requestedQty = Math.max(1, parseInt(qtyInput.value || "1", 10)) + 1;
+        const qty = stockLimit > 0 ? Math.min(requestedQty, stockLimit) : requestedQty;
         qtyInput.value = String(qty);
+        if (stockLimit > 0 && requestedQty > stockLimit) {
+          window.BenzyCartStore?.showToast?.(
+            `Only ${stockLimit} ${stockLimit === 1 ? "piece is" : "pieces are"} left in stock. Please proceed with ${stockLimit} or choose another product.`,
+            "error"
+          );
+        }
+        if (plusBtn instanceof HTMLButtonElement) plusBtn.disabled = stockLimit > 0 && qty >= stockLimit;
       }
       return;
     }
@@ -5182,6 +5295,8 @@ function productToCardHtml(product, cardClass) {
       if (qtyInput instanceof HTMLInputElement) {
         const qty = Math.max(1, parseInt(qtyInput.value || "1", 10) - 1);
         qtyInput.value = String(qty);
+        const plusButton = document.getElementById("quick-qty-plus");
+        if (plusButton instanceof HTMLButtonElement) plusButton.disabled = false;
       }
       return;
     }
@@ -5215,7 +5330,10 @@ function productToCardHtml(product, cardClass) {
     if (buyBtn instanceof HTMLButtonElement) {
       if (!modalProduct) return;
       const qtyInput = document.getElementById("quick-view-qty");
-      const qty = qtyInput instanceof HTMLInputElement ? Math.max(1, parseInt(qtyInput.value || "1", 10)) : 1;
+      const stockLimit = getProductStockQuantity(modalProduct);
+      const requestedQty = qtyInput instanceof HTMLInputElement ? Math.max(1, parseInt(qtyInput.value || "1", 10)) : 1;
+      const qty = stockLimit > 0 ? Math.min(requestedQty, stockLimit) : requestedQty;
+      if (qtyInput instanceof HTMLInputElement) qtyInput.value = String(qty);
       const selectedSizeEl = document.querySelector(".quick-size.active");
       const selectedSize = selectedSizeEl ? `Size: ${selectedSizeEl.textContent?.trim()}` : "Size: M";
       const colorLabel = document.getElementById("quick-view-color-label");

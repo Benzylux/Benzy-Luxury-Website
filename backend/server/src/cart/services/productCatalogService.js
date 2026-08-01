@@ -249,8 +249,10 @@ async function hydrateAndMergeCartItems(items) {
       throw new AppError(409, `${item.name} only has ${item.availableStock} item(s) left in stock.`);
     }
 
-    const { availableStock, ...rest } = item;
-    return rest;
+    return {
+      ...item,
+      stockQuantity: item.availableStock
+    };
   });
 
   return merged;

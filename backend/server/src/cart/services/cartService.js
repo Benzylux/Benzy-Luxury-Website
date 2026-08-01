@@ -186,7 +186,9 @@ async function persistCalculatedCart(cart, nextState) {
     size: item.size || '',
     color: item.color || '',
     variantId: item.variantId || '',
-    categoryId: item.categoryId || 'all'
+    categoryId: item.categoryId || 'all',
+    stockQuantity: Math.max(0, parseInt(String(item.stockQuantity ?? item.availableStock ?? 0), 10) || 0),
+    availableStock: Math.max(0, parseInt(String(item.availableStock ?? item.stockQuantity ?? 0), 10) || 0)
   }));
   cart.couponCode = nextState.couponCode || null;
   cart.summary = nextState.summary || emptySummary();

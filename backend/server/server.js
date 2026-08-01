@@ -1181,9 +1181,9 @@ function normalizeAdminRoleValue(role, user) {
 }
 
 const DEFAULT_SETTINGS = {
-  shippingFeeNgn: 3000,
+  shippingFeeNgn: 0,
   shipping: {
-    defaultDomesticFeeNgn: 3000,
+    defaultDomesticFeeNgn: 0,
     lagosFeeNgn: 3000,
     otherStatesFeeNgn: 4500,
     internationalFeeNgn: 15000,
@@ -2365,6 +2365,86 @@ async function recordEmailLog(entry) {
   }
 
   return record;
+}
+
+function getRequestIpAddress(req) {
+  const forwardedFor = String(req?.headers?.['x-forwarded-for'] || '').split(',')[0].trim();
+  return sanitizePlainText(forwardedFor || req?.ip || req?.socket?.remoteAddress || 'Unknown location', 80);
+}
+
+function getRequestUserAgent(req) {
+  return sanitizePlainText(req?.headers?.['user-agent'] || 'Unknown device', 220);
+}
+
+function formatLoginEmailTime(value) {
+  const date = value ? new Date(value) : new Date();
+  if (Number.isNaN(date.getTime())) return new Date().toISOString();
+
+  try {
+    return new Intl.DateTimeFormat('en-NG', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: 'Africa/Lagos'
+    }).format(date);
+  } catch {
+    return date.toISOString();
+  }
+}
+
+function buildLoginNotificationEmailHtml(user, loginDetails = {}) {
+  const firstName = sanitizePlainText(String(user?.name || '').split(/\s+/)[0] || 'there', 80);
+  const loginTime = sanitizePlainText(loginDetails.loginTime || 'Just now', 80);
+  const ipAddress = sanitizePlainText(loginDetails.ipAddress || 'Unknown location', 80);
+  const userAgent = sanitizePlainText(loginDetails.userAgent || 'Unknown device', 220);
+  const supportEmail = sanitizePlainText(getBrevoConfig().senderEmail || CONTACT_INFO_DEFAULTS.email, 120);
+
+  return `
+    <div style="margin:0;padding:32px 16px;background:#f6f0ea;font-family:Arial,sans-serif;color:#231711;">
+      <div style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #eadfd3;border-radius:16px;overflow:hidden;">
+        <div style="padding:24px 28px;background:#111111;color:#ffffff;">
+          <div style="font-size:12px;letter-spacing:.22em;text-transform:uppercase;">Benzy Luxury</div>
+          <h1 style="margin:10px 0 0;font-size:28px;line-height:1.2;">Welcome back</h1>
+        </div>
+        <div style="padding:28px;">
+          <p style="margin:0 0 18px;font-size:16px;line-height:1.65;">Hi ${escapeHtml(firstName)}, you just logged in to your Benzy Luxury account.</p>
+          <div style="margin:22px 0;padding:18px 20px;border:1px solid #eadfd3;border-radius:12px;background:#fbf7f2;">
+            <p style="margin:0 0 10px;font-size:13px;line-height:1.5;color:#6b5a4d;"><strong style="color:#231711;">Time:</strong> ${escapeHtml(loginTime)}</p>
+            <p style="margin:0 0 10px;font-size:13px;line-height:1.5;color:#6b5a4d;"><strong style="color:#231711;">IP address:</strong> ${escapeHtml(ipAddress)}</p>
+            <p style="margin:0;font-size:13px;line-height:1.5;color:#6b5a4d;"><strong style="color:#231711;">Device:</strong> ${escapeHtml(userAgent)}</p>
+          </div>
+          <p style="margin:0;color:#6b5a4d;font-size:14px;line-height:1.6;">If this was you, no action is needed. If you did not sign in, reset your password and contact ${escapeHtml(supportEmail)} right away.</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function sendLoginNotificationEmail(user, req, loginAt) {
+  const loginDetails = {
+    loginAt,
+    loginTime: formatLoginEmailTime(loginAt),
+    ipAddress: getRequestIpAddress(req),
+    userAgent: getRequestUserAgent(req)
+  };
+
+  return sendAccountTransactionalEmail('login_notification', user, {
+    subject: 'New login to your Benzy Luxury account',
+    htmlContent: buildLoginNotificationEmailHtml(user, loginDetails),
+    textContent: [
+      `Hi ${sanitizePlainText(user?.name || 'there', 80)},`,
+      'You just logged in to your Benzy Luxury account.',
+      `Time: ${loginDetails.loginTime}`,
+      `IP address: ${loginDetails.ipAddress}`,
+      `Device: ${loginDetails.userAgent}`,
+      'If this was you, no action is needed. If you did not sign in, reset your password and contact Benzy Luxury right away.'
+    ].join('\n'),
+    metadata: {
+      userId: user?.id || '',
+      loginAt,
+      ipAddress: loginDetails.ipAddress,
+      userAgent: loginDetails.userAgent
+    }
+  });
 }
 
 async function sendAccountTransactionalEmail(type, user, details = {}) {
@@ -5211,6 +5291,7 @@ app.post('/api/auth/login', asyncHandler(async (req, res) => {
   await sendAdminCustomerActivityEmail(user, 'logged in', {
     lastLoginAt: user.lastLoginAt
   });
+  await sendLoginNotificationEmail(user, req, user.lastLoginAt);
 
   const token = signToken(user);
   res.json({ token, user: toPublicUser(user) });
@@ -5294,6 +5375,7 @@ app.post('/api/auth/otp/verify', asyncHandler(async (req, res) => {
   users[idx].loginOtp = null;
   users[idx].lastLoginAt = new Date().toISOString();
   await writeUsers(users);
+  await sendLoginNotificationEmail(users[idx], req, users[idx].lastLoginAt);
   res.json({ token: signToken(users[idx]), user: toPublicUser(users[idx]) });
 }));
 

@@ -92,6 +92,24 @@
     return roundMoney(priceUsd * 1600);
   }
 
+  function getItemStock(item) {
+    const stock = Number.parseInt(String(item?.availableStock ?? item?.stockQuantity ?? 0), 10);
+    return Number.isFinite(stock) && stock > 0 ? stock : 0;
+  }
+
+  function getStockLimitMessage(item) {
+    const stock = getItemStock(item);
+    const name = String(item?.name || item?.title || "This item").trim();
+    if (stock <= 0) return `${name} is currently out of stock. Please remove it or choose another product.`;
+    return `${name} has only ${stock} ${stock === 1 ? "piece" : "pieces"} left in stock. Please proceed with ${stock} or choose another product.`;
+  }
+
+  function clampQuantityForStock(item, quantity) {
+    const stock = getItemStock(item);
+    const safeQuantity = Math.max(1, parseInt(String(quantity || 1), 10) || 1);
+    return stock > 0 ? Math.min(safeQuantity, stock) : safeQuantity;
+  }
+
   function roundMoney(value) {
     const amount = Number(value ?? 0);
     if (!Number.isFinite(amount)) return 0;
@@ -337,7 +355,10 @@
   function createCartItemElement(item) {
     const quantity = Math.max(1, parseInt(String(item.quantity || item.qty || 1), 10));
     const unitPriceNgn = getItemPriceNgn(item);
-    const lineTotal = roundMoney(unitPriceNgn * quantity);
+    const stock = getItemStock(item);
+    const visibleQuantity = stock > 0 ? Math.min(quantity, stock) : quantity;
+    const lineTotal = roundMoney(unitPriceNgn * visibleQuantity);
+    const maxAttr = stock > 0 ? ` max="${stock}"` : "";
     const article = document.createElement("article");
 
     article.className = "cart-ref-item row";
@@ -359,8 +380,8 @@
       <div class="qty-col">
         <div class="qty-box">
           <button class="qty-btn qty-minus" type="button" aria-label="Decrease quantity">-</button>
-          <input class="qty-input" type="number" min="1" value="${quantity}" aria-label="Quantity" />
-          <button class="qty-btn qty-plus" type="button" aria-label="Increase quantity">+</button>
+          <input class="qty-input" type="number" min="1"${maxAttr} value="${visibleQuantity}" aria-label="Quantity" />
+          <button class="qty-btn qty-plus" type="button" aria-label="Increase quantity"${stock > 0 && visibleQuantity >= stock ? " disabled" : ""}>+</button>
         </div>
         <button class="remove-link cart-remove" type="button" aria-label="Remove item">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -475,9 +496,15 @@
 
     try {
       if (target.closest(".qty-plus")) {
-        setStatus("Updating quantity...", "pending");
         const nextQuantity = Math.max(1, parseInt(String(currentItem.quantity || currentItem.qty || 1), 10) + 1);
-        const state = await store.updateItem(itemId, { quantity: nextQuantity });
+        const cappedQuantity = clampQuantityForStock(currentItem, nextQuantity);
+        if (cappedQuantity < nextQuantity) {
+          setStatus(getStockLimitMessage(currentItem), "error");
+          renderCart(store.getCachedState());
+          return;
+        }
+        setStatus("Updating quantity...", "pending");
+        const state = await store.updateItem(itemId, { quantity: cappedQuantity });
         renderCart(state);
         setStatus("Cart updated.", "success");
         return;
@@ -511,8 +538,13 @@
     if (!(itemEl instanceof HTMLElement)) return;
 
     const itemId = String(itemEl.dataset.itemId || "").trim();
-    const quantity = Math.max(1, parseInt(String(target.value || 1), 10) || 1);
+    const currentItem = store.getCachedCart().find((item) => String(item.id || "") === itemId);
+    const requestedQuantity = Math.max(1, parseInt(String(target.value || 1), 10) || 1);
+    const quantity = currentItem ? clampQuantityForStock(currentItem, requestedQuantity) : requestedQuantity;
     target.value = String(quantity);
+    if (currentItem && quantity < requestedQuantity) {
+      setStatus(getStockLimitMessage(currentItem), "error");
+    }
 
     const existingTimer = qtyInputTimers.get(itemId);
     if (existingTimer) window.clearTimeout(existingTimer);

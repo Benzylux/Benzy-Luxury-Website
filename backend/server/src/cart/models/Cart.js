@@ -10,7 +10,9 @@ const cartItemSchema = new mongoose.Schema({
   size: { type: String, trim: true, default: '' },
   color: { type: String, trim: true, default: '' },
   variantId: { type: String, trim: true, default: '' },
-  categoryId: { type: String, trim: true, default: 'all' }
+  categoryId: { type: String, trim: true, default: 'all' },
+  stockQuantity: { type: Number, min: 0, default: 0 },
+  availableStock: { type: Number, min: 0, default: 0 }
 }, { _id: true });
 
 const appliedCouponSchema = new mongoose.Schema({

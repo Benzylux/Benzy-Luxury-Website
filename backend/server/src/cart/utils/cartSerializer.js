@@ -4,6 +4,7 @@ function serializeCartItem(item) {
   const quantity = Math.max(1, parseInt(String(item?.quantity || 1), 10));
   const price = roundCurrency(item?.price || 0);
   const name = String(item?.name || '').trim();
+  const availableStock = Math.max(0, parseInt(String(item?.availableStock ?? item?.stockQuantity ?? 0), 10) || 0);
 
   return {
     id: String(item?._id || item?.id || item?.lineKey || ''),
@@ -20,7 +21,9 @@ function serializeCartItem(item) {
     size: String(item?.size || '').trim(),
     color: String(item?.color || '').trim(),
     variantId: String(item?.variantId || '').trim(),
-    categoryId: String(item?.categoryId || '').trim()
+    categoryId: String(item?.categoryId || '').trim(),
+    stockQuantity: availableStock,
+    availableStock
   };
 }
 

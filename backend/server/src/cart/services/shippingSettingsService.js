@@ -1,7 +1,7 @@
 const { getCollection } = require('../../../mongo');
 const { roundCurrency } = require('../utils/money');
 
-const DEFAULT_SHIPPING_FEE_NGN = 3000;
+const DEFAULT_SHIPPING_FEE_NGN = 0;
 
 async function getShippingFeeNgn() {
   const collection = await getCollection('settings');

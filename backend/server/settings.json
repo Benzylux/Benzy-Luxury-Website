@@ -1,7 +1,7 @@
 {
-  "shippingFeeNgn": 3000,
+  "shippingFeeNgn": 0,
   "shipping": {
-    "defaultDomesticFeeNgn": 3000,
+    "defaultDomesticFeeNgn": 0,
     "lagosFeeNgn": 3000,
     "otherStatesFeeNgn": 4500,
     "internationalFeeNgn": 15000,
