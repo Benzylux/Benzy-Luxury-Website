@@ -85,6 +85,7 @@
     messagesAutomation: document.getElementById("messages-automation"),
     messagesList: document.getElementById("messages-list"),
     paymentsSummary: document.getElementById("payments-summary"),
+    paymentsStatusBreakdown: document.getElementById("payments-status-breakdown"),
     paymentsList: document.getElementById("payments-list"),
     couponForm: document.getElementById("coupon-form"),
     couponCodeGenerateBtn: document.getElementById("coupon-code-generate-btn"),
@@ -441,6 +442,38 @@
     if (["apple pay", "apple_pay", "applepay"].includes(raw)) return "apple_pay";
     if (["paystack", "flutterwave", "wallet"].includes(raw)) return raw;
     return raw || "unknown";
+  }
+
+  function getPaymentEmailState(payment) {
+    const delivery = payment?.emailDelivery && typeof payment.emailDelivery === "object" ? payment.emailDelivery : {};
+    const rawStatus = String(delivery.status || "").trim().toLowerCase();
+    const status = rawStatus || (delivery.sentAt ? "sent" : "");
+    if (status === "sent" || status === "delivered" || status === "opened" || status === "clicked") {
+      return {
+        label: status === "sent" ? "Email sent" : `Email ${titleCase(status).toLowerCase()}`,
+        caption: delivery.sentAt ? `Sent ${formatShortDate(delivery.sentAt)}` : "Confirmation receipt",
+        className: "is-success"
+      };
+    }
+    if (status === "failed" || status === "bounced" || status === "soft_bounce" || status === "hard_bounce") {
+      return {
+        label: "Email failed",
+        caption: delivery.error || "Check Brevo delivery",
+        className: "is-danger"
+      };
+    }
+    if (status === "skipped") {
+      return {
+        label: "Email skipped",
+        caption: delivery.reason || "Customer email was not sent",
+        className: "is-warning"
+      };
+    }
+    return {
+      label: normalizePaymentStatusValue(payment?.status) === "paid" ? "Email pending" : "Email waits for payment",
+      caption: "Order confirmation receipt",
+      className: "is-warning"
+    };
   }
 
   function isBankTransferOrder(order) {
@@ -1489,6 +1522,13 @@
   }
 
   function renderPayments() {
+    const entries = Array.isArray(state.payments.payments) ? state.payments.payments : [];
+    const statusCounts = entries.reduce(function (summary, payment) {
+      const status = normalizePaymentStatusValue(payment?.status);
+      summary[status] = (summary[status] || 0) + 1;
+      return summary;
+    }, { paid: 0, pending: 0, failed: 0, refunded: 0 });
+
     renderMetricCards(nodes.paymentsSummary, [
       { label: "Verified payments", value: String(state.payments.summary?.verifiedPayments || 0), note: "Paid and confirmed", action: "payment-records" },
       { label: "Failed payments", value: String(state.payments.summary?.failedPayments || 0), note: "Needs investigation", action: "payment-records" },
@@ -1497,16 +1537,35 @@
       { label: "Refund records", value: String(state.payments.summary?.refundRecords || 0), note: "Tracked refunds", action: "payment-records" }
     ]);
 
+    if (nodes.paymentsStatusBreakdown instanceof HTMLElement) {
+      nodes.paymentsStatusBreakdown.innerHTML = [
+        { key: "paid", label: "Successful", note: "Cleared payments" },
+        { key: "pending", label: "Pending", note: "Awaiting confirmation" },
+        { key: "failed", label: "Failed", note: "Needs investigation" },
+        { key: "refunded", label: "Refunded", note: "Money returned" }
+      ].map(function (item) {
+        return `
+          <button class="admin-payment-status-pill" type="button" data-payment-status="${escapeHtml(item.key)}">
+            <span>${escapeHtml(item.label)}</span>
+            <strong>${escapeHtml(String(statusCounts[item.key] || 0))}</strong>
+            <small>${escapeHtml(item.note)}</small>
+          </button>
+        `;
+      }).join("");
+    }
+
     if (!(nodes.paymentsList instanceof HTMLElement)) return;
-    const entries = Array.isArray(state.payments.payments) ? state.payments.payments : [];
     nodes.paymentsList.innerHTML = entries.length
       ? entries.map(function (payment) {
+          const emailState = getPaymentEmailState(payment);
+          const status = normalizePaymentStatusValue(payment.status);
           return `
             <article class="admin-payment-card" data-order-id="${escapeHtml(payment.orderId || "")}" data-payment-id="${escapeHtml(payment.id || "")}">
               <div class="admin-order-top">
                 <div class="admin-meta-row">
                   <span class="admin-chip">${escapeHtml(payment.type === "wallet" ? "Wallet" : "Order")}</span>
-                  <span class="admin-tag ${payment.status === "failed" ? "is-danger" : payment.status === "paid" ? "is-success" : ""}">${escapeHtml(titleCase(payment.status || "pending"))}</span>
+                  <span class="admin-tag ${status === "failed" ? "is-danger" : status === "paid" ? "is-success" : status === "refunded" ? "is-warning" : ""}">${escapeHtml(titleCase(status))}</span>
+                  <span class="admin-tag ${escapeHtml(emailState.className)}">${escapeHtml(emailState.label)}</span>
                 </div>
                 <strong class="admin-order-total">${escapeHtml(formatCurrency(payment.amount || 0, payment.currency || "NGN"))}</strong>
               </div>
@@ -1514,6 +1573,7 @@
                 <div class="admin-info-tile"><h4>${escapeHtml(payment.orderId || payment.id || "Payment")}</h4><p class="admin-meta">${escapeHtml(payment.customerName || payment.customerEmail || "Unknown")}</p></div>
                 <div class="admin-info-tile"><h4>${escapeHtml(payment.method || "Method")}</h4><p class="admin-meta">Payment route</p></div>
                 <div class="admin-info-tile"><h4>${escapeHtml(payment.provider || "Provider")}</h4><p class="admin-meta">${escapeHtml(formatDate(payment.paidAt || payment.createdAt))}</p></div>
+                <div class="admin-info-tile"><h4>${escapeHtml(emailState.label)}</h4><p class="admin-meta">${escapeHtml(emailState.caption)}</p></div>
                 <div class="admin-info-tile"><h4>${escapeHtml(String((payment.refunds || []).length))} refunds</h4><p class="admin-meta">${escapeHtml(payment.bankTransferConfirmedAt ? "Bank transfer confirmed" : "No manual confirmation")}</p></div>
               </div>
               ${payment.type === "order" ? `<div class="admin-payment-actions"><button class="admin-inline-btn" type="button" data-action="refund-payment">Record refund</button></div>` : ""}
@@ -3253,6 +3313,22 @@
         if (!(button instanceof HTMLElement)) return;
         if (button.getAttribute("data-metric-action") !== "payment-records") return;
         nodes.paymentsList?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
+    if (nodes.paymentsStatusBreakdown) {
+      nodes.paymentsStatusBreakdown.addEventListener("click", function (event) {
+        const button = event.target.closest("[data-payment-status]");
+        if (!(button instanceof HTMLElement)) return;
+        const status = button.getAttribute("data-payment-status") || "";
+        const card = Array.from(nodes.paymentsList?.querySelectorAll(".admin-payment-card") || []).find(function (entry) {
+          return normalizePaymentStatusValue(entry.querySelector(".admin-meta-row .admin-tag")?.textContent || "") === status;
+        });
+        if (card instanceof HTMLElement) {
+          card.scrollIntoView({ behavior: "smooth", block: "center" });
+        } else {
+          nodes.paymentsList?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
       });
     }
 

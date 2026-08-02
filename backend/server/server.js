@@ -1991,11 +1991,21 @@ async function maybeSendOrderConfirmationEmail(order, triggerSource = 'payment-c
           ...(updatedOrder.metadata || {}),
           orderConfirmationEmailSentAt: new Date().toISOString(),
           orderConfirmationEmailTrigger: sanitizePlainText(triggerSource, 80) || 'payment-confirmed',
-          orderConfirmationMessageId: String(result?.messageId || '').trim() || null
+          orderConfirmationMessageId: String(result?.messageId || '').trim() || null,
+          orderConfirmationEmailError: '',
+          orderConfirmationEmailFailedAt: null
         }
       });
     } catch (error) {
       console.error(`Order confirmation email failed for ${order?.orderId || 'unknown-order'}:`, error);
+      updatedOrder = await updateOrderRecord(updatedOrder.orderId, {
+        metadata: {
+          ...(updatedOrder.metadata || {}),
+          orderConfirmationEmailError: sanitizePlainText(error?.message || 'Unable to send order confirmation email.', 240),
+          orderConfirmationEmailFailedAt: new Date().toISOString(),
+          orderConfirmationEmailTrigger: sanitizePlainText(triggerSource, 80) || 'payment-confirmed'
+        }
+      });
     }
   }
 

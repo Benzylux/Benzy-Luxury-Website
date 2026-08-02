@@ -2116,23 +2116,53 @@ function createAdminRouter(dependencies) {
   }
 
   function buildPaymentRecords(orders, users) {
+    const usersByEmail = new Map(
+      (Array.isArray(users) ? users : [])
+        .map((user) => [normalizeEmail(user?.email), user])
+        .filter(([email]) => Boolean(email))
+    );
     const orderPayments = (Array.isArray(orders) ? orders : []).map((order) => {
       const metadata = order?.metadata && typeof order.metadata === 'object' ? order.metadata : {};
       const refunds = Array.isArray(metadata.refunds) ? metadata.refunds : [];
+      const customerEmail = normalizeEmail(order?.customerEmail || order?.customer?.email);
+      const customerUser = usersByEmail.get(customerEmail);
+      const customerEmailEnabled = customerUser?.notifications?.email !== false;
+      const customerEmailValid = isValidEmail(customerEmail);
+      const confirmationEmailSentAt = metadata.orderConfirmationEmailSentAt || null;
+      const confirmationEmailError = safeString(metadata.orderConfirmationEmailError || '', 240);
+      const confirmationEmailLifecycle = safeString(metadata.orderConfirmationEmailDeliveryStatus || metadata.orderConfirmationEmailLastEvent || '', 80);
+      const paymentStatus = normalizePaymentStatus(order?.paymentStatus);
+      const emailStatus = confirmationEmailError
+        ? 'failed'
+        : (confirmationEmailLifecycle
+          || (confirmationEmailSentAt
+            ? 'sent'
+            : (paymentStatus === 'paid' && (!customerEmailValid || customerEmailEnabled === false) ? 'skipped' : 'pending')));
+      const emailSkipReason = !customerEmailValid
+        ? 'Customer email is missing or invalid.'
+        : (customerEmailEnabled === false ? 'Customer email notifications are disabled.' : '');
       return {
         id: safeString(order?.paymentReference || order?.transactionId || order?.orderId || '', 120),
         type: 'order',
         orderId: safeString(order?.orderId || '', 120),
-        customerEmail: normalizeEmail(order?.customerEmail || order?.customer?.email),
+        customerEmail,
         customerName: safeString(order?.customerName || order?.customer?.name || '', 120),
         amount: toPositiveNumber(order?.total, 0),
         currency: safeString(order?.currency || 'NGN', 10).toUpperCase(),
-        status: normalizePaymentStatus(order?.paymentStatus),
+        status: paymentStatus,
         provider: safeString(order?.paymentProvider || normalizePaymentMethod(order?.paymentMethodCode || order?.paymentMethod), 40),
         method: safeString(order?.paymentMethod || order?.paymentMethodCode || 'Not selected', 80),
         bankTransferConfirmedAt: metadata.bankTransferConfirmedAt || null,
         paidAt: order?.paidAt || null,
         createdAt: order?.createdAt || order?.orderDate || null,
+        emailDelivery: {
+          status: emailStatus,
+          sentAt: confirmationEmailSentAt,
+          messageId: safeString(metadata.orderConfirmationMessageId || '', 160),
+          error: confirmationEmailError,
+          reason: emailSkipReason,
+          trigger: safeString(metadata.orderConfirmationEmailTrigger || '', 80)
+        },
         refunds: refunds.map((refund) => ({
           amount: toPositiveNumber(refund?.amount, 0),
           reason: safeString(refund?.reason || '', 200),
@@ -2158,6 +2188,16 @@ function createAdminRouter(dependencies) {
         bankTransferConfirmedAt: null,
         paidAt: transaction?.createdAt || null,
         createdAt: transaction?.createdAt || null,
+        emailDelivery: {
+          status: transaction?.metadata?.walletTopUpEmailError
+            ? 'failed'
+            : (safeString(transaction?.metadata?.walletTopUpEmailDeliveryStatus || transaction?.metadata?.walletTopUpEmailLastEvent || '', 80)
+              || (transaction?.metadata?.walletTopUpEmailSentAt ? 'sent' : 'pending')),
+          sentAt: transaction?.metadata?.walletTopUpEmailSentAt || null,
+          messageId: safeString(transaction?.metadata?.walletTopUpEmailMessageId || '', 160),
+          error: safeString(transaction?.metadata?.walletTopUpEmailError || '', 240),
+          trigger: safeString(transaction?.metadata?.walletTopUpEmailTrigger || '', 80)
+        },
         refunds: []
       }));
     });
