@@ -3880,14 +3880,13 @@ function productToCardHtml(product, cardClass) {
     }
   };
   const homeHeroImages = [
+    "OFF BACK/benzy-new-collection-poster-1.jpeg",
+    "OFF BACK/benzy-new-collection-poster-2.jpeg",
     "Model shoot/IMG_0038.JPG",
     "Model shoot/IMG_9617.JPG",
     "Model shoot/IMG_9591.JPG",
     "Model shoot/IMG_9604.JPG",
-    "Model shoot/IMG_9630.JPG",
-    "Model shoot/IMG_9722.JPG",
-    "Model shoot/IMG_0024.JPG",
-    "Model shoot/IMG_9997.JPG"
+    "Model shoot/IMG_9630.JPG"
   ];
   homeHeroImages.forEach((src) => {
     const image = new Image();
@@ -4155,6 +4154,7 @@ function productToCardHtml(product, cardClass) {
     const nextSrc = homeHeroImages[safeIndex];
     if (!nextSrc) return;
     homeHeroIndex = safeIndex;
+    shopHomeHeroImage.classList.toggle("is-poster-slide", safeIndex < 2);
     shopHomeHeroImage.style.opacity = "0.55";
     const nextImage = new Image();
     nextImage.onload = function () {
@@ -4177,9 +4177,10 @@ function productToCardHtml(product, cardClass) {
     if (!(ghostCta instanceof HTMLAnchorElement)) return;
     if (!(solidCta instanceof HTMLAnchorElement)) return;
     if (!homeHeroImages.length) return;
+    const isPosterSlide = homeHeroIndex < 2;
     const isFirstSlide = homeHeroIndex === 0;
     const isLastSlide = homeHeroIndex === homeHeroImages.length - 1;
-    const isMiddleSlide = !isFirstSlide && !isLastSlide;
+    const isMiddleSlide = !isPosterSlide && !isLastSlide;
 
     heroContent.classList.toggle("is-slide-first", isFirstSlide);
     heroContent.classList.toggle("is-slide-last", isLastSlide);

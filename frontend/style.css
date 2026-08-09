@@ -1665,6 +1665,12 @@ body.shop-home-mode .logo-blx {
   display: block;
 }
 
+.shop-home-video.is-poster-slide {
+  object-fit: contain;
+  object-position: center center;
+  background: #f7f4ef;
+}
+
 .shop-home-overlay {
   position: absolute;
   inset: 0;
