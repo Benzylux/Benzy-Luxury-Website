@@ -4154,7 +4154,9 @@ function productToCardHtml(product, cardClass) {
     const nextSrc = homeHeroImages[safeIndex];
     if (!nextSrc) return;
     homeHeroIndex = safeIndex;
-    shopHomeHeroImage.classList.toggle("is-poster-slide", safeIndex < 2);
+    const isPosterSlide = safeIndex < 2;
+    shopHomeHeroImage.classList.toggle("is-poster-slide", isPosterSlide);
+    shopHomeHeroImage.style.setProperty("--poster-tile-image", isPosterSlide ? `url("${nextSrc}")` : "none");
     shopHomeHeroImage.style.opacity = "0.55";
     const nextImage = new Image();
     nextImage.onload = function () {

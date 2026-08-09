@@ -1668,7 +1668,11 @@ body.shop-home-mode .logo-blx {
 .shop-home-video.is-poster-slide {
   object-fit: contain;
   object-position: center center;
-  background: #f7f4ef;
+  background-color: #f7f4ef;
+  background-image: var(--poster-tile-image);
+  background-repeat: repeat-x;
+  background-position: center center;
+  background-size: auto 100%;
 }
 
 .shop-home-overlay {
